@@ -8,6 +8,7 @@ class Email implements Comparable<Email> {
 	}
 
 	public String getDomain() {
+		System.out.println(email + "-Domain wurde abgefragt");
 		return email.substring(email.lastIndexOf('@') + 1);
 	}
 

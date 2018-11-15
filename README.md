@@ -182,7 +182,7 @@ The curly braces around a single statement are optional:
 button.addActionListener(event -> button.setText(new Date().toString()));
 ```
 
-> **Exercise:** Study how lambdas are compiled to bytecode.
+> **Exercise:** Write a function `measureExecutionTime` that takes a procedure, measures how long it takes to execute, and logs the measure time to the console.
 
 ## Case study: Collections
 
@@ -234,6 +234,85 @@ public static List<String> adultDomains(List<Person> persons) {
             .distinct()
             // terminal operation:
             .collect(toList()); // import static java.util.stream.Collectors.toList;
+}
+```
+
+Compressed overview of `Stream<T>` JavaDoc:
+
+> * A sequence of elements supporting sequential and parallel aggregate operations.
+> * In addition to Stream, which is a stream of object references, there are **primitive specializations** for `IntStream`, `LongStream`, and `DoubleStream`.
+> * To perform a computation, stream operations are composed into a **stream pipeline**. A stream pipeline consists of
+>   * a **source**,
+>   * zero or more **intermediate operations** (which transform a stream into another stream),
+>   * and a **terminal operation** (which produces a result or side-effect).
+> * Streams are **lazy**; computation on the source data is only performed when the terminal operation is initiated, and source elements are consumed only as needed.
+> * A stream should be operated on **only once**. This rules out multiple traversals of the same stream.
+> * Streams have a `close()` method and implement `AutoCloseable`. Generally, only streams whose source is an IO channel will require closing.
+
+```java
+public interface Stream<T> {
+
+    // source
+
+    static <T> Stream<T> empty();
+    static <T> Stream<T> of(T t);
+    static <T> Stream<T> ofNullable(T t);
+    static <T> Stream<T> of(T... values);
+
+    static <T> Stream<T> generate(Supplier<? extends T> s);
+
+    static <T> Stream<T> iterate(T seed, UnaryOperator<T> next);
+    static <T> Stream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next);
+
+    static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b);
+
+    // intermediate operations
+
+    Stream<T> filter(Predicate<? super T> predicate);
+
+    <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+
+    <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);
+
+    Stream<T> limit(long maxSize);
+    Stream<T> skip (long n);
+
+    Stream<T> takeWhile(Predicate<? super T> predicate);
+    Stream<T> dropWhile(Predicate<? super T> predicate);
+
+    Stream<T> peek(Consumer<? super T> action);
+
+    Stream<T> distinct();
+
+    Stream<T> sorted();
+    Stream<T> sorted(Comparator<? super T> comparator);
+
+    // terminal operations
+
+    void forEach       (Consumer<? super T> action);
+    void forEachOrdered(Consumer<? super T> action);
+
+    long count();
+
+    boolean  anyMatch(Predicate<? super T> predicate);
+    boolean  allMatch(Predicate<? super T> predicate);
+    boolean noneMatch(Predicate<? super T> predicate);
+
+    Optional<T> findFirst();
+    Optional<T> findAny();
+
+    Optional<T> min(Comparator<? super T> comparator);
+    Optional<T> max(Comparator<? super T> comparator);
+
+    Object[] toArray();
+    <A>  A[] toArray(IntFunction<A[]> generator);
+
+    <R, A> R collect(Collector<? super T, A, R> collector);
+    <R>    R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner);
+
+    T           reduce(T identity, BinaryOperator<T> accumulator);
+    Optional<T> reduce(BinaryOperator<T> accumulator);
+    <U> U       reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
 }
 ```
 
@@ -314,8 +393,161 @@ public static List<String> adultDomains(List<Person> persons) {
 > | Array Constructor | `int[]::new`             | `len -> new int[len]`           |
 > [EJ3 44]
 
+> **Exercise:** Write interesting Party methods of your choice.
+
+> **Exercise:** Write a method `public static int numVowels(String s)` with regular expressions and streams.
+
 > **Exercise:** Write a Java 7 method `public static Map<String, List<Email>> emailsByDomain(List<Person> persons)` which groups the persons email addresses by their domain.
 > We will discuss how Java 8 simplifies the implementation significantly.
+
+## Case study: Nullable references
+
+> **Tony Hoare:** I call it my billion-dollar mistake.
+> It was the invention of the null reference in 1965.
+> At that time, I was designing the first comprehensive type system for references in an object oriented language (ALGOL W).
+> My goal was to ensure that all use of references should be absolutely safe, with checking performed automatically by the compiler.
+> But I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.
+> This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
+
+### Java 7
+
+Language lawyer: "Every reference type is a supertype of the null type."
+
+Java programmer: "Every reference can be null."
+
+```java
+public Person findFirstPersonWithAge(int age);
+```
+
+What if there is no person with the given age? Should the method...
+* ...return null?
+* ...return a "default Person"?
+* ...throw an exception?
+
+One approach is to return null and let the caller deal with the situation:
+
+```java
+public Person findFirstPersonWithAge(int age) {
+    for (Person person : persons) {
+        if (person.getAge() == age) {
+            return person;
+        }
+    }
+    return null;
+}
+```
+
+But what if the caller is not aware of the potential null reference?
+
+```java
+String name = party.findFirstPersonWithAge(42).getName();
+                                           // ^ ticking time bomb
+```
+
+If the caller is aware of the potential null reference, he can deal with it as he sees fit:
+
+```java
+Person person = party.findFirstPersonWithAge(42);
+String name;
+if (person != null) {
+    name = person.getName();
+} else {
+    // null name:
+    name = null;
+
+    // default name:
+    name = "";
+
+    // exception:
+    throw new Exception("...");
+}
+```
+
+### Java 8
+
+`Optional<Person>` makes it clear that `findPersonWithAge` might return no Person:
+
+```java
+public Optional<Person> findFirstPersonWithAge(int age) {
+    return persons.stream().filter(person -> person.getAge() == age).findFirst();
+}
+```
+
+Now the caller is forced to deal with the situation:
+
+```java
+String name = party.findFirstPersonWithAge(42)
+                   .map(Person::getName)
+
+                   // null name:
+                   .orElse(null);
+
+                   // default name:
+                   .orElse("");
+
+                   // exception:
+                   .orElseThrow(() -> new Exception("..."));
+```
+
+Compressed overview of `Optional<T>` JavaDoc:
+
+> * A container object which may or may not contain a non-null value.
+> * This is a **value-based class**; use of identity-sensitive operations (including reference equality (==), identity hash code, or synchronization on instances of Optional may have unpredictable results and should be avoided.
+> * Optional is primarily intended for use as a **method return type** where there is a clear need to represent "no result," and where using null is likely to cause errors.
+> * A variable whose type is Optional should **never itself be null**; it should always point to an Optional instance.
+
+```java
+public final class Optional<T> {
+
+    private final T value;
+
+    // Factory methods
+
+    public static <T> Optional<T> empty();
+
+    public static <T> Optional<T> of(T value);
+
+    public static <T> Optional<T> ofNullable(T value);
+
+    // Intermediate methods
+
+    public Optional<T> filter(Predicate<? super T> predicate);
+
+    public <U> Optional<U> map(Function<? super T, ? extends U> mapper);
+
+    public <U> Optional<U> flatMap(Function<? super T, ? extends Optional<? extends U>> mapper);
+
+    public Optional<T> or(Supplier<? extends Optional<? extends T>> supplier); // @since 9
+
+    // Conditional methods
+
+    public void ifPresent(Consumer<? super T> action);
+
+    public void ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction); // @since 9
+
+    // Extractor methods
+
+    public T orElse(T other);
+
+    public T orElseGet(Supplier<? extends T> supplier);
+
+    public T orElseThrow(); // @since 10, throws NoSuchElementException
+
+    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+
+    // Interoperability
+
+    public Stream<T> stream(); // @since 9
+
+    public boolean isEmpty(); // @since 11
+
+    public boolean isPresent();
+
+    public T get(); // throws NoSuchElementException
+
+    // equals, hashCode, toString
+}
+```
 
 ## Case study: Comparator
 
@@ -354,7 +586,79 @@ public static void sortAgeDescendingNameEmail(List<Person> persons) {
 }
 ```
 
-> **Exercise:** Prior to Java 8, it would have been infeasible to add the `sort` method to the `List` interface. Why?
+> **Discuss:** Prior to Java 8, it would have been infeasible to add the `sort` method to the `List` interface. Why?
+
+## java.time
+
+* Designed around ISO 8601 calendar system
+* Heavily inspired by Joda Time
+* Replacement for
+  * `java.util.Date`
+  * `java.util.Calendar`
+  * `java.util.TimeZone`
+  * `java.util.DateFormat`
+* Plethora of immutable types for managing everything time-related:
+
+| Type            | Zone         | Year | Month | Day | Hour | Minute | Second | Nanosecond |
+| --------------- | ------------ | ---- | ----- | --- | ---- | ------ | ------ | ---------- |
+| `Instant`       | UTC          |      |       |     |      |        | ✓      | ✓          |
+| `LocalDate`     |              | ✓    | ✓     | ✓   |      |        |        |            |
+| `LocalTime`     |              |      |       |     | ✓    | ✓      | ✓      | ✓          |
+| `LocalDateTime` |              | ✓    | ✓     | ✓   | ✓    | ✓      | ✓      | ✓          |
+| `OffsetTime`    | `ZoneOffset` |      |       |     | ✓    | ✓      | ✓      | ✓          |
+| `OffsetDateTime`| `ZoneOffset` | ✓    | ✓     | ✓   | ✓    | ✓      | ✓      | ✓          |
+| `ZonedDateTime` | `ZoneId`     | ✓    | ✓     | ✓   | ✓    | ✓      | ✓      | ✓          |
+| `Year`          |              | ✓    |       |     |      |        |        |            |
+| `YearMonth`     |              | ✓    | ✓     |     |      |        |        |            |
+| `Month`         |              |      | ✓     |     |      |        |        |            |
+| `MonthDay`      |              |      | ✓     | ✓   |      |        |        |            |
+| `DayOfWeek`     |              |      |       | (✓) |      |        |        |            |
+| `Duration`      |              |      |       |     | (✓)  | (✓)    | (✓)    | (✓)        |
+| `Period`        |              | (✓)  | (✓)   | (✓) |      |        |        |            |
+
+* (`DayOfWeek` has 7 values instead of 31)
+* (`Duration` and `Period` store differences)
+
+### How many days between two dates?
+
+```java
+LocalDate java7Release = LocalDate.of(2011, Month.JULY, 28);
+LocalDate java8Release = LocalDate.of(2014, 3, 18);
+
+Period pause = java7Release.until(java8Release);
+System.out.println(pause); // P2Y7M18D
+System.out.printf("There were %d years, %d months and %d days between Java 7 and Java 8.%n",
+        pause.getYears(), pause.getMonths(), pause.getDays());
+
+long days = ChronoUnit.DAYS.between(java7Release, java8Release);
+System.out.printf("There were %d days between Java 7 and Java 8.%n", days);
+```
+
+### What about leap years?
+
+```java
+for (int y = LocalDate.now().getYear(), bound = y + 12; y < bound; ++y) {
+    Year year = Year.of(y);
+    System.out.printf("%d is %s leap year.%n", y, year.isLeap() ? "a" : "not a");
+
+    YearMonth february = year.atMonth(Month.FEBRUARY);
+    System.out.printf("February %d has %d days, %d has %d days.%n",
+        y, february.lengthOfMonth(), y, february.lengthOfYear());
+
+    System.out.printf("February %d ends at %s.%n%n", y, february.atEndOfMonth());
+}
+```
+
+### What about daylight saving time?
+
+```java
+ZoneId berlin = ZoneId.of("Europe/Berlin");
+ZonedDateTime saturday = ZonedDateTime.of(LocalDateTime.of(2018, Month.OCTOBER, 27, 9, 0), berlin);
+ZonedDateTime sundayAtEight = saturday.plusHours(24);
+ZonedDateTime sundayAtNine = saturday.plusDays(1);
+```
+
+> **Exercise:** Write a program that determines your next 5 birthdays that fall on a weekend.
 
 ## Resource management
 
@@ -728,11 +1032,13 @@ names.filter((Predicate<String>)((String name) -> name.isEmpty()))
 
 Since Java 11, all JDK distributions are based 100% on the OpenJDK source code available at http://hg.openjdk.java.net
 
-| Distribution | Cost  | Updates                     | Download                 |
-| ------------ | ----  | --------------------------- | ------------------------ |
-| OpenJDK      | free  | 6 months                    | https://jdk.java.net/11  |
-| OracleJDK    | money | 3 years (LTS) / 6 months    | https://www.oracle.com/technetwork/java/javase/downloads/index.html |
-| AdoptOpenJDK | free  | longer support than OpenJDK | https://adoptopenjdk.net |
+| Distribution    | Cost  | Updates                     | Download                                                            |
+| --------------- | ----  | --------------------------- | ------------------------------------------------------------------- |
+| OpenJDK         | free  | 6 months                    | https://jdk.java.net/11                                             |
+| OracleJDK       | money | 3 years (LTS) / 6 months    | https://www.oracle.com/technetwork/java/javase/downloads/index.html |
+| AdoptOpenJDK    | free  | longer support than OpenJDK | https://adoptopenjdk.net                                            |
+| Azul Zulu       | both  | 8-10 years paid LTS support | https://www.azul.com/downloads/zulu                                 |
+| Amazon Corretto | free  | long term support           | https://aws.amazon.com/de/corretto                                  |
 
 ### Java Runtime Environment
 
