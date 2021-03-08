@@ -1108,3 +1108,87 @@ String js = """
             }, 1000);
             """;
 ```
+
+# Java 16
+
+## Pattern Matching for `instanceof`
+
+```java
+public static int count(Object obj) {
+    if (obj instanceof Collection) {
+        Collection coll = (Collection) obj;
+        return coll.size();
+    } else if (obj instanceof Map) {
+        Map map = (Map) obj;
+        return map.size();
+    } else if (obj instanceof CharSequence) {
+        CharSequence cs = (CharSequence) obj;
+        return cs.length();
+    } else {
+        return 0;
+    }
+}
+```
+
+```java
+public static int count(Object obj) {
+    if (obj instanceof Collection coll) {
+        return coll.size();
+    } else if (obj instanceof Map map) {
+        return map.size();
+    } else if (obj instanceof CharSequence cs) {
+        return cs.length();
+    } else {
+        return 0;
+    }
+}
+```
+
+## Records
+
+```java
+class Name {
+    private final String surname;
+    private final String forename;
+
+    public Name(String surname, String forename) {
+        if (surname.isBlank()) throw new IllegalArgumentException();
+        if (forename.isBlank()) throw new IllegalArgumentException();
+        this.surname = surname;
+        this.forename = forename;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getForename() {
+        return forename;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Name that)) return false;
+        return this.surname.equals(that.surname) && this.forename.equals(that.forename);
+    }
+
+    @Override
+    public int hashCode() {
+        return (1 * 31 + surname.hashCode()) * 31 + forename.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Name[" + "surname='" + surname + '\'' + ", forename='" + forename + '\'' + ']';
+    }
+}
+```
+
+```java
+record Name(String surname, String forename) {
+    Name {
+        if (surname.isBlank()) throw new IllegalArgumentException();
+        if (forename.isBlank()) throw new IllegalArgumentException();
+    }
+}
+```
