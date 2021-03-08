@@ -1090,3 +1090,21 @@ double daysPerMonth = switch (month) {
     case FEBRUARY -> 28.2425;
 }
 ```
+
+# Java 15
+
+## Text Blocks
+
+```
+String js = "setTimeout(function () {\n" +
+            "    console.log(\"Hello JavaScript!\");\n" +
+            "}, 1000);\n";
+```
+
+```
+String js = """
+            setTimeout(function () {
+                console.log("Hello JavaScript!");
+            }, 1000);
+            """;
+```
