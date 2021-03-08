@@ -1051,3 +1051,42 @@ Some modules were removed from Java 11:
 * JavaFX
 * Java EE
 * CORBA
+
+# Java 14
+
+## `switch` expressions
+
+```java
+double daysPerMonth = 0;
+switch (month) {
+    case JANUARY:
+    case MARCH:
+    case MAY:
+    case JULY:
+    case AUGUST:
+    case OCTOBER:
+    case DECEMBER:
+        daysPerMonth = 31;
+        break;
+
+    case APRIL:
+    case JUNE:
+    case SEPTEMBER:
+    case NOVEMBER:
+        daysPerMonth = 30;
+        break;
+
+    case FEBRUARY:
+        daysPerMonth = 28.2425;
+}
+```
+
+```java
+double daysPerMonth = switch (month) {
+    case JANUARY, MARCH, MAY, JULY, AUGUST, OCTOBER, DECEMBER -> 31;
+
+    case APRIL, JUNE, SEPTEMBER, NOVEMBER -> 30;
+
+    case FEBRUARY -> 28.2425;
+}
+```
