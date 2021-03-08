@@ -1030,21 +1030,20 @@ names.filter((Predicate<String>)((String name) -> name.isEmpty()))
 
 ### Distributions
 
-Since Java 11, all JDK distributions are based 100% on the OpenJDK source code available at http://hg.openjdk.java.net
+Since Java 11, all JDK distributions are based 100% on the OpenJDK source code available at https://github.com/openjdk/jdk
 
-| Distribution    | Cost  | Updates                     | Download                                                            |
-| --------------- | ----  | --------------------------- | ------------------------------------------------------------------- |
-| OpenJDK         | free  | 6 months                    | https://jdk.java.net/11                                             |
-| OracleJDK       | money | 3 years (LTS) / 6 months    | https://www.oracle.com/technetwork/java/javase/downloads/index.html |
-| AdoptOpenJDK    | free  | longer support than OpenJDK | https://adoptopenjdk.net                                            |
-| Azul Zulu       | both  | 8-10 years paid LTS support | https://www.azul.com/downloads/zulu                                 |
-| Amazon Corretto | free  | long term support           | https://aws.amazon.com/de/corretto                                  |
+- https://adoptopenjdk.net
+- https://www.azul.com/downloads/zulu
+- https://aws.amazon.com/de/corretto
+- https://developers.redhat.com/products/openjdk/download (requires registration)
+- https://jdk.java.net/16 (only the current Java version receives updates)
+- https://www.oracle.com/java/technologies/javase-downloads.html (costs money)
 
 ### Java Runtime Environment
 
 The JRE is a thing of the past:
 * Either install the JDK on clients
-* Or ship a self-contained, minimal image prepared with jlink
+* Or ship a self-contained, minimal image prepared with `jlink`
 
 ### Removed modules
 
@@ -1052,5 +1051,3 @@ Some modules were removed from Java 11:
 * JavaFX
 * Java EE
 * CORBA
-
-> **Discuss:** How are we going to handle the new release cadence in our own projects?
