@@ -2,41 +2,17 @@
 
 ![](img/gosling.jpg)
 
-## James Gosling: [The Feel of Java](https://www.win.tue.nl/~evink/education/avp/pdf/feel-of-java.pdf) (June 1997)
-
-- Blue Collar Language
-  - Distributed objects on the web
-  - Thin clients
-  - Architecture neutral
-- Java Virtual Machine
-  - Compile-time checking
-  - Garbage collection
-  - Pointer restrictions
-  - Exception handling
-- Object-oriented extensibility
-  - Dynamic linking
-- Performance
-
-> Java evolved out of a Sun research project started six years ago to look into distributed control of **consumer electronics devices**.
-> It was not an academic research project studying programming languages: Doing language research was actively an antigoal.
-
-> In the consumer electronics business, there are **dozens of different CPU types** and good reasons for all of them in their individual contexts.
-> But developing software for a dozen different platforms just doesn't scale, and it was this desire for architecture neutrality that broke the C++ mold — not so much C++ the language, but the standard way people built C++ compilers. 
-
-> We use a very old technique where the compiler generates some **bytecoded instructions for this abstract virtual machine** that's based largely on work from Smalltalk and Pascal-P machines.
-> I put a lot of effort into making it very easy to interpret and verify byte-code before it was compiled into machine code, using both an interpreter and a machine code generator to make sure that generating machine code was pretty straightforward.
-
 ## Type system
 
 > There are **two kinds of types** in the Java programming language:
 > - primitive types
 > - reference types
 >
-> There are, correspondingly, **two kinds of data values**
+> There are, correspondingly, **two kinds of data values**:
 > - primitive values
 > - reference values
 >
-> that can be
+> that can be:
 > - stored in variables,
 > - passed as arguments,
 > - returned by methods,
@@ -68,21 +44,21 @@ class Box {
 }
 
 class Pass {
+    public static void main(String[] args) {
+        Box a = new Box();
+        pass(a);
+        System.out.println(a.content); // What does this print?
+    }
+
     static void pass(Box x) {
         x.content = 1;
         x = new Box();
         x.content = 2;
     }
-
-    public static void main(String[] args) {
-        Box a = new Box();
-        pass(a);
-        System.out.println(a.content);
-    }
 }
 ```
 
-What does the above program print?
+What does the program print?
 - 0
 - 1
 - 2
@@ -94,6 +70,12 @@ class Box {
 }
 
 class Pass {
+    public static void main(String[] args) {
+        Box a = new Box();
+        pass(a);
+        System.out.println(a.content); // 1
+    }
+
     static void pass(Box x) {
 /*
         /---\
@@ -139,12 +121,6 @@ class Pass {
         +---+    +---+
 */
     }
-
-    public static void main(String[] args) {
-        Box a = new Box();
-        pass(a);
-        System.out.println(a.content); // 1
-    }
 }
 ```
 
@@ -165,7 +141,7 @@ class Pass {
 | Uninitialized | ✔️ | ❌ | 
 | Rebindable    | ✔️ | ❌ |
 | Purpose       | Reference semantics             | Pass by reference         |
-| Meaning       | `T v` actually is<br>`T* v` into heap | Parameter and argument<br>are the same variable |
+| Meaning       | `T v` &nbsp; is actually<br>`T* v` &nbsp; to object | Parameter and argument<br>are the same variable |
 
 ## Bytecode
 
@@ -175,7 +151,8 @@ public class Pythagoras {
                                   double x2, double y2) {
         double dx = x1 - x2;
         double dy = y1 - y2;
-        return Math.sqrt(dx * dx + dy * dy);
+        double square = dx * dx + dy * dy;
+        return Math.sqrt(square);
     }
 }
 ```
@@ -198,14 +175,17 @@ public class Pythagoras {
 
   public static double distance(double, double, double, double);
     Code:
+                            // double dx = x1 - x2;
        0: dload_0
        1: dload         4
        3: dsub
        4: dstore        8
+                            // double dy = y1 - y2;
        6: dload_2
        7: dload         6
        9: dsub
       10: dstore        10
+                            // double square = dx * dx + dy * dy;
       12: dload         8
       14: dload         8
       16: dmul
@@ -213,9 +193,11 @@ public class Pythagoras {
       19: dload         10
       21: dmul
       22: dadd
-      23: invokestatic  #7  // Method java/lang/Math.sqrt:(D)D
-      26: dreturn
-}
+      23: dstore        12
+                            // return Math.sqrt(square);
+      25: dload         12
+      27: invokestatic  #7
+      30: dreturn
 ```
 
 ## Case study: GUI code
@@ -270,10 +252,6 @@ class ButtonUpdater implements ActionListener {
   - `ButtonUpdater.class`
 
 ### Java 1.1 (1997)
-
-> Closures were left out of Java initially more because of time pressures than anything else. Closures, as a concept, are tried and true – well past the days of being PhD topics. The arguments are in the details, not the broad concepts.
->
-> In the early days of Java the **lack of closures** was pretty painful, and so **inner classes** were born: an uncomfortable compromise that attempted to avoid a number of hard issues. But as is normal in so many design issues, the simplifications didn't really solve any problems, they just moved them. We should have gone all the way back then. [James Gosling, 2008]
 
 ```java
 public class GUI {
@@ -421,29 +399,25 @@ public static List<String> adultDomains(List<Person> persons) {
 
 ```java
 public static List<String> adultDomains(List<Person> persons) {
-                  // source:
+                // source:
     return persons.stream()
-                  // intermediate operations:
+                // intermediate operations:
                   .filter(person -> person.isAdult())
                   .map(person -> person.getEmail().getDomain())
                   .sorted()
                   .distinct()
-                  // terminal operation:
+                // terminal operation:
                   .collect(Collectors.toList());
 }
 ```
 
-Compressed overview of `Stream<T>` Javadoc:
-
-> - A sequence of elements supporting sequential and parallel aggregate operations.
-> - In addition to Stream, which is a stream of object references, there are **primitive specializations** for `IntStream`, `LongStream`, and `DoubleStream`.
-> - To perform a computation, stream operations are composed into a **stream pipeline**. A stream pipeline consists of
->   - a **source**,
->   - zero or more **intermediate operations** (which transform a stream into another stream),
->   - and a **terminal operation** (which produces a result or side-effect).
-> - Streams are **lazy**; computation on the source data is only performed when the terminal operation is initiated, and source elements are consumed only as needed.
-> - A stream should be operated on **only once**. This rules out multiple traversals of the same stream.
-> - Streams have a `close()` method and implement `AutoCloseable`. Generally, only streams whose source is an IO channel will require closing.
+> - A **stream pipeline** consists of:
+>   - a **source**
+>   - zero or more **intermediate operations** (which transform a stream into another stream)
+>   - a **terminal operation** (which produces a result or side-effect)
+> - Streams are **lazy**:
+>   - computation on the source data is only performed when the terminal operation is initiated
+>   - source elements are consumed only as needed
 
 ```java
 public interface Stream<T> {
@@ -514,76 +488,17 @@ public interface Stream<T> {
 
 The package `java.util.function` contains 43 functional interfaces:
 
-- Suppliers
-  - `Supplier<T>`
-  - `BooleanSupplier`
-  - `IntSupplier`
-  - `LongSupplier`
-  - `DoubleSupplier`
-- Consumers
-  - `Consumer<T>`
-  - `IntConsumer`
-  - `LongConsumer`
-  - `DoubleConsumer`
-- BiConsumers
-  - `BiConsumer<T, U>`
-  - `ObjIntConsumer<T>`
-  - `ObjLongConsumer<T>`
-  - `ObjDoubleConsumer<T>`
-- UnaryOperators
-  - `UnaryOperator<T>`
-  - `IntUnaryOperator`
-  - `LongUnaryOperator`
-  - `DoubleUnaryOperator`
-- BinaryOperators
-  - `BinaryOperator<T>`
-  - `IntBinaryOperator`
-  - `LongBinaryOperator`
-  - `DoubleBinaryOperator`
-- Functions
-  - `Function<T, R>`
-  - `ToIntFunction<T>`
-  - `ToLongFunction<T>`
-  - `ToDoubleFunction<T>`
-  - `IntFunction<R>`
-  - `IntToLongFunction`
-  - `IntToDoubleFunction`
-  - `LongFunction<R>`
-  - `LongToIntFunction`
-  - `LongToDoubleFunction`
-  - `DoubleFunction<R>`
-  - `DoubleToIntFunction`
-  - `DoubleToLongFunction`
-- BiFunctions
-  - `BiFunction<T, U, R>`
-  - `ToIntBiFunction<T, U>`
-  - `ToLongBiFunction<T, U>`
-  - `ToDoubleBiFunction<T, U>`
-- Predicates
-  - `Predicate<T>`
-  - `IntPredicate`
-  - `LongPredicate`
-  - `DoublePredicate`
-  - `BiPredicate<T, U>`
-
-Stream sources are not limited to collections:
-
-```java
-public static long countVowels1(String s) {
-    return s.chars()
-            .filter(ch -> "AEIOUaeiou".indexOf(ch) != -1)
-            .count();
-}
-
-
-private static Pattern VOWELS = Pattern.compile("[aeiou]", Pattern.CASE_INSENSITIVE);
-
-public static long countVowels2(String s) {
-    return VOWELS.matcher(s)
-                 .results()
-                 .count();
-}
-```
+| `Object` | `int` | `long` | `double` |
+| -------- | ----- | ------ | -------- |
+| `Supplier<T>` | `IntSupplier` | `LongSupplier` | `DoubleSupplier` |
+| `Consumer<T>` | `IntConsumer` | `LongConsumer` | `DoubleConsumer` |
+| `BiConsumer<T, U>` | `ObjIntConsumer<T>` | `ObjLongConsumer<T>` | `ObjDoubleConsumer<T>` |
+| `UnaryOperator<T>` | `IntUnaryOperator` | `LongUnaryOperator` | `DoubleUnaryOperator` |
+| `BinaryOperator<T>` | `IntBinaryOperator` | `LongBinaryOperator` | `DoubleBinaryOperator` |
+| `Function<T, R>` | ... | ... | ... |
+| `BiFunction<T, U, R>` | `ToIntBiFunction<T, U>` | `ToLongBiFunction<T, U>` | `ToDoubleBiFunction<T, U>` |
+| `Predicate<T>` | `IntPredicate` | `LongPredicate` | `DoublePredicate` |
+| `BiPredicate<T, U>` | | | |
 
 Simple lambdas can often be replaced with method references:
 
@@ -618,34 +533,14 @@ public static Map<String, List<Email>> emailsByDomain(List<Person> persons) {
 > | Class Constructor | `TreeMap<K, V>::new`     | `() -> new TreeMap<K, V>()`     |
 > | Array Constructor | `int[]::new`             | `len -> new int[len]`           |
 
-**In vivo:** [pangit](https://github.com/fredoverflow/pangit/blob/master/src/main/java/GitBlob.java#L32)
-```java
-public static Stream<GitBlob> findGitBlobs(Path root, Consumer<GitBlob> gitBlobConsumer) throws IOException {
-    return Files.walk(root)
-                .filter(GitBlob::isGitObject)
-                .map(GitBlob::gitBlobOrNull)
-                .filter(Objects::nonNull)
-                .peek(gitBlobConsumer)
-                .sorted();
-}
-```
-
 ## Case study: Nullable references
 
 ![](img/hoare.jpg)
 
-> **Tony Hoare:** I call it my billion-dollar mistake.
+> **Tony Hoare:** I call it my billion-dollar mistake.  
 > It was the invention of the null reference in 1965.
-> At that time, I was designing the first comprehensive type system for references in an object oriented language (ALGOL W).
-> My goal was to ensure that all use of references should be absolutely safe, with checking performed automatically by the compiler.
-> But I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement.
-> This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
 
 ### Java 7
-
-Language lawyer: "Every reference type is a supertype of the null type."
-
-Java programmer: "Every reference can be null."
 
 ```java
 public Person findFirstPersonWithAge(int age);
@@ -726,7 +621,6 @@ String name = party.findFirstPersonWithAge(42)
 Compressed overview of `Optional<T>` Javadoc:
 
 > - A container object which may or may not contain a non-null value.
-> - This is a **value-based class**; use of identity-sensitive operations (including reference equality (==), identity hash code, or synchronization on instances of Optional may have unpredictable results and should be avoided.
 > - Optional is primarily intended for use as a **method return type** where there is a clear need to represent "no result," and where using null is likely to cause errors.
 > - A variable whose type is Optional should **never itself be null**; it should always point to an Optional instance.
 
@@ -994,59 +888,6 @@ public enum Month {
     - `class JumboEnumSet`
       - `private long elements[];`
   - `public class EnumMap<K extends Enum<K>, V>`
-  
-**In vivo:** [pangit](https://github.com/fredoverflow/pangit/blob/master/src/main/java/CharacterEncoding.java)
-```java
-public enum CharacterEncoding {
-    UTF16BigEndian {
-        @Override
-        public String decode(byte[] bytes, int start) {
-            start += 2;
-            return new String(bytes, start, bytes.length - start, StandardCharsets.UTF_16BE);
-        }
-    }, UTF16LittleEndian {
-        @Override
-        public String decode(byte[] bytes, int start) {
-            start += 2;
-            return new String(bytes, start, bytes.length - start, StandardCharsets.UTF_16LE);
-        }
-    }, UTF8 {
-        @Override
-        public String decode(byte[] bytes, int start) {
-            // https://en.wikipedia.org/wiki/Byte_order_mark#UTF-8
-            if (start + 2 < bytes.length &&
-                    bytes[start]     == (byte) 0xEF &&
-                    bytes[start + 1] == (byte) 0xBB &&
-                    bytes[start + 2] == (byte) 0xBF) {
-                start += 3;
-            }
-            return new String(bytes, start, bytes.length - start, StandardCharsets.UTF_8);
-        }
-    }, LATIN1 {
-        @Override
-        public String decode(byte[] bytes, int start) {
-            return new String(bytes, start, bytes.length - start, StandardCharsets.ISO_8859_1);
-        }
-    }, BINARY {
-        @Override
-        public String decode(byte[] bytes, int start) {
-            final int limit = HEXDUMP_LIMIT + start;
-            if (bytes.length > limit) {
-                bytes = Arrays.copyOf(bytes, limit);
-            }
-            return Hexdump.hexdump(bytes, start);
-        }
-    };
-
-    public static final int HEXDUMP_LIMIT = 1024;
-
-    public abstract String decode(byte[] bytes, int start);
-
-    // ...
-}
-```
-
-- Enumeration constants can subclass their containing class!
 
 ## Resource management
 
@@ -1148,15 +989,6 @@ try (Connection connection = dataSource.getConnection();
 }
 ```
 
-**In vivo:** [pangit](https://github.com/fredoverflow/pangit/blob/master/src/main/java/BackgroundScanner.java#L28)
-```java
-protected List<GitBlob> doInBackground() throws Exception {
-    try (Stream<GitBlob> gitBlobs = GitBlob.findGitBlobs(selectedDirectory.toPath(), this::publish)) {
-        return gitBlobs.collect(Collectors.toList());
-    }
-}
-```
-
 ## LoggerFactory.getLogger
 
 ### Java 6
@@ -1181,7 +1013,7 @@ public class Baz {
 }
 ```
 
-- Do you see the problem?
+Do you see the problem?
 
 ### Java 7
 
@@ -1204,17 +1036,6 @@ public class Baz {
     // ...
 }
 ```
-
-- No *actual* method handles in the above example
-
-> A method handle is a typed, directly executable reference to an underlying method,
-> constructor, field, or similar low-level operation,
-> with optional transformations of arguments or return values.
->
-> Method handles are dynamically and strongly typed according to their parameter and return types.
-
-- Mostly interesting for dynamic JVM language implementers
-  - [MethodHandles Everywhere!](https://www.youtube.com/watch?v=NGnuIAd0VHY)
 
 > **Exercise:** Search for `LoggerFactory.getLogger` in your project:
 > - How many `Wrong.class` bugs exist?
@@ -1347,33 +1168,8 @@ public @interface FunctionalInterface {
 
 - You may have noted the empty bodies `{}`
 - Annotations are merely metadata on declarations
-- Without interpretation, annotations are meaningless markers:
-
-```java
-import java.lang.annotation.*;
-
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface TreeFalls {
-}
-
-@TreeFalls
-class Wood {
-}
-```
-
+- Without interpretation, annotations are meaningless markers
 - Spring defines and interprets lots of runtime annotations
-
-**In vivo:** [spritze](https://github.com/frectures/spritze/blob/master/src/main/java/spritze/Main.java#L29)
-```java
-for (Class<?> clazz : scanClassPath()) {
-    for (Annotation annotation : clazz.getAnnotations()) {
-        if (annotation.annotationType() == Komponente.class) {
-            // ...
-        }
-    }
-}
-```
 
 # Java 9
 
@@ -1386,39 +1182,27 @@ C:\Users\fred> jshell
 |  For an introduction type: /help intro
 
 
-jshell> int i = 1
-i ==> 1
+jshell> int i = 42
+i ==> 42
 
-jshell> int j = 2
-j ==> 2
-
-jshell> i + j
-$3 ==> 3
+jshell> i + 1
+$2 ==> 43
 
 jshell> i
-i ==> 1
-
-jshell> j
-j ==> 2
+i ==> 42
 
 
-jshell> String s = "hello "
-s ==> "hello "
+jshell> String s = "weizen"
+s ==> "weizen"
 
-jshell> String t = "world!"
-t ==> "world!"
+jshell> s + "bier"
+$5 ==> "weizenbier"
 
-jshell> s + t
-$8 ==> "hello world!"
-
-jshell> s.concat(t)
-$9 ==> "hello world!"
+jshell> s.concat("korn")
+$6 ==> "weizenkorn"
 
 jshell> s
-s ==> "hello "
-
-jshell> t
-t ==> "world!"
+s ==> "weizen"
 
 
 jshell> import java.time.*

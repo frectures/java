@@ -5,6 +5,7 @@ public class Pythagoras {
                                   double x2, double y2) {
         double dx = x1 - x2;
         double dy = y1 - y2;
-        return Math.sqrt(dx * dx + dy * dy);
+        double square = dx * dx + dy * dy;
+        return Math.sqrt(square);
     }
 }
