@@ -795,24 +795,28 @@ ZonedDateTime sundayAtNine = saturday.plusDays(1);
 
 ```java
 public final class Month {
-    private final int ordinal;
     private final String name;
+    private final int ordinal;
 
     private final double days;
 
-    public Month(int ordinal, String name, double days) {
-        this.ordinal = ordinal;
+    public Month(String name, int ordinal, double days) {
         this.name = name;
+        this.ordinal = ordinal;
 
         this.days = days;
+    }
+
+    public String name() {
+        return name;
     }
 
     public int ordinal() {
         return ordinal;
     }
 
-    public String name() {
-        return name;
+    public double days() {
+        return days;
     }
 
     @Override
@@ -820,22 +824,18 @@ public final class Month {
         return name;
     }
 
-    public double days() {
-        return days;
-    }
-
-    public static final Month JAN = new Month(0, "JAN", 31);
-    public static final Month FEB = new Month(1, "FEB", 28.2425);
-    public static final Month MAR = new Month(2, "MAR", 31);
-    public static final Month APR = new Month(3, "APR", 30);
-    public static final Month MAY = new Month(4, "MAY", 31);
-    public static final Month JUN = new Month(5, "JUN", 30);
-    public static final Month JUL = new Month(6, "JUL", 31);
-    public static final Month AUG = new Month(7, "AUG", 31);
-    public static final Month SEP = new Month(8, "SEP", 30);
-    public static final Month OCT = new Month(9, "OCT", 31);
-    public static final Month NOV = new Month(10, "NOV", 30);
-    public static final Month DEC = new Month(11, "DEC", 31);
+    public static final Month JAN = new Month("JAN",  0, 31);
+    public static final Month FEB = new Month("FEB",  1, 28.2425);
+    public static final Month MAR = new Month("MAR",  2, 31);
+    public static final Month APR = new Month("APR",  3, 30);
+    public static final Month MAY = new Month("MAY",  4, 31);
+    public static final Month JUN = new Month("JUN",  5, 30);
+    public static final Month JUL = new Month("JUL",  6, 31);
+    public static final Month AUG = new Month("AUG",  7, 31);
+    public static final Month SEP = new Month("SEP",  8, 30);
+    public static final Month OCT = new Month("OCT",  9, 31);
+    public static final Month NOV = new Month("NOV", 10, 30);
+    public static final Month DEC = new Month("DEC", 11, 31);
 
     private static final Month[] values;
     private static final Map<String, Month> monthsByName;
@@ -857,37 +857,87 @@ public final class Month {
         if (month == null) throw new IllegalArgumentException(name);
         return month;
     }
+
+    public double days_alternative() {
+        switch (this.ordinal + 1) {
+            case 2:
+                return 28.2425;
+
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+
+            default:
+                return 31;
+        }
+    }
+
+    public Month plus(int months) {
+        return Month.values[(this.ordinal + 1200000000 + months) % 12];
+    }
 }
 ```
 
 ### Java 5
 
 ```java
-public enum Month {
-    JAN(31), FEB(28.2425), MAR(31), APR(30), MAY(31), JUN(30), JUL(31), AUG(31), SEP(30), OCT(31), NOV(30), DEC(31);
+public enum Month /* extends java.lang.Enum<Month> */ {
+    JAN(31),      // public static final Month JAN = new Month("JAN",  0, 31);
+    FEB(28.2425), // public static final Month FEB = new Month("FEB",  1, 28.2425);
+    MAR(31),      // public static final Month MAR = new Month("MAR",  2, 31);
+    APR(30),      // public static final Month APR = new Month("APR",  3, 30);
+    MAY(31),      // public static final Month MAY = new Month("MAY",  4, 31);
+    JUN(30),      // public static final Month JUN = new Month("JUN",  5, 30);
+    JUL(31),      // public static final Month JUL = new Month("JUL",  6, 31);
+    AUG(31),      // public static final Month AUG = new Month("AUG",  7, 31);
+    SEP(30),      // public static final Month SEP = new Month("SEP",  8, 30);
+    OCT(31),      // public static final Month OCT = new Month("OCT",  9, 31);
+    NOV(30),      // public static final Month NOV = new Month("NOV", 10, 30);
+    DEC(31);      // public static final Month DEC = new Month("DEC", 11, 31);
 
-    private final double days;
-
-    Month(double days) {
+    /*private*/ Month(/* String name, int ordinal, */ double days) {
+        /* super(name, ordinal); */
         this.days = days;
     }
+
+    private final double days;
 
     public double days() {
         return days;
     }
+
+    public double days_alternative() {
+        switch (this) {
+            case FEB:
+                return 28.2425;
+
+            case APR:
+            case JUN:
+            case SEP:
+            case NOV:
+                return 30;
+
+            default:
+                return 31;
+        }
+    }
+
+    public Month plus(int months) {
+        return Month.values()[(super.ordinal() + months + 1200000000) % 12];
+    }
 }
 ```
 
-- `Month` implicitly inherits from `java.lang.Enum<Month>`
-  - `public abstract class Enum<E extends Enum<E>>`
-  - https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
-- Optimized collections using `ordinal()`:
-  - `public abstract class EnumSet<E extends Enum<E>>`
-    - `class RegularEnumSet`
-      - `private long elements;`
-    - `class JumboEnumSet`
-      - `private long elements[];`
-  - `public class EnumMap<K extends Enum<K>, V>`
+Optimized collections using `ordinal()`:
+
+- `public abstract class EnumSet<E extends Enum<E>>`
+  - `class RegularEnumSet`
+    - `private long elements;`
+  - `class JumboEnumSet`
+    - `private long elements[];`
+- `public class EnumMap<K extends Enum<K>, V>`
 
 ## Resource management
 
@@ -1181,40 +1231,14 @@ C:\Users\fred> jshell
 |  Welcome to JShell -- Version 17
 |  For an introduction type: /help intro
 
-
-jshell> int i = 42
-i ==> 42
-
-jshell> i + 1
-$2 ==> 43
-
-jshell> i
-i ==> 42
-
-
 jshell> String s = "weizen"
 s ==> "weizen"
 
-jshell> s + "bier"
-$5 ==> "weizenbier"
-
-jshell> s.concat("korn")
-$6 ==> "weizenkorn"
+jshell> s.concat("bier")
+$2 ==> "weizenbier"
 
 jshell> s
 s ==> "weizen"
-
-
-jshell> import java.time.*
-
-jshell> LocalDate weihnachten = LocalDate.of(2023, Month.DECEMBER, 24)
-weihnachten ==> 2023-12-24
-
-jshell> LocalDate silvester = weihnachten.plusDays(7)
-silvester ==> 2023-12-31
-
-jshell> weihnachten
-weihnachten ==> 2023-12-24
 ```
 
 ## Collection 'literals'
@@ -1477,7 +1501,7 @@ public class Gebiet {
     private final String ort;
 
     public Gebiet(int plz, String ort) {
-        // TODO validate constructor parameters
+        Contract.checkRange(0, plz, 100_000, "plz");
         this.plz = plz;
         this.ort = ort;
     }
@@ -1510,7 +1534,7 @@ public class Gebiet {
 ```java
 public record Gebiet(int plz, String ort) {
     Gebiet {
-        // TODO validate constructor parameters
+        Contract.checkRange(0, plz, 100_000, "plz");
     }
 }
 ```
