@@ -80,6 +80,49 @@ jshell> t
 </tr>
 </table>
 
+## Funktionale Sammlungen ([Clojure](https://clojure.org/reference/data_structures), [Scala](https://docs.scala-lang.org/overviews/collections-2.13/overview.html), [Kotlinx](https://github.com/Kotlin/kotlinx.collections.immutable#persistent-collection-interfaces), [Vavr](https://docs.vavr.io/#_persistent_data_structures), [Immutable.js](https://github.com/immutable-js/immutable-js)...)
+
+<table>
+<tr>
+<th>PersistentVector</th>
+<th>PersistentHashMap</th>
+</tr>
+<tr>
+<td>
+
+```
+jshell> import clojure.lang.*
+
+jshell> var v = PersistentVector.create("hello")
+      ["hello"]
+
+jshell> v.cons("world")
+      ["hello" "world"]
+
+jshell> v
+      ["hello"]
+```
+
+</td>
+<td>
+
+```
+jshell> import clojure.lang.*
+
+jshell> var m = PersistentHashMap.create("Java", "James Gosling")
+      {"Java" "James Gosling"}
+
+jshell> m.assoc("Clojure", "Rich Hickey")
+      {"Clojure" "Rich Hickey", "Java" "James Gosling"}
+
+jshell> m
+      {"Java" "James Gosling"}
+```
+
+</td>
+</tr>
+</table>
+
 ## In einem Parallel-Universum ohne Value Objects...
 
 ```java
