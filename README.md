@@ -1441,6 +1441,27 @@ names.filter((Predicate<String>)((String name) -> name.isEmpty()))
 | https://www.oracle.com/java/technologies/downloads       | free of charge since Java 17   |
 | https://jdk.java.net                                     | only current & early access    |
 
+## java.net.http
+
+```java
+public static String download(String url) throws IOException, InterruptedException {
+    var client = HttpClient.newBuilder().build();
+
+    var request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .GET()
+            .build();
+                                                              // .ofByteArray()
+    var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                                                              // .ofLines()
+    if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+        return response.body();
+    } else {
+        throw new IOException("HTTP status code " + response.statusCode());
+    }
+}
+```
+
 # Java 14
 
 ## [JEP 361: Switch Expressions](https://openjdk.org/jeps/361)
