@@ -1577,6 +1577,14 @@ public record Gebiet(int plz, String ort) {
 
 # Preview
 
+## [JEP 445: Unnamed Classes and Instance Main Methods](https://openjdk.org/jeps/445)
+
+```java
+void main() {
+    System.out.println("Hello, World!");
+}
+```
+
 ## [JEP draft: Value Objects](https://openjdk.org/jeps/8277163)
 
 > Enhance the Java object model with value objects;
