@@ -1424,15 +1424,22 @@ names.filter((Predicate<String>)((String name) -> name.isEmpty()))
 
 ## Distributions
 
-All JDK distributions are based 100% on the OpenJDK source code available at https://github.com/openjdk/jdk
+- In 2019, Oracle started charging money for their OracleJDK distribution
+- This led to an explosion of competing distributions (and lots of confusion)
+- All distributions are built from the same source code https://github.com/openjdk/jdk
 
-- https://adoptium.net (recommended default)
-- https://www.azul.com/downloads (optionally with JavaFX)
-- https://bell-sw.com/pages/downloads (optionally with JavaFX)
-- https://aws.amazon.com/de/corretto
-- https://developers.redhat.com/products/openjdk/download (requires registration)
-- https://www.oracle.com/java/technologies/downloads
-- https://jdk.java.net (only current & early access)
+| Distribution                                             | Notes                          |
+| -------------------------------------------------------- | ------------------------------ |
+| https://adoptium.net                                     | formerly known as AdoptOpenJDK |
+| https://aws.amazon.com/corretto                          |                                |
+| https://www.azul.com/downloads                           | optionally with JavaFX         |
+| https://bell-sw.com/pages/downloads                      | optionally with JavaFX         |
+| https://developer.ibm.com/languages/java/semeru-runtimes |                                |
+| https://www.microsoft.com/openjdk                        |                                |
+| https://developers.redhat.com/products/openjdk/download  | requires registration          |
+| https://sap.github.io/SapMachine                         |                                |
+| https://www.oracle.com/java/technologies/downloads       | free of charge since Java 17   |
+| https://jdk.java.net                                     | only current & early access    |
 
 # Java 14
 
