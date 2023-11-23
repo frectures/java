@@ -875,7 +875,7 @@ public final class Month {
     }
 
     public Month plus(int months) {
-        return Month.values[(this.ordinal + 1200000000 + months) % 12];
+        return Month.values()[Math.floorMod(super.ordinal() + months, 12)];
     }
 }
 ```
@@ -925,7 +925,7 @@ public enum Month /* extends java.lang.Enum<Month> */ {
     }
 
     public Month plus(int months) {
-        return Month.values()[(super.ordinal() + months + 1200000000) % 12];
+        return Month.values()[Math.floorMod(super.ordinal() + months, 12)];
     }
 }
 ```
@@ -1498,7 +1498,7 @@ double daysPerMonth = switch (month) {
     case APRIL, JUNE, SEPTEMBER, NOVEMBER -> 30;
 
     case FEBRUARY -> 28.2425;
-}
+};
 ```
 
 # Java 15
@@ -1529,7 +1529,7 @@ public class Gebiet {
     private final String ort;
 
     public Gebiet(int plz, String ort) {
-        Contract.checkRange(0, plz, 100_000, "plz");
+        Contract.checkBetween(0, plz, 99_999, "plz");
         this.plz = plz;
         this.ort = ort;
     }
@@ -1561,8 +1561,8 @@ public class Gebiet {
 
 ```java
 public record Gebiet(int plz, String ort) {
-    Gebiet {
-        Contract.checkRange(0, plz, 100_000, "plz");
+    public Gebiet {
+        Contract.checkBetween(0, plz, 99_999, "plz");
     }
 }
 ```
@@ -1585,7 +1585,7 @@ void main() {
 }
 ```
 
-## [JEP draft: Value Objects](https://openjdk.org/jeps/8277163)
+## [JEP 401: Value Classes and Objects (Preview)](https://openjdk.org/jeps/401)
 
 > Enhance the Java object model with value objects;
 > class instances that

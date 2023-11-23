@@ -25,7 +25,7 @@ public enum Month0 /* extends java.lang.Enum<Month0> */ {
     }
 
     public Month0 plus(int months) {
-        return Month0.values()[(super.ordinal() + months + 1200000000) % 12];
+        return Month0.values()[Math.floorMod(super.ordinal() + months, 12)];
     }
 
 
