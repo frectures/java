@@ -112,6 +112,6 @@ git commit -am "fix bug #456"
       - `IllegalArgumentException`
       - `IllegalStateException`
   - `Error` (insbesondere VM-Erschöpfung)
-    - `VirtalMachineError`
+    - `VirtualMachineError`
       - `StackOverflowError`
       - `OutOfMemoryError`
