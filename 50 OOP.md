@@ -253,9 +253,8 @@ public class String {
   - Standard ist alle 10 Reihen einen Tick schneller
 - Vermisst du weitere Features?
   - Dann schreibe (formlose) Tickets dafür!
-- Die 5 Zustandsfelder `letterSupplier`, `letter`, `rotation`, `shape` und `position` gehören logisch zusammen
-  - Wahrscheinlich ist es sinnvoll, diese 5 Zustandsfelder eine eigene Klasse `Piece` auszulagern
-  - Welcher Code kann in die neue Klasse `Piece` mitwandern, damit sie nicht bloß ein Datensack ist?
+- Die 4 Zustandsfelder `letterSupplier`, `letter`, `rotation` und `shape` gehören logisch zusammen
+  - Wahrscheinlich ist es sinnvoll, diese 4 Zustandsfelder eine eigene Klasse `Shape` auszulagern
 - Die scheinbar kleine Klasse `FairLetterSupplier` ist mit 81 kb die größte der gesamten Schulung!
   - Woran liegt das?
   - 🏆 Kannst du das im Klassenkommentar dokumentierte Verhalten auch platzsparender realisieren?
