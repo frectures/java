@@ -251,10 +251,9 @@ public class String {
 - Bisher fällt der aktuelle Stein 1x pro Sekunde (alle 30 Ticks)
   - Je mehr Reihen man insgesamt entfernt hat, desto schneller soll er fallen
   - Standard ist alle 10 Reihen einen Tick schneller
-- Vermisst du weitere Features?
-  - Dann schreibe (formlose) Tickets dafür!
-- Die 4 Zustandsfelder `letterSupplier`, `letter`, `rotation` und `shape` gehören logisch zusammen
-  - Wahrscheinlich ist es sinnvoll, diese 4 Zustandsfelder eine eigene Klasse `Shape` auszulagern
+- Verlängere den langen `I`-Stein um 25%
 - Die scheinbar kleine Klasse `FairLetterSupplier` ist mit 81 kb die größte der gesamten Schulung!
   - Woran liegt das?
   - 🏆 Kannst du das im Klassenkommentar dokumentierte Verhalten auch platzsparender realisieren?
+- Vermisst du weitere Features?
+  - Dann schreibe (formlose) Tickets dafür!
