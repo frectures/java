@@ -13,6 +13,7 @@
   - `enum C { ... }`
   - `record D { ... }`
   - ⚠️ `v = w` kopiert lediglich die Referenz, *nicht* das referenzierte Objekt!
+  - ⚠️ `a == b` vergleicht lediglich die Referenzen, *nicht* die referenzierten Objekte!
 
 ### Primitive Typen
 
