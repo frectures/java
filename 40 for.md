@@ -39,13 +39,12 @@ for (int i = 0; i < 10; ++i) {
 ### Ziffern
 
 > **Übung:**
-> - Beantworte folgende 15 Fragen:
+> - Beantworte folgende 12 Fragen:
 
 ```java
 public class Ziffern {
     public static void geradeZiffern() {
         // Was ist der ERSTE Wert von i im Schleifenrumpf?
-        // Was ist der ZWEITE Wert von i im Schleifenrumpf?
         // Was ist der LETZTE Wert von i im Schleifenrumpf?
         // WIE OFT wird der Schleifenrumpf betreten?
         // Welcher Wert bewirkt den ABBRUCH der Schleife?
@@ -56,7 +55,6 @@ public class Ziffern {
 
     public static void ungeradeZiffern() {
         // Was ist der ERSTE Wert von i im Schleifenrumpf?
-        // Was ist der ZWEITE Wert von i im Schleifenrumpf?
         // Was ist der LETZTE Wert von i im Schleifenrumpf?
         // WIE OFT wird der Schleifenrumpf betreten?
         // Welcher Wert bewirkt den ABBRUCH der Schleife?
@@ -67,7 +65,6 @@ public class Ziffern {
 
     public static void dreierZiffern() {
         // Was ist der ERSTE Wert von i im Schleifenrumpf?
-        // Was ist der ZWEITE Wert von i im Schleifenrumpf?
         // Was ist der LETZTE Wert von i im Schleifenrumpf?
         // WIE OFT wird der Schleifenrumpf betreten?
         // Welcher Wert bewirkt den ABBRUCH der Schleife?
@@ -160,14 +157,10 @@ public class TextAnalyse {
 >   - Anfänger schreiben häufig `int leertasten;` statt `int leertasten = 0;`
 >   - Was passiert dann?
 > - Implementiere `anzahlVokale`
->   - Erkennt deine Implementation Groß- und Kleinbuchstaben?
->   - ☕ `Character.toLowerCase(text.charAt(i))`
 > - Implementiere `vokalVielfalt`
->   - Extrahiere die duplizierte Vokal-Erkennung in eine separate Methode:
->   - `public static boolean istVokal(char zeichen)`
 > - Implementiere `istPalindrom`
->   - Kommt deine Implementation mit Emojis zurecht?
+> - 🏆 Kommt deine Implementation von `istPalindrom` mit Emojis zurecht?
 >   - Der Datentyp `char` ist nur 16 Bit breit
 >   - Seit Juli 1996 gibt es aber mehr als 2<sup>16</sup> Unicode-Zeichen
 >   - Deshalb brauchen neuere Unicode-Zeichen tendenziell 2 `char`s
->   - ☕ `int[] echteZeichen = text.codePoints().toArray();`
+>   - ☕ `Character.isSurrogate`

@@ -100,13 +100,15 @@ public class Echo {
 > **Übung:**
 > - Prüfe, ob IntelliJ IDEA bereits auf deinem Rechner installiert ist
 >   - Falls nicht, installiere IntelliJ IDEA von https://www.jetbrains.com/idea/download
->   - Für die Schulung ist die Community-Edition (runterscrollen) ausreichend
+>   - Für die Schulung ist die 👇Community-Edition👇 ausreichend
 > - Starte IntelliJ IDEA
-> - Main Menu/File/New/Project from Version Control
+> - Erster Start? **dann** Get from VCS, **sonst** Main Menu/File/New/Project from Version Control
 >   - URL: https://github.com/frectures/java.git
 >   - Clone
-> - Rechtsklick auf Main.java
->   - Run 'Main.main()'
+>   - dazu muss ggf. Git nachinstalliert werden
+> - Doppelklick auf `java/src/main/java/Main.java`
+>   - ggf. Warnhinweis bzgl. JDK-Konfiguration folgen
+>   - Klick auf das grüne Dreieck in Zeile 1
 > - Modifiziere das Programm, so dass Vorname und Nachname getrennt abgefragt werden
 > - Was passiert, wenn man die Klammern um `(alter + 1)` entfernt?
 

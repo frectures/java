@@ -59,5 +59,10 @@ public class Zahlenraten {
 > - Lasse den Benutzer beliebig oft raten
 > - Zähle die Rateversuche mit
 > - Ändere den Zahlenbereich auf 0 bis 100
+>   - Dann sollte der Computer immer verraten, ob seine eigene Zahl kleiner oder größer ist
 > - Bewerte die Anzahl Rateversuche am Ende
 > - Belehre den Nutzer bei unsinnigen Rateversuchen
+>   - Negative Zahlen
+>   - Zahlen größer als 100
+>   - selbe Zahl wie vorher
+>   - ...

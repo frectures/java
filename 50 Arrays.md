@@ -157,6 +157,12 @@ Aufsteigend sortiert:
 3. Stroustrup
 ```
 
+| String-Vergleich      | Relative Lage im Wörterbuch |
+| --------------------- | --------------------------- |
+| `s.compareTo(t) < 0`  | `s` kommt vor `t`           |
+| `s.compareTo(t) == 0` | `s` und `t` sind gleich     |
+| `s.compareTo(t) > 0`  | `s` kommt nach `t`          |
+
 > **Übung:**
 > - Falls die eingegebenen Namen bereits aufsteigend sortiert sind, sollen diese nicht erneut auf die Konsole geschrieben werden, sondern lediglich der Hinweis "Die Namen sind bereits aufsteigend sortiert."
 > - Lagere die Logik zum Erkennen der Sortierung in eine eigene Methode `public static boolean istSortiert(String[] namen)` aus
@@ -191,7 +197,8 @@ public class ZeichenHaeufigkeit {
 
 > **Übung:**
 > - Schreibe nur Häufigkeiten von Buchstaben auf die Konsole, die auch im Text vorkommen
-> - Ignoriere Groß- und Kleinschreibung im Text
+> - Ignoriere schon beim Zählen Groß- und Kleinschreibung im Text
+>   - ☕ `Character.toLowerCase`
 > - Lies einen zweiten Text ein und bestimme, ob dieser ein Anagramm des ersten Texts ist, z.B.
 >   1. New York Times
 >   2. Monkeys Write

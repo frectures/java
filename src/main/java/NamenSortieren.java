@@ -1,23 +1,18 @@
-import java.util.ArrayList;
-
 public class NamenSortieren {
     public static void main(String[] args) {
 
-        ArrayList<String> namen = new ArrayList<String>();
-        System.out.println("Bitte beliebig viele Namen eingeben,");
-        System.out.println("ein leerer Name beendet die Eingabe:");
+        String[] namen = new String[3];
+        System.out.println("Bitte 3 Namen eingeben:");
 
-        String name = Konsole.readString("> ");
-        while (!name.isBlank()) {
-            namen.add(name);
-            name = Konsole.readString("> ");
-        }
+        namen[0] = Konsole.readString("> ");
+        namen[1] = Konsole.readString("> ");
+        namen[2] = Konsole.readString("> ");
 
-        java.util.Collections.sort(namen);
+        java.util.Arrays.sort(namen);
         System.out.println("\nAufsteigend sortiert:");
 
-        for (int i = 0; i < namen.size(); i++) {
-            System.out.println(namen.get(i));
-        }
+        System.out.println(namen[0]);
+        System.out.println(namen[1]);
+        System.out.println(namen[2]);
     }
 }

@@ -1,7 +1,6 @@
 public class Ziffern {
     public static void geradeZiffern() {
         // Was ist der ERSTE Wert von i im Schleifenrumpf?
-        // Was ist der ZWEITE Wert von i im Schleifenrumpf?
         // Was ist der LETZTE Wert von i im Schleifenrumpf?
         // WIE OFT wird der Schleifenrumpf betreten?
         // Welcher Wert bewirkt den ABBRUCH der Schleife?
@@ -12,7 +11,6 @@ public class Ziffern {
 
     public static void ungeradeZiffern() {
         // Was ist der ERSTE Wert von i im Schleifenrumpf?
-        // Was ist der ZWEITE Wert von i im Schleifenrumpf?
         // Was ist der LETZTE Wert von i im Schleifenrumpf?
         // WIE OFT wird der Schleifenrumpf betreten?
         // Welcher Wert bewirkt den ABBRUCH der Schleife?
@@ -23,7 +21,6 @@ public class Ziffern {
 
     public static void dreierZiffern() {
         // Was ist der ERSTE Wert von i im Schleifenrumpf?
-        // Was ist der ZWEITE Wert von i im Schleifenrumpf?
         // Was ist der LETZTE Wert von i im Schleifenrumpf?
         // WIE OFT wird der Schleifenrumpf betreten?
         // Welcher Wert bewirkt den ABBRUCH der Schleife?

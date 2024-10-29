@@ -1,11 +1,7 @@
 public class Zahlenraten {
-    public static int zufallszahl(int von, int bis) {
-        int anzahl = bis - von + 1;
-        return (int) (Math.random() * anzahl) + von;
-    }
-
     public static void main(String[] args) {
-        int ausgedacht = zufallszahl(1, 10);
+
+        int ausgedacht = (int) (Math.random() * 10) + 1;
         System.out.println("Ich habe mir eine Zahl zwischen 1 und 10 ausgedacht.");
 
         int geraten = Konsole.readInt("Welche Zahl mag es wohl sein? ");
