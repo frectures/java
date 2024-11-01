@@ -162,7 +162,7 @@ HttpClient client = HttpClient.newBuilder().build();
 
 HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://...")).build();
 
-HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 int statusCode = response.statusCode();
 

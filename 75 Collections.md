@@ -322,7 +322,7 @@ public class StringSet {
     }
 ```
 
-- Nun verbraucht das Array allerdings 4,4 MB statt 0,26 MB...
+- Nun verbraucht das Array allerdings 8,8 MB statt 0,52 MB...
 - Wenn die meisten Einträge in einem `T[]` nie angefasst werden, ist `Map<Integer, T>` eine speichersparende Alternative:
 
 ```java
