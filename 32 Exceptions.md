@@ -154,7 +154,12 @@ public class MobyDick {
 > **Übung:**
 > - Falls die Datei `2701-0.txt` nicht existiert, soll sie *automatisch* heruntergeladen werden
 >   - Dabei können natürlich weitere Probleme auftreten, die sinnvoll behandelt werden sollen
->   - ⚠️ Speichern nach Herunterladen nicht vergessen: `Files.writeString`
+> - Die Datei soll aber nicht bei jedem Programmstart neu heruntergeladen werden!
+>   - `Files.writeString`
+> - Die Ausgabe `Anzahl Zeichen: ...` soll bei jedem Programmstart erscheinen
+>   - Egal, ob die Datei erst heruntergeladen werden muss oder nicht
+> - 🏆 Was passiert, wenn der Server zwar erreichbar ist, aber die Datei nicht existiert?
+>   - Das kann man durch einen falschen Dateinamen simulieren, z.B. `2701-9.txt`
 > - Vorlage für Http-Download in Java:
 
 ```java

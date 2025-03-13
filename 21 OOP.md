@@ -227,8 +227,9 @@ public class String {
   - Konstruktor(en)
   - Methode(n)
 - Wenn zwei Punkte sich sehr nahe kommen, werden sie ins Jenseits geschleudert
-  - Sorge dafür, dass `distanceSquared` einen sinnvollen Mindestwert nicht unterschreitet
-- Bisher haben alle Punkte dieselbe (implizite) Masse
+  - Physikalisch können sich die Körper-Mittelpunkte aber nicht näher kommen als `2`
+  - Sorge deshalb dafür, dass `distanceSquared` den Wert `4` nicht unterschreitet
+- Bisher haben alle Punkte dieselbe (implizite) Masse `5`
   - Ergänze die Klasse `Point` um 1 neues Zustandsfeld `mass`
   - Initialisiere `mass` im Konstruktor mit einem zufälligen Wert
   - Berücksichtige `mass` in der Methode `updateVelocity` bei der Berechnung der Anziehung
@@ -242,16 +243,22 @@ public class String {
   - Was funktioniert noch nicht?
 - Implementiere die Methode `rotate`
   - Beachte die Zustandsfelder `rotation` und `shape`
-- Implementiere die Methode `removeCompleteLines`
-  - Probiere ausführlich mit dem langen `I`-Stein
+  - Was passiert, wenn du einen vertikalen `I`-Stein am Rand drehst?
+- Implementiere die Methode `removeCompleteLines` in 3 Schritten:
+  1. Falls die unterste Zeile voll ist, überschreibe sie mit Nullen
+  2. Falls die unterste Zeile voll ist, kopiere die Zeilen darüber 1 Zeile nach unten
+  3. Führe Schritt 2 nicht nur für die unterste Zeile aus, sondern für *alle* Zeilen
 - Implementiere die Methode `insertPenaltyLines`
   - Strafzeilen werden ganz unten eingefügt
   - Die Strafzeilen haben in einer zufälligen Spalte eine Lücke
   - Verwende als Farbwert `9`
 - Bisher fällt der aktuelle Stein 1x pro Sekunde (alle 30 Ticks)
-  - Je mehr Reihen man insgesamt entfernt hat, desto schneller soll er fallen
-  - Standard ist alle 10 Reihen einen Tick schneller
+  - Für jede bisher entfernte Reihe soll der Stein 1 Tick schneller fallen
 - Verlängere den langen `I`-Stein um 25%
+- Angenommen, es werden erst `m` Strafzeilen geschickt und dann `n` Strafzeilen
+  - Alle `m` Strafzeilen sollen dieselbe (zufällige) Leer-Spalte haben
+  - Alle `n` Strafzeilen sollen dieselbe (zufällige) Leer-Spalte haben
+  - 🏆 Aber `m` und `n` sollen *niemals* gleich sein!
 - Die scheinbar kleine Klasse `FairLetterSupplier` ist mit 81 kb die größte der gesamten Schulung!
   - Woran liegt das?
   - 🏆 Kannst du das im Klassenkommentar dokumentierte Verhalten auch platzsparender realisieren?

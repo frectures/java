@@ -22,6 +22,8 @@
 ### List
 
 ```java
+import java.util.List;
+
 public class MobyDick {
     public static void main(String[] args) throws IOException {
         Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
@@ -88,7 +90,7 @@ public interface List<E> extends Collection<E> {
 - Das Programm schreibt auf die Konsole:
 
 ```
-Anzahl Zeilen: 22316
+Anzahl Zeilen: 21940
 Listen-Klasse: class java.util.ArrayList
 ```
 
@@ -108,8 +110,8 @@ Listen-Klasse: class java.util.ArrayList
 
         List<String> woerter = new ArrayList<>();
 
-        Matcher matcher = Pattern.compile("[A-Za-z]+").matcher(inhalt);
-        while (matcher.find()) {           /////////
+        Matcher matcher = Pattern.compile("\\p{IsAlphabetic}+").matcher(inhalt);
+        while (matcher.find()) {           //////////////////
             String wort = matcher.group();
             woerter.add(wort.toLowerCase());
         }
@@ -352,24 +354,15 @@ public class ZeichenHaeufigkeit {
 
         Map<Integer, Long> zaehler = zaehleZeichen(text);
 
-        // Kleinbuchstaben
-        for (char ch = 'a'; ch <= 'z'; ++ch) {
-
-            Long n = zaehler.get((int) ch);
-            if (n != null) {
-                System.out.println(ch + ": " + n);
-            }
-        }
-
-        // Emojis
         for (Map.Entry<Integer, Long> entry : zaehler.entrySet()) {
 
-            Integer codePoint = entry.getKey();
-            if (codePoint > Character.MAX_VALUE) {
-                System.out.print(Character.toChars(codePoint));
+            int codePoint = entry.getKey();
+            long count = entry.getValue();
 
-                Long n = entry.getValue();
-                System.out.println(": " + n);
+            if (codePoint <= Character.MAX_VALUE) {
+                System.out.println(            (char) codePoint  + ": " + count);
+            } else {
+                System.out.println(Character.toString(codePoint) + ": " + count);
             }
         }
     }
@@ -398,12 +391,24 @@ public class ZeichenHaeufigkeit {
 ```
 
 > **Übung:**
-> - Vervollständige folgende Methode zum Zählen von *Wörtern* (statt *Buchstaben*)
-> - Welches Wort kommt am häufigsten vor?
-> - Welches Wort kommt am seltensten vor?
+> - Vervollständige folgende 3 Methoden zum Zählen von *Wörtern* (statt *Buchstaben*)
+> - 🏆 Ändere den Ergebnistyp von `haeufigstesWort` auf `Map.Entry<String, Long>`
+>   - damit man nicht nur das häufigste Wort selbst liefert, sondern auch dessen Häufigkeit
+> - 🏆 Ändere den Ergebnistyp von `seltenstesWort` auf `Map<String, Long>`
+>   - weil wahrscheinlich mehrere Wörter gleich selten sind
 
 ```java
     public static Map<String, Long> zaehleWoerter(String text) {
+        // TODO
+        return null;
+    }
+
+    public static String haeufigstesWort(Map<String, Long> zaehler) {
+        // TODO
+        return null;
+    }
+
+    public static String seltenstesWort(Map<String, Long> zaehler) {
         // TODO
         return null;
     }
