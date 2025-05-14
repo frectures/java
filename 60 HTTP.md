@@ -56,7 +56,7 @@ public static String download(String url) throws IOException, InterruptedExcepti
 - Brotkrümel:
   - `Konsole.readString`
   - `MessageDigest.getInstance`
-  - `Base64.getEncoder`
+  - `HexFormat.of`
   - `String.substring`
   - `HttpUrlConnection` oder `HttpClient`, siehe `download`-Beispielmethoden
   - 🏆 Verarbeite die Server-Antwort nur bis zur relevanten Zeile
