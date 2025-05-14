@@ -112,6 +112,6 @@ public class FruitServlet extends HttpServlet {
   - Dafür geht das HTML in Servlets leider komplett unter
   - IDEs unterstützen z.B. kein HTML in String-Literalen
   - Dynamische Inhalte muss man überall von Hand escapen
-- Die Lösung dieser Probleme sind Template-Engines with z.B. Thymeleaf:
+- Die Lösung dieser Probleme sind Template-Engines wie z.B. Thymeleaf:
   - HTML-Dialekte mit Spezialsyntax für dynamische Inhalte
   - Dynamische Inhalte werden automatisch escaped

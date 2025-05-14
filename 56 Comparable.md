@@ -122,6 +122,6 @@ public static void sortAgeDescendingNameEmail(List<Person> persons) {
 
 > **Übung:**
 > 1. Verwende einen `new Comparator<String> { ... }`, der:
->  - kurze Strings vor lange Strings einordnet
->  - und gleich lange Strings alphabetisch
+>    - kurze Strings vor lange Strings einordnet
+>    - und gleich lange Strings alphabetisch
 > 2. Baue denselben `Comparator` durch `.comparing` und `.thenComparing` nach

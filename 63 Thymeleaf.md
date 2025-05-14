@@ -111,7 +111,7 @@ public class FruitController {
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <h3>What is your favorite fruit?</h3>
-<form th:action="@{/fruit}" th:object="${fruit}" method="post">
+<form method="post" th:action="@{/fruit}" th:object="${fruit}">
     <input type="text" th:field="*{fruit}">
     <input type="submit" value="Yummy!">
 </form>
@@ -176,6 +176,9 @@ public String search(@RequestParam                   String q,
 - Ein Controller kann beliebig viele `@GetMapping`/`@PostMapping`-Methoden definieren:
   - s.o. `@GetMapping("/search")`
   - Das definierte Pfad-Suffix muss Controller-weit eindeutig sein
+- So generiert man Query-Strings mit Thymeleaf:
+  - `<form th:action="@{/search(client='firefox')}">`
+  - `<form th:action="@{/search(client=${hierKannstDuAufsModelZugreifen})}">`
 
 ### PathVariable
 
@@ -188,10 +191,14 @@ public String search(@RequestParam                   String q,
 public String get(@PathVariable int id)
 ```
 
+- So generiert man Pfad-Variablen mit Thymeleaf:
+  - `<form th:action="@{/{id}(id=927)}">`
+  - `<form th:action="@{/{id}(id=${hierKannstDuAufsModelZugreifen})}">`
+
 ### Populäre Passwörter
 
 - Heute morgen hast du eine Konsolen-Anwendung für populäre Passwörter geschrieben
-- Schreibe für denselben Zweck eine Thymeleaf-Anwendung
+- Portiere diese Anwendung nach Thymeleaf
 
 ### XKCD
 
@@ -202,6 +209,7 @@ public String get(@PathVariable int id)
   - https://imgs.xkcd.com/comics/goto.png
   - https://imgs.xkcd.com/comics/pointers.png
 - Baue `prev`/`next`-Buttons, die zum vorherigen/nächsten Bild aus der Liste wechseln
+  - Jeder Button muss in sein eigenes Formular eingebettet sein
   - ⚠️ Der Server darf sich *nicht* Request-übergreifend merken, welcher Comic gerade angezeigt wird
   - Sonst würden sich verschiedene Benutzer gegenseitig beeinflussen
 - Der Benutzer soll per Zahleneingabe (1 bis 5) direkt zu einem Bild springen können

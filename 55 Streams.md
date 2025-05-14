@@ -25,7 +25,7 @@ public static List<String> adultDomains(List<Person> persons) {
                 // intermediate operations:
                   .filter(person -> person.isAdult())
                   .map(person -> person.getEmail())   // Stream<Email>
-                  .map(email -> person.getDomain())   // Stream<String>
+                  .map(email -> email.getDomain())    // Stream<String>
                   .sorted()
                   .distinct()
                 // terminal operation:
