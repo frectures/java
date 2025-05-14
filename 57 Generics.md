@@ -64,6 +64,12 @@ public static void printAll(List<? extends Object> list) {
   - nur noch die `null`-Referenz
   - die ist schließlich in allen Listen erlaubt
 
+- Für `<? extends Object>` gibt es die Abkürzung `<?>`:
+
+```java
+public static void printAll(List<?> list)
+```
+
 ### Kontravarianz
 
 - Was schreibt folgendes Programm auf die Konsole?
@@ -133,14 +139,6 @@ both methods have the same erasure
 ```java
 public static void greet(List<? super String> list) {
     list.add("hello");   ////////////////
-}
-```
-
-- Für `<? super String>` gibt es die Abkürzung `<?>`:
-
-```java
-public static void greet(List<?> list) {
-    list.add("hello");   ///
 }
 ```
 
