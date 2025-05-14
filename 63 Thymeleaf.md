@@ -259,3 +259,21 @@ public class ComicDto implements Serializable {
 ```java
 ComicDto comic = restTemplate.getForObject(url, ComicDto.class);
 ```
+
+### Weitere Features für besonders Schnelle
+
+- Comic-Titel anzeigen
+- Tag, Monat, Jahr anzeigen
+- Wenn die Maus auf dem Bild ist, `alt`-Text anzeigen
+- Falls dein System fest auf 3000 Comics verdrahtet ist:
+  - `https://xkcd.com/info.0.json` liefert den neuesten Comic
+  - dessen `num` ist die Anzahl existierender Comics
+  - Prüfe 1x pro Stunde, ob es einen neueren Comic gibt
+- 3 Comics nebeneinander anzeigen
+  - mittlerer Comic normale Größe
+  - links/rechts kleiner
+  - links/rechts anklickbar, ersetzt prev/next-Buttons
+- Bilder lokal im Dateisystem cachen
+- Comics bewerten
+  - mit 0-5 Sternen
+  - oder Thumbs up/down
