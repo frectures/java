@@ -153,7 +153,7 @@ public class FruitController {
         // ... 
 
      // return           "fruit-like";
-        return "redirect:/fruit-ask";
+        return "redirect:/fruit";
     }
 ```
 
