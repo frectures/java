@@ -150,3 +150,26 @@ public class Person {
 
 - Benutzer sollen XKCD-Comics mit Kommentaren versehen können
   - d.h. ein XKCD-Comic hat beliebig viele Kommentare
+
+## Optimistisches Locking
+
+Entities, die ein mit `@Version` annotiertes Feld deklarieren, verwenden automatisch *optimistisches Locking*:
+```java
+public class Person {
+    @Version
+    private Long version;
+
+    // ...
+}
+```
+
+Lesezugriffe sind immer erlaubt und merken sich die aktuelle Version.
+Schreibzugriffe vergleichen die aktuelle Version mit der gemerkten.
+Bei Gleichheit wird die Version hochgezählt.
+Andernfalls wird eine `OptimisticLockException` geworfen und die Transaktion zurückgerollt.
+
+## Aufgabe
+
+- Benutzer sollen XKCD-Kommentare editieren können
+  - verwende dazu optimistisches Locking
+  - d.h. der erste Editierer gewinnt

@@ -5,26 +5,33 @@ JPQL ist syntaktisch an SQL angelehnt, bezieht sich aber auf Entities, nicht auf
 ### Ergebnis-Liste
 
 ```java
-String q = "select p from Person p where p.surname = 'Jackson'";
+String q = "select p from Person p where p.forename = 'Michael'";
+
 Query query = entityManager.createQuery(q);
-List<Person> theJacksons = query.getResultList();
+
+@SuppressWarnings("unchecked")
+List<Person> michaels = (List<Person>) query.getResultList();
 ```
 
 ### Typsicherheit
 
 ```java
 String q = "select p from Person p where p.forename = 'Michael'";
+
 TypedQuery<Person> query = entityManager.createQuery(q, Person.class);
-Person michaelJackson = query.getSingleResult();
+
+List<Person> michaels = query.getResultList();
 ```
 
 ### Query-Parameter
 
 ```java
 String q = "select p from Person p where p.forename = :fore";
+
 TypedQuery<Person> query = entityManager.createQuery(q, Person.class);
+
 query.setParameter("fore", untrustedUserInput);
-Person jacksonWithGivenForename = query.getSingleResult();
+List<Person> peopleWithGivenForename = query.getResultList();
 ```
 
 ### Sortieren
@@ -32,15 +39,19 @@ Person jacksonWithGivenForename = query.getSingleResult();
 ```java
 String q = "select p from Person p"
         + " order by p.surname asc, p.forename desc";
-Query query = entityManager.createQuery(q);
-List<Person> sortedPersons = query.getResultList();
+
+TypedQuery<Person> query = entityManager.createQuery(q, Person.class);
+
+List<Person> sortedPeople = query.getResultList();
 ```
 
 ### Zählen
 
 ```java
 String q = "select count(p) from Person p";
+
 TypedQuery<Long> query = entityManager.createQuery(q, Long.class);
+
 long count = query.getSingleResult().longValue();
 ```
 
@@ -48,7 +59,9 @@ long count = query.getSingleResult().longValue();
 
 ```java
 String q = "select distinct p.surname from Person p";
-Query query = entityManager.createQuery(q);
+
+TypedQuery<String> query = entityManager.createQuery(q, String.class);
+
 List<String> surnames = query.getResultList();
 ```
 
@@ -56,7 +69,9 @@ List<String> surnames = query.getResultList();
 
 ```java
 String q = "select p.surname, p.forename from Person p";
+
 Query query = entityManager.createQuery(q);
+
 List<Object[]> names = query.getResultList();
 for (Object[] name : names) {
     String surname = (String) name[0];
@@ -69,7 +84,9 @@ for (Object[] name : names) {
 
 ```java
 String q = "select new util.Pair(p.surname, p.forename) from Person p";
+
 TypedQuery<Pair> query = entityManager.createQuery(q, Pair.class);
+
 List<Pair> pairs = query.getResultList();
 ```
 
@@ -78,8 +95,12 @@ List<Pair> pairs = query.getResultList();
 ```java
 String s = "select count(p) from Person p where p member of f.persons";
 String q = "select f from Family f where (" + s + ") > 1";
-Query query = entityManager.createQuery(q);
-List<Family> bigFamilies = query.getResultList();
 
+TypedQuery<Family> query = entityManager.createQuery(q, Family.class);
+
+List<Family> bigFamilies = query.getResultList();
+```
+
+```java
 String easier = "select f from Family f where size(f.persons) > 1";
 ```

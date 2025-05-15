@@ -63,7 +63,7 @@ Falls es keinen fachlichen Primärschlüssel gibt, kann man per `@GeneratedValue
 Normalerweise arbeitet JPA per Reflection direkt auf den privaten Feldern.
 Alternativ kann JPA mit Properties arbeiten, dafür müssen die entsprechenden Getter annotiert werden (nicht die Setter).
 
-### 12 CRUD-Methoden
+### Ein Dutzend CRUD-Methoden
 
 - Für gängige Datenbank-Zugriffe reicht das Erben von `ListCrudRepository<Entity, ID>`:
 
@@ -125,20 +125,31 @@ public class PersonRepository {
         entityManager.persist(person);
     }
 
-    public List<Person> findBySurname(String surname) {
-        String q = "select p from Person p where p.surname = :sur"; // JPQL
-        TypedQuery<Person> query = entityManager.createQuery(q, Person.class);
+    public List<Person> findBySurname_SQL(String surname) {
+        String sql = "select p.id, p.surname, p.forename from Person p where p.surname = ?";
+        Query query = entityManager.createNativeQuery(sql, Person.class);
+        query.setParameter(1, surname);
+        @SuppressWarnings("unchecked")
+        List<Person> result = (List<Person>) query.getResultList();
+        return result;
+    }
+
+    public List<Person> findBySurname_JPQL(String surname) {
+        String jpql = "select p from Person p where p.surname = :sur";
+        TypedQuery<Person> query = entityManager.createQuery(jpql, Person.class);
         query.setParameter("sur", surname);
         return query.getResultList();
     }
 }
 ```
 
-- `Query` und `TypedQuery` verwenden JPQL als Abfragesprache
-- `NativeQuery` verwendet SQL als Abfragesprache
-  - Native Queries vertragen sich schlecht mit dem Rest von JPA (Synchronisationsprobleme)
-  - Innerhalb einer Transaktion sollte man native Queries entweder gar nicht oder ausschließlich verwenden
-  - Grundsätzlich ist von native Queries eher abzuraten
+- `createNativeQuery` verwendet SQL als Abfragesprache
+  - JPA definiert durchnummerierte Parameter, aber keine benannten Parameter
+  - `getResultList` liefert eine ungetypte `List`
+  - Hibernate flusht nicht automatisch vor dem Ausführen von Native Queries
+- `createQuery` verwenden JPQL als Abfragesprache
+  - Klassen können Refactoring-sicher referenziert werden:
+  - `"select p from " + Person.class.getName() + ...`
 
 ### Aufgabe
 

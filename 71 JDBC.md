@@ -1,6 +1,6 @@
-## JDBC
+## Java DataBase Connectivity
 
-JDBC (**J**ava **D**ata**B**ase **C**onnectivity) ermöglicht den Zugriff auf Datenbanken per SQL.
+JDBC ermöglicht den Zugriff auf Datenbanken per SQL.
 
 ### Treiber
 
@@ -54,7 +54,7 @@ while (resultSet.next()) {
 ```
 
 Verschiedene Datenbanken verwenden unterschiedliche SQL-Dialekte.
-Eine Dokumentation zur SQL-Syntax von H2 findet man auf http://www.h2database.com/html/grammar.html
+Eine Dokumentation zur SQL-Syntax von H2 findet man auf https://www.h2database.com/html/grammar.html
 
 ### Aufgabe
 
@@ -69,9 +69,9 @@ Syntax error in SQL statement "CREATE TABLE .[*].. "; expected "identifier"
 ```
 
 Die `main`-Methode liefert ein grobes Skelett zum spielerischen Umgang mit der Datenbank, aber es passiert noch nichts sinnvolles.
-Arbeite die `TODO`s ab, bis alle Fehler verschwunden sind.
+Baue das Beispiel "m:1 Beziehung" (*Beliebig viele Personen wohnen in ein und demselben Haushalt*) aus der Datei `70 Kardinal.md` nach.
 Beschäftige dich dabei insbesondere mit folgenden Fragen:
 1. Wie definiert man einen Primärschlüssel, der automatisch hochgezählt wird?
-2. Wie definiert man einen Sekundärschlüssel?
+2. Wie definiert man einen Fremdschlüssel?
 3. Wie formuliert man JOIN-Abfragen über mehrere Tabellen?
-4. Was passiert, wenn man eine Zeile löscht, die von einem Sekundärschlüssel referenziert wird?
+4. Was passiert, wenn man eine Zeile löscht, die von einem Fremdschlüssel referenziert wird?

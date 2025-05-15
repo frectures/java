@@ -177,8 +177,10 @@ public String search(@RequestParam                   String q,
   - s.o. `@GetMapping("/search")`
   - Das definierte Pfad-Suffix muss Controller-weit eindeutig sein
 - So generiert man Query-Strings mit Thymeleaf:
-  - `<form th:action="@{/search(client='firefox')}">`
-  - `<form th:action="@{/search(client=${hierKannstDuAufsModelZugreifen})}">`
+  - `<a th:href="@{/search(client='firefox')}">`
+  - `<a th:href="@{/search(client=${hierKannstDuAufsModelZugreifen})}">`
+- ⚠️ Query-Strings in der `action` eines `form`s werden ignoriert!
+  - Verwende stattdessen `<input type="hidden" name="client" th:value="${hierKannstDuAufsModelZugreifen}">`
 
 ### PathVariable
 
@@ -208,8 +210,7 @@ public String get(@PathVariable int id)
   - https://imgs.xkcd.com/comics/compiling.png
   - https://imgs.xkcd.com/comics/goto.png
   - https://imgs.xkcd.com/comics/pointers.png
-- Baue `prev`/`next`-Buttons, die zum vorherigen/nächsten Bild aus der Liste wechseln
-  - Jeder Button muss in sein eigenes Formular eingebettet sein
+- Baue `prev`/`next`-Links oder -Buttons ein, die zum vorherigen/nächsten Bild aus der Liste wechseln
   - ⚠️ Der Server darf sich *nicht* Request-übergreifend merken, welcher Comic gerade angezeigt wird
   - Sonst würden sich verschiedene Benutzer gegenseitig beeinflussen
 - Der Benutzer soll per Zahleneingabe (1 bis 5) direkt zu einem Bild springen können
