@@ -126,6 +126,7 @@ public class PersonRepository {
     }
 
     public List<Person> findBySurname_SQL(String surname) {
+        //                                                    Tabelle          Spalte
         String sql = "select p.id, p.surname, p.forename from Person p where p.surname = ?";
         Query query = entityManager.createNativeQuery(sql, Person.class);
         query.setParameter(1, surname);
@@ -135,6 +136,7 @@ public class PersonRepository {
     }
 
     public List<Person> findBySurname_JPQL(String surname) {
+        //                           Klasse           Feld
         String jpql = "select p from Person p where p.surname = :sur";
         TypedQuery<Person> query = entityManager.createQuery(jpql, Person.class);
         query.setParameter("sur", surname);
@@ -179,4 +181,12 @@ Started DemoApplication in 3.058 seconds (process running for 3.399)
 - Wenn du den Server neu startest, ist die Datenbank wieder leer
   - weil die Datenbank normalerweise im Arbeitsspeicher abgelegt wird
 - Um das zu verhindern, kannst du die Datenbank in einer Datei ablegen:
-  - `spring.datasource.url=jdbc:h2:file:gewünschterdateiname`
+
+```
+spring.datasource.url=jdbc:h2:file:~/xkcd
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+```
+
+- Falls du deine Entity-Klassen irgendwann änderst, einfach die Datenbank-Dateien löschen
