@@ -17,21 +17,31 @@ public class Server {
             System.out.println("Server started on port " + serverSocket.getLocalPort());
             System.out.println("Waiting for client...");
             // TODO support multiple clients
+            while (true) {
+                try (Socket clientSocket = serverSocket.accept();
+                     var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                     var out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                    System.out.println("Client connected from port " + clientSocket.getPort());
 
-            try (Socket clientSocket = serverSocket.accept();
-                 var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                 var out = new PrintWriter(clientSocket.getOutputStream(), true)) {
-                System.out.println("Client connected from port " + clientSocket.getPort());
-
-                while (true) {
-                    String lineFromClient = in.readLine();
-                    if (lineFromClient == null) {
-                        System.out.println("Client disconnected from port " + clientSocket.getPort());
-                        break;
-                    }
-                    System.out.println(clientSocket.getPort() + ": " + lineFromClient);
-                    String lineToClient = new StringBuilder(lineFromClient).reverse().toString();
-                    out.println(lineToClient);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                while (true) {
+                                    String lineFromClient = in.readLine();
+                                    if (lineFromClient == null) {
+                                        System.out.println("Client disconnected from port " + clientSocket.getPort());
+                                        break;
+                                    }
+                                    System.out.println(clientSocket.getPort() + ": " + lineFromClient);
+                                    String lineToClient = new StringBuilder(lineFromClient).reverse().toString();
+                                    out.println(lineToClient);
+                                }
+                            } catch (IOException ex) {
+                                // TODO ...
+                            }
+                        }
+                    }).start();
                 }
             }
         }
