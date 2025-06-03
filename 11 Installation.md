@@ -110,7 +110,7 @@ public class Echo {
 > - Doppelklick auf `java/src/main/java/Main.java`
 >   - ggf. Warnhinweis bzgl. JDK-Konfiguration folgen
 >   - Klick auf das grüne Dreieck in Zeile 1
->   - Run 'Einloggen.main()'
+>   - Run 'Main.main()'
 > - Modifiziere das Programm, so dass Vorname und Nachname getrennt abgefragt werden
 > - Was passiert, wenn man die Klammern um `(alter + 1)` entfernt?
 
