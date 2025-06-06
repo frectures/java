@@ -17,6 +17,9 @@ public class Informatiker {
                 new PerNachname(),
                 new PerAlter(),
                 new Zweistufig(new PerAlter(), new PerNachname()),
+                new PerGeschlecht(),
+                new Umgekehrt(new PerGeschlecht()),
+                new Zweistufig(new PerGeschlecht(), new Zweistufig(new PerAlter(), new PerNachname())),
         };
 
         Person[] unsortiertePersonen = {

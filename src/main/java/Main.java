@@ -1,16 +1,24 @@
+import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+
 public class Main {
     public static void main(String[] args) {
 
-        // Liest einen String von der Konsole
-        String name = Konsole.readString("Wie heißt du? ");
+        double[] randomNumbers = new Random().doubles(10, -1, 1)
+                .toArray();
+        System.out.println(java.util.Arrays.toString(randomNumbers));
 
-        // Liest eine Ganzzahl von der Konsole
-        int alter = Konsole.readInt("Wie alt bist du? ");
+        long[] powersOfTwo = LongStream.iterate(1, x -> x != 0, x -> x * 2)
+                .toArray();
+        System.out.println(java.util.Arrays.toString(powersOfTwo));
 
-        if (alter < 0 || alter > 123) {
-            System.out.println("Das glaube ich nicht...");
-        } else {
-            System.out.println("In einem Jahr bist du " + (alter + 1) + ", " + name + "!");
-        }
+        int[] codePoints = IntStream.concat(
+                IntStream.rangeClosed('A', 'Z'),
+                IntStream.rangeClosed('a', 'z')
+        ).toArray();
+
+        String s = new String(codePoints, 0, codePoints.length);
+        System.out.println(s);
     }
 }

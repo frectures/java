@@ -58,6 +58,9 @@ public class Parser {
             case 'X':
                 ++index;
                 return new X();
+            case '-':
+                ++index;
+                return new Negiert(primaer());
 
             case '0':
             case '1':

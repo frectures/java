@@ -7,21 +7,22 @@ public class Tetris {
     private static final int START_POSITION = 6;
 
     private final int[] board;
-    private final FairLetterSupplier letterSupplier;
+    private final LetterSupplier letterSupplier;
     private int letter, rotation;
     private int[] shape;
     private int position;
     private int timer;
     private Tetris opponent;
+    // TODO Aus int mach int[] oder List<Integer>
     private int penaltyLines;
     private boolean gameOver;
 
-    public Tetris() {
+    public Tetris(LetterSupplier letterSupplier) {
         // Plenum: Warum wird dieses Array geklont ...
         board = EMPTY_BOARD.clone();
         // Plenum: ... Aber dieses Array nicht?
         shape = SHAPES[letter = 4][rotation = 0]; // the O shape
-        letterSupplier = new FairLetterSupplier();
+        this.letterSupplier = letterSupplier;
 
         position = START_POSITION;
         timer = 0;
@@ -90,7 +91,7 @@ public class Tetris {
                 case 4 -> 4;
                 default -> 0;
             };
-            insertPenaltyLines();
+            opponent.insertPenaltyLines();
 
             letter = letterSupplier.nextLetter();
             rotation = (int) (Math.random() * SHAPES[letter].length);
@@ -107,16 +108,58 @@ public class Tetris {
     }
 
     public void rotate() {
-        // TODO
+        int oldRotation = rotation;
+
+        rotation = (rotation + 1) % SHAPES[letter].length;
+        shape = SHAPES[letter][rotation];
+
+        if (pieceCollides()) {
+            rotation = oldRotation;
+            shape = SHAPES[letter][rotation];
+        }
     }
 
     private int removeCompleteLines() {
-        // TODO
-        return 0;
+        int removed = 0;
+        // TODO Führe Schritt 2 nicht nur für die unterste Zeile aus, sondern für alle Zeilen
+        for (int i = 0; i < 20; ++i) {
+
+            if (lineIsFull(i * WIDTH)) {
+                // TODO Falls die unterste Zeile voll ist, überschreibe sie mit Nullen
+                // java.util.Arrays.fill(board, 19 * WIDTH + 3, 19 * WIDTH + 13, 0);
+
+                // Falls die unterste Zeile voll ist, kopiere die Zeilen darüber 1 Zeile nach unten
+                System.arraycopy(board, 0, board, WIDTH, i * WIDTH);
+                java.util.Arrays.fill(board, 3, 13, 0);
+                removed++;
+            }
+        }
+        return removed;
+    }
+
+    private boolean lineIsFull(int lineStart) {
+        return board[lineStart + 3] != 0 &&
+                board[lineStart + 4] != 0 &&
+                board[lineStart + 5] != 0 &&
+                board[lineStart + 6] != 0 &&
+                board[lineStart + 7] != 0 &&
+                board[lineStart + 8] != 0 &&
+                board[lineStart + 9] != 0 &&
+                board[lineStart + 10] != 0 &&
+                board[lineStart + 11] != 0 &&
+                board[lineStart + 12] != 0;
     }
 
     private void insertPenaltyLines() {
-        // TODO
+        if (penaltyLines > 0) {
+            System.arraycopy(board, penaltyLines * WIDTH, board, 0, (20 - penaltyLines) * WIDTH);
+            int spalte = (int) (Math.random() * 10) + 3;
+            for (int i = 20 - penaltyLines; i < 20; ++i) {
+                java.util.Arrays.fill(board, i * WIDTH + 3, i * WIDTH + 13, 9);
+                board[i * WIDTH + spalte] = 0;
+            }
+            penaltyLines = 0;
+        }
     }
 
     public boolean gameOver() {

@@ -14,7 +14,10 @@ public class TetrisGUI {
     }
 
     private static void createAndShowGUI() {
-        Tetris[] games = {new Tetris(), new Tetris()};
+        Tetris[] games = {
+                new Tetris(new FairLetterSupplier()),
+                new Tetris(new CheatingLetterSupplier()),
+        };
         games[0].setOpponent(games[1]);
         games[1].setOpponent(games[0]);
 
@@ -95,7 +98,7 @@ public class TetrisGUI {
             for (int g = 0; g < games.length; ++g) {
                 games[g].tick();
                 if (games[g].gameOver()) {
-                    games[g] = new Tetris();
+                    games[g] = new Tetris(new CheatingLetterSupplier());
                     games[0].setOpponent(games[1]);
                     games[1].setOpponent(games[0]);
                 }
