@@ -3,6 +3,7 @@ package informatiker;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class Informatiker {
@@ -77,7 +78,7 @@ public class Informatiker {
             button = new JButton(vergleicher.toString());
             button.addActionListener(event -> {
                 Person[] personen = unsortiertePersonen.clone();
-                sortiere(personen, vergleicher);
+                quicksort(personen, 0, personen.length - 1, vergleicher);
                 updateTable.accept(personen);
             });
             buttons.add(button);
@@ -91,17 +92,31 @@ public class Informatiker {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void sortiere(Person[] personen, Vergleicher vergleicher) {
-        for (int n = 1; n < personen.length; ++n) {
-            // Die ersten n Elemente (links von n) sind bereits sortiert;
-            // nun muss Element n an die passende Stelle geschoben werden.
-            int i = n;
-            Person einzufuegen = personen[i];
-            while ((i > 0) && vergleicher.vergleiche(einzufuegen, personen[i - 1]) < 0) {
-                personen[i] = personen[i - 1];
-                --i;
+    // Programming Pearls
+    // 11.3 Better Quicksorts
+    public static void quicksort(Person[] personen, int l, int u, Vergleicher vergleicher) {
+        if (l < u) {
+            swap(personen, l, random.nextInt(l, u + 1));
+            Person pivot = personen[l];
+            int i = l;
+            int j = u + 1;
+            while (true) {
+                do ++i; while (i <= u && vergleicher.vergleiche(personen[i], pivot) < 0);
+                do --j; while (/*     */ vergleicher.vergleiche(personen[j], pivot) > 0);
+                if (i > j) break;
+                swap(personen, i, j);
             }
-            personen[i] = einzufuegen;
+            swap(personen, l, j);
+            quicksort(personen, /**/l, j - 1, vergleicher);
+            quicksort(personen, j + 1, u/**/, vergleicher);
         }
     }
+
+    private static void swap(Person[] personen, int i, int j) {
+        Person temp = personen[i];
+        personen[i] = personen[j];
+        personen[j] = temp;
+    }
+
+    private static final Random random = new Random();
 }
