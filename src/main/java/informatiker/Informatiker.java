@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Random;
-import java.util.function.Consumer;
 
 public class Informatiker {
     public static void main(String[] args) {
@@ -15,49 +14,50 @@ public class Informatiker {
     private static void createAndShowGUI() {
         // TODO weitere Vergleicher hinzufügen
         Vergleicher[] alleVergleicher = {
+                new Unsortiert(),
                 new PerNachname(),
                 new PerAlter(),
                 new Zweistufig(new PerAlter(), new PerNachname()),
         };
 
-        Person[] unsortiertePersonen = {
-                new Person("Ada", "Lovelace", 1815, false),
-                new Person("Charles", "Babbage", 1791, true),
-                new Person("Grace", "Hopper", 1906, false),
-                new Person("Konrad", "Zuse", 1910, true),
+        Person[] personen = {
+                new Person(10, "Ada", "Lovelace", 1815, false),
+                new Person(11, "Charles", "Babbage", 1791, true),
+                new Person(12, "Grace", "Hopper", 1906, false),
+                new Person(13, "Konrad", "Zuse", 1910, true),
 
-                new Person("Alan", "Kay", 1940, true),
-                new Person("Alonzo", "Church", 1903, true),
-                new Person("Brian", "Kernighan", 1942, true),
-                new Person("Dennis", "Ritchie", 1941, true),
-                new Person("John", "Baccus", 1924, true),
-                new Person("Kristen", "Nygaard", 1926, true),
-                new Person("Niklaus", "Wirth", 1934, true),
-                new Person("Ole-Johan", "Dahl", 1931, true),
+                new Person(20, "Alan", "Kay", 1940, true),
+                new Person(21, "Alonzo", "Church", 1903, true),
+                new Person(22, "Brian", "Kernighan", 1942, true),
+                new Person(23, "Dennis", "Ritchie", 1941, true),
+                new Person(24, "John", "Baccus", 1924, true),
+                new Person(25, "Kristen", "Nygaard", 1926, true),
+                new Person(26, "Niklaus", "Wirth", 1934, true),
+                new Person(27, "Ole-Johan", "Dahl", 1931, true),
 
-                new Person("Ken", "Thompson", 1943, true),
-                new Person("Linus", "Torvalds", 1969, true),
-                new Person("Richard", "Stallman", 1953, true),
+                new Person(30, "Ken", "Thompson", 1943, true),
+                new Person(31, "Linus", "Torvalds", 1969, true),
+                new Person(32, "Richard", "Stallman", 1953, true),
 
-                new Person("Alan", "Turing", 1912, true),
-                new Person("Claude", "Shannon", 1916, true),
-                new Person("George", "Boole", 1815, true),
-                new Person("Harry", "Nyquist", 1889, true),
-                new Person("John", "Neumann von", 1903, true),
-                new Person("Kurt", "Goedel", 1906, true),
-                new Person("Richard", "Hamming", 1915, true),
+                new Person(40, "Alan", "Turing", 1912, true),
+                new Person(41, "Claude", "Shannon", 1916, true),
+                new Person(42, "George", "Boole", 1815, true),
+                new Person(43, "Harry", "Nyquist", 1889, true),
+                new Person(44, "John", "Neumann von", 1903, true),
+                new Person(45, "Kurt", "Goedel", 1906, true),
+                new Person(46, "Richard", "Hamming", 1915, true),
 
-                new Person("Christiane", "Floyd", 1943, false),
-                new Person("Donald", "Knuth", 1938, true),
-                new Person("Edsger", "Dijkstra", 1930, true),
-                new Person("Herman", "Hollerith", 1860, true),
-                new Person("Tony", "Hoare", 1934, true),
+                new Person(50, "Christiane", "Floyd", 1943, false),
+                new Person(51, "Donald", "Knuth", 1938, true),
+                new Person(52, "Edsger", "Dijkstra", 1930, true),
+                new Person(53, "Herman", "Hollerith", 1860, true),
+                new Person(54, "Tony", "Hoare", 1934, true),
         };
 
         JTable table = new JTable();
         table.getTableHeader().setReorderingAllowed(false);
 
-        Consumer<Person[]> updateTable = (personen) -> {
+        Runnable updateTable = () -> {
             Object[][] data = new Object[personen.length][];
             for (int i = 0; i < personen.length; ++i) {
                 data[i] = personen[i].toArray();
@@ -66,20 +66,14 @@ public class Informatiker {
             table.setModel(new DefaultTableModel(data, columns));
         };
 
-        updateTable.accept(unsortiertePersonen);
+        updateTable.run();
 
         JPanel buttons = new JPanel();
-        JButton button = new JButton("unsortiert");
-        button.addActionListener(event -> {
-            updateTable.accept(unsortiertePersonen);
-        });
-        buttons.add(button);
         for (Vergleicher vergleicher : alleVergleicher) {
-            button = new JButton(vergleicher.toString());
+            JButton button = new JButton(vergleicher.toString());
             button.addActionListener(event -> {
-                Person[] personen = unsortiertePersonen.clone();
                 quicksort(personen, 0, personen.length - 1, vergleicher);
-                updateTable.accept(personen);
+                updateTable.run();
             });
             buttons.add(button);
         }
