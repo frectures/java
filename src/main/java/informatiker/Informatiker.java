@@ -1,7 +1,7 @@
 package informatiker;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.Random;
 
@@ -64,23 +64,48 @@ public class Informatiker {
         table.setFont(font);
         table.setRowHeight(table.getFontMetrics(font).getHeight());
 
-        Runnable updateTable = () -> {
-            Object[][] data = new Object[personen.length][];
-            for (int i = 0; i < personen.length; ++i) {
-                data[i] = personen[i].toArray();
+        AbstractTableModel tableModel = new AbstractTableModel() {
+            @Override
+            public int getRowCount() {
+                return personen.length;
             }
-            String[] columns = {"Vorname", "Nachname", "Geburtsjahr", "Geschlecht"};
-            table.setModel(new DefaultTableModel(data, columns));
-        };
 
-        updateTable.run();
+            @Override
+            public int getColumnCount() {
+                return 4;
+            }
+
+            @Override
+            public String getColumnName(int column) {
+                return switch (column) {
+                    case 0 -> "Nachname";
+                    case 1 -> "Vorname";
+                    case 2 -> "Geburtsjahr";
+                    case 3 -> "Geschlecht";
+                    default -> throw new IllegalArgumentException("" + column);
+                };
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                Person person = personen[rowIndex];
+                return switch (columnIndex) {
+                    case 0 -> person.nachname();
+                    case 1 -> person.vorname();
+                    case 2 -> person.geburtsjahr();
+                    case 3 -> person.maennlich() ? "♂" : "♀";
+                    default -> throw new IllegalArgumentException("" + columnIndex);
+                };
+            }
+        };
+        table.setModel(tableModel);
 
         JPanel buttons = new JPanel();
         for (Vergleicher vergleicher : alleVergleicher) {
             JButton button = new JButton(vergleicher.toString());
             button.addActionListener(event -> {
                 quicksort(personen, 0, personen.length - 1, vergleicher);
-                updateTable.run();
+                tableModel.fireTableDataChanged();
             });
             buttons.add(button);
         }
