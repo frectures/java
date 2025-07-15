@@ -2,6 +2,7 @@ package informatiker;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.Random;
 
@@ -93,7 +94,7 @@ public class Informatiker {
                     case 0 -> person.nachname();
                     case 1 -> person.vorname();
                     case 2 -> person.geburtsjahr();
-                    case 3 -> person.maennlich() ? "♂" : "♀";
+                    case 3 -> person.maennlich() ? "   ♂" : "♀   ";
                     default -> throw new IllegalArgumentException("" + columnIndex);
                 };
             }
@@ -109,6 +110,11 @@ public class Informatiker {
             });
             buttons.add(button);
         }
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        table.getColumnModel().getColumn(2).setCellRenderer(renderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(renderer);
 
         JFrame frame = new JFrame("Bekannte Informatiker");
         frame.add(buttons, BorderLayout.NORTH);
