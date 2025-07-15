@@ -6,6 +6,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class Informatiker {
+    private static final float SCALE_FONT_SIZE = 1.5f;
+
     public static void main(String[] args) {
         // https://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         EventQueue.invokeLater(Informatiker::createAndShowGUI);
@@ -56,6 +58,11 @@ public class Informatiker {
 
         JTable table = new JTable();
         table.getTableHeader().setReorderingAllowed(false);
+
+        Font font = table.getFont();
+        font = font.deriveFont(font.getSize() * SCALE_FONT_SIZE);
+        table.setFont(font);
+        table.setRowHeight(table.getFontMetrics(font).getHeight());
 
         Runnable updateTable = () -> {
             Object[][] data = new Object[personen.length][];
