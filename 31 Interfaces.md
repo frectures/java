@@ -194,40 +194,30 @@ Vergleicher verhält
 einstufen
   - Als Inspiration kann hierbei die (deutlich kompliziertere) Klasse `Zweistufig` dienen
 
-### Funktions-Plotter
+### JSON
 
-- Starte die (`main`-Methode in der) Klasse `Plotter`
-  - Editiere die Formeln und bestätige mit der Enter-Taste
-  - Dann sollten sich die Graphen ändern
-- Studiere das Interface `Formel` und seine implementierenden Klassen
-- Öffne die Klasse `Parser` und studiere folgende Methoden:
-  - `strichrechnung`
-  - `punktrechnung`
-  - `primaer`
-- Bisher kann man Formeln nicht negieren, zum Beispiel `-x+1`
-  - Auf der Konsole erscheint eine Fehlermeldung
-  - Probiere aus, welche der folgenden Ergänzungsversuche in `primaer` sich für `-x+1` mathematisch korrekt verhält:
-
-```java
-case '-':
-    ++index;                           //////////////
-    return new Minus(new Konstante(0), strichrechnung());
-```
-```java
-case '-':
-    ++index;                           /////////////
-    return new Minus(new Konstante(0), punktrechnung());
-```
-```java
-case '-':
-    ++index;                           ///////
-    return new Minus(new Konstante(0), primaer());
-```
-
-- Schreibe eine neue Klasse `Negiert`, so dass
-  - `new Minus(new Konstante(0), ...)` durch
-  - `new Negiert(...)` ersetzt werden kann
-- Statt `x*x*x` würden wir gerne `x^3` schreiben können
-  - Das erfordert eine neue Klasse `Hoch`
-  - Und eine neue Methode zwischen `punktrechnung` und `primaer`
-    - weil Exponentation stärker bindet als Punktrechnung
+- Starte die (`main`-Methode in der) Klasse `Freddy`
+  - Kennst du das JSON-Austauschformat?
+  - Fällt dir in der Konsole **ein Fehler** auf?
+- Studiere folgende Typen in dieser Reihenfolge:
+  1. `Wert`
+  2. `Zahl`
+  3. `Zeichenkette`
+  4. `Symbolisch`
+  5. `Objekt`
+- Behebe **o.g. Fehler**, der dir in der Konsole aufgefallen war
+- Füge 2 weitere Konstruktoren zu `Objekt` zu
+  - damit auch 4 und 5 Schlüssel/Wert-Pärchen funktionieren
+- Füge einen neuen Typ `class Array implements Wert` hinzu
+  - z.B. `new Array(Symbolisch.TRUE, new Zahl(42), new Zeichenkette("test")).stringify()`
+  - sollte `[true, 42.0, "test"]` ergeben
+  - Tipp: Der Parametertyp `Wert...` erlaubt beliebig viele Argumente
+- Die Methode `Zeichenkette.appendLiteral` kann noch nicht mit Sonderzeichen umgehen:
+  - Gänsefüßchen
+  - Zeilenumbruch
+  - Backslash
+  - ...
+  - 🏆 Behandle diese Sonderzeichen sinnvoll
+    - https://www.google.com/search?q=escape+sequenz
+- Bisher schreibt `append` alles in eine Zeile
+  - 🏆 Schöner wäre eine Zeile pro Schlüssel/Wert-Pärchen bzw. Array-Eintrag
