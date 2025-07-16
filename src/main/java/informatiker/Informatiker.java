@@ -93,7 +93,7 @@ public class Informatiker {
                 return switch (columnIndex) {
                     case 0 -> person.nachname();
                     case 1 -> person.vorname();
-                    case 2 -> person.geburtsjahr();
+                    case 2 -> formatiertesJahr(person.geburtsjahr());
                     case 3 -> person.maennlich() ? "   ♂" : "♀   ";
                     default -> throw new IllegalArgumentException("" + columnIndex);
                 };
@@ -123,6 +123,34 @@ public class Informatiker {
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private static String formatiertesJahr(int jahr) {
+        return switch (jahr) {
+            case 1791 -> "1791                     ";
+            case 1815 -> " 1815                    ";
+            case 1860 -> "  1860                   ";
+            case 1889 -> "   1889                  ";
+            case 1903 -> "    1903                 ";
+            case 1906 -> "     1906                ";
+            case 1910 -> "      1910               ";
+            case 1912 -> "       1912              ";
+            case 1915 -> "        1915             ";
+            case 1916 -> "         1916            ";
+            case 1924 -> "          1924           ";
+            case 1926 -> "           1926          ";
+            case 1930 -> "            1930         ";
+            case 1931 -> "             1931        ";
+            case 1934 -> "              1934       ";
+            case 1938 -> "               1938      ";
+            case 1940 -> "                1940     ";
+            case 1941 -> "                 1941    ";
+            case 1942 -> "                  1942   ";
+            case 1943 -> "                   1943  ";
+            case 1953 -> "                    1953 ";
+            case 1969 -> "                     1969";
+            default -> throw new IllegalArgumentException("" + jahr);
+        };
     }
 
     // Programming Pearls
