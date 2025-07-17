@@ -115,3 +115,45 @@ git commit -am "fix bug #456"
     - `VirtualMachineError`
       - `StackOverflowError`
       - `OutOfMemoryError`
+
+### throw
+
+- `IllegalArgumentException` wird bei ungültigen Argumenten geworfen:
+
+```java
+package json;
+
+public class Zahl implements Wert {
+
+    private final double number;
+
+    public Zahl(double number) {
+
+        if (Double.isInfinite(number)) throw new IllegalArgumentException("JSON forbids Infinity");
+        if (Double.isNaN     (number)) throw new IllegalArgumentException("JSON forbids NaN");
+
+        this.number = number;
+    }
+
+    // ...
+}
+```
+
+- `IllegalStateException` wird bei ungültigen Zuständen geworfen:
+
+```java
+public class ByteVector {
+
+    private int size;
+    // ...
+
+    public byte top() {
+
+        if (size == 0) throw new IllegalStateException("top on empty vector");
+
+        // ...
+    }
+
+    // ...
+}
+```
