@@ -142,31 +142,15 @@ public class NamenSortieren {
 ```
 
 > **Übung:**
-> - Überzeuge dich durch Ausprobieren, dass die erste Schleife _nicht_ durch eine foreach-Schleife ersetzt werden kann
-> - Schreibe für den Menschen verständliche (d.h. bei 1 beginnende) Positionen auf die Konsole:
-
-```
-Bitte 3 Namen eingeben:
-1. Stroustrup
-2. Gosling
-3. Odersky
-
-Aufsteigend sortiert:
-1. Gosling
-2. Odersky
-3. Stroustrup
-```
+> - Anstatt fest 3 Namen zu verarbeiten, soll der Anwender bei Programmstart gefragt werden, wie viele Namen er verarbeiten möchte
+> - Falls die eingegebenen Namen bereits aufsteigend sortiert sind, sollen diese nicht erneut auf die Konsole geschrieben werden, sondern lediglich der Hinweis “Die Namen sind bereits aufsteigend sortiert.”
+> - Lagere die Logik zum Erkennen der Sortierung in eine eigene Methode `public static boolean istSortiert(String[] namen)` aus
 
 | String-Vergleich      | Relative Lage im Wörterbuch |
 | --------------------- | --------------------------- |
 | `s.compareTo(t) < 0`  | `s` kommt vor `t`           |
 | `s.compareTo(t) == 0` | `s` und `t` sind gleich     |
 | `s.compareTo(t) > 0`  | `s` kommt nach `t`          |
-
-> **Übung:**
-> - Falls die eingegebenen Namen bereits aufsteigend sortiert sind, sollen diese nicht erneut auf die Konsole geschrieben werden, sondern lediglich der Hinweis “Die Namen sind bereits aufsteigend sortiert.”
-> - Lagere die Logik zum Erkennen der Sortierung in eine eigene Methode `public static boolean istSortiert(String[] namen)` aus
-> - Anstatt fest 3 Namen zu verarbeiten, soll der Anwender bei Programmstart gefragt werden, wie viele Namen er verarbeiten möchte
 
 ### Zeichen-Häufigkeit
 
@@ -203,146 +187,7 @@ public class ZeichenHaeufigkeit {
 >   1. New York Times
 >   2. Monkeys Write
 
-### [Sieb des Eratosthenes](https://de.wikipedia.org/wiki/Sieb_des_Eratosthenes)
-
-- Algorithmus zum Berechnen aller Primzahlen unterhalb einer festen Grenze
-- Funktioniert ohne Division bzw. Divisionsrest:
-
-```java
-public class Eratosthenes {
-    public static int[] berechnePrimzahlen(int grenze) {
-
-        boolean[] prim = new boolean[grenze];
-        java.util.Arrays.fill(prim, true); // jede Zahl zunächst prim, bis Gegenteil bewiesen wird
-
-        int[] primzahlen = new int[0]; // bisher wurde noch keine Primzahl gefunden
-
-        for (int i = 2; i < prim.length; ++i) {
-            if (prim[i]) {
-                // Kopiere die bisherigen Primzahlen in ein um 1 größeres Array um
-                primzahlen = java.util.Arrays.copyOf(primzahlen, primzahlen.length + 1);
-
-                // Kopiere die soeben gefundene Primzahl auf die letzte Position
-                primzahlen[primzahlen.length - 1] = i;
-
-                // Markiere alle Vielfachen von i als zusammengesetzt
-                for (int k = 2 * i; k < prim.length; k += i) {
-                    prim[k] = false;
-                }
-            }
-        }
-        return primzahlen;
-    }
-
-    public static void main(String[] args) {
-        int grenze = Konsole.readInt("Primzahlen bis zu welcher Grenze? ");
-        int[] primzahlen = berechnePrimzahlen(grenze);
-        System.out.println(java.util.Arrays.toString(primzahlen));
-    }
-}
-```
-
-- 🐌 `Arrays.copyOf(a, a.length + 1)` ist ein Performance-Anti-Pattern:
-  - Bei *jeder* neuen Primzahl müssen *alle* alten Primzahlen umkopiert werden!
-  - Probiere 1 Millionen oder 10 Millionen für `grenze` aus
-- Wie löst man dieses Performance-Problem?
-  - Mit einem (viel) zu großen Array anfangen
-  - Am Ende auf die tatsächliche Nutzgröße zuschneiden:
-
-```java
-public class Eratosthenes {
-    public static int[] berechnePrimzahlen(int grenze) {
-
-        boolean[] prim = new boolean[grenze];
-        java.util.Arrays.fill(prim, true);
-
-        int[] primzahlen = new int[grenze]; // hier passen locker alle Primzahlen rein
-        int gefunden = 0;                   // bisher wurde noch keine Primzahl gefunden
-
-        for (int i = 2; i < prim.length; ++i) {
-            if (prim[i]) {
-                // Kopiere die soeben gefundene Primzahl auf die nächste freie Position
-                primzahlen[gefunden++] = i;
-
-                for (int k = 2 * i; k < prim.length; k += i) {
-                    prim[k] = false;
-                }
-            }
-        }
-        // Kopiere die tatsächlich gefundenen Primzahlen in ein kleineres Array um
-        return java.util.Arrays.copyOf(primzahlen, gefunden);
-    }
-
-    public static void main(String[] args) {
-        int grenze = Konsole.readInt("Primzahlen bis zu welcher Grenze? ");
-        int[] primzahlen = berechnePrimzahlen(grenze);
-        System.out.println(java.util.Arrays.toString(primzahlen));
-    }
-}
-```
-
-- 🗿 `int[] primzahlen = new int[grenze]` reserviert viel zu viel Speicher:
-  - Unterhalb von `grenze` gibt es deutlich weniger als `grenze` Primzahlen
-- Wie löst man diese Speicherverschwendung?
-  - Mit einem kleinen Array anfangen
-  - Größe bei Bedarf verdoppeln
-  - Dann hält sich der Kopieraufwand in Grenzen:
-
-```java
-public class Eratosthenes {
-    public static int[] berechnePrimzahlen(int grenze) {
-
-        boolean[] prim = new boolean[grenze];
-        java.util.Arrays.fill(prim, true);
-
-        int[] primzahlen = new int[10]; // erst mal wenig Speicher reservieren
-        int gefunden = 0;               // bisher wurde noch keine Primzahl gefunden
-
-        for (int i = 2; i < prim.length; ++i) {
-            if (prim[i]) {
-                // Ist kein Platz mehr in dem Array?
-                if (gefunden == primzahlen.length) {
-                    // Dann kopiere die bisherigen Primzahlen in ein doppelt so großes Array um
-                    primzahlen = java.util.Arrays.copyOf(primzahlen, primzahlen.length * 2);
-                }
-
-                primzahlen[gefunden++] = i;
-
-                for (int k = 2 * i; k < prim.length; k += i) {
-                    prim[k] = false;
-                }
-            }
-        }
-        return java.util.Arrays.copyOf(primzahlen, gefunden);
-    }
-
-    public static void main(String[] args) {
-        int grenze = Konsole.readInt("Primzahlen bis zu welcher Grenze? ");
-        int[] primzahlen = berechnePrimzahlen(grenze);
-        System.out.println(java.util.Arrays.toString(primzahlen));
-    }
-}
-```
-
-> **Übung:**
-> - Warum fängt die äußere Schleife bei 2 an?
->   - Wie würde sich das Programm verhalten, wenn sie bei 1 anfinge?
->   - Wie würde sich das Programm verhalten, wenn sie bei 0 anfinge?
-> - `java.util.Arrays.fill(prim, true);` ist erforderlich, weil `false` der default-Wert von `boolean`
- ist
->   - Entferne diese Codezeile, dann sind alle Variablen in dem Array `false`
->   - Ändere den Array-Namen von `prim` nach `zusammengesetzt`
->   - Invertiere die verbleibende boolesche Logik
-> - Mathematisch könnte die innere Schleife mit `int k = i * i` anfangen statt `2 * i`
->   - Für kleine `grenze`n funktioniert das auch
->   - Für 1 Millionen aber nicht; warum nicht?
-> - Auf Wikipedia findet man [eine schlauere Implementierung](https://de.wikipedia.org/wiki/Sieb_des_Eratosthenes#Implementierung) mit *zwei äußeren* Schleifen:
->   - die erste bis inkl. √(grenze) — mit Markierung der Vielfachen
->   - die zweite ab exkl. √(grenze) — ohne Markierung der Vielfachen
->   - Passe den Java-Code entsprechend an
->   - ☕ `int wurzel = (int) Math.sqrt(grenze);`
-
-### Formatierung
+### 🏆 Zahlen formatieren
 
 - `int zahl = Konsole.readInt("")` liest Dezimalziffern 0-9 ein
 - `System.out.println(zahl)` schreibt Dezimalziffern 0-9 raus

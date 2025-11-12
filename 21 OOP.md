@@ -2,112 +2,208 @@
 
 ### Motivation
 
-- Der eigentliche Primzahl-Algorithmus wird durch das Array-Wachstum verkompliziert:
+- Wie viele Namen konnten wir gestern sortieren?
+- Das hatte zunächst der Programmierer festgelegt:
 
 ```java
-public class Eratosthenes {
-    public static int[] berechnePrimzahlen(int grenze) {
+String[] namen = new String[3];
+System.out.println("Bitte 3 Namen eingeben:");
 
-        boolean[] prim = new boolean[grenze];
-        java.util.Arrays.fill(prim, true);
+namen[0] = Konsole.readString("> ");
+namen[1] = Konsole.readString("> ");
+namen[2] = Konsole.readString("> ");
+```
 
-        int[] primzahlen = new int[10]; // erst mal wenig Speicher reservieren
-        int gefunden = 0;               // bisher wurde noch keine Primzahl gefunden
+- Später dann der Anwender des Programms:
 
-        for (int i = 2; i < prim.length; ++i) {
-            if (prim[i]) {
-                // Ist kein Platz mehr in dem Array?
-                if (gefunden == primzahlen.length) {
-                    // Dann kopiere die bisherigen Primzahlen in ein doppelt so großes Array um
-                    primzahlen = java.util.Arrays.copyOf(primzahlen, primzahlen.length * 2);
-                }
+```java
+int n = Konsole.readInt("Wie viele Namen sortieren? ");
+String[] namen = new String[n];
+System.out.println("Bitte " + n + " Namen eingeben:");
 
-                primzahlen[gefunden++] = i;
-
-                for (int k = 2 * i; k < prim.length; k += i) {
-                    prim[k] = false;
-                }
-            }
-        }
-        return java.util.Arrays.copyOf(primzahlen, gefunden);
-    }
+for (int i = 0; i < n; ++i) {
+    namen[i] = Konsole.readString("> ");
 }
 ```
 
-- Deutlich übersichtlicher wäre es, für das Array-Wachstum einen eigenen Typ zu benutzen:
+- Noch schöner wäre es, wenn der Anwender die Anzahl nicht von vornherein festlegen müsste
+- sondern einfach so lange Namen eingeben könnte, bis ihm keiner mehr einfällt:
+
+```
+> q
+> w
+> e
+> r
+> t
+> z
+> u
+> i
+> o
+> p
+>
+```
+
+- Dazu könnte man erst mal mit einem Array der Größe 0 anfangen
+- und dann jedes Mal die alten Namen in ein um 1 größeres Array umkopieren: `·`
+
+```
+{}
+
+{q}
+ ·
+{q, w}
+ ·  ·
+{q, w, e}
+ ·  ·  ·
+{q, w, e, r}
+ ·  ·  ·  ·
+{q, w, e, r, t}
+ ·  ·  ·  ·  ·
+{q, w, e, r, t, z}
+ ·  ·  ·  ·  ·  ·
+{q, w, e, r, t, z, u}
+ ·  ·  ·  ·  ·  ·  ·
+{q, w, e, r, t, z, u, i}
+ ·  ·  ·  ·  ·  ·  ·  ·
+{q, w, e, r, t, z, u, i, o}
+ ·  ·  ·  ·  ·  ·  ·  ·  ·
+{q, w, e, r, t, z, u, i, o, p}
+```
+
+- Wie viele Namen mussten insgesamt umkopiert werden? `·`
+- 1+2+3+4+5+6+7+8+9 = 45
+- Bei 1000 Namen wären das 1+2+3+...+997+998+999 = 499500 Kopien!
 
 ```java
-public class Eratosthenes {
-    public static int[] berechnePrimzahlen(int grenze) {
+String[] namen = new String[0];
+System.out.println("Bitte beliebig viele Namen eingeben:");
 
-        boolean[] prim = new boolean[grenze];
-        java.util.Arrays.fill(prim, true);
+String name = Konsole.readString("> "); // erster Name
+while (!name.isBlank()) {
 
-        IntArrayBuilder primzahlen = new IntArrayBuilder(10); // Objekt-Erzeugung
+    // Alte Namen umkopieren                            ///
+    namen = java.util.Arrays.copyOf(namen, namen.length + 1);
 
-        for (int i = 2; i < prim.length; ++i) {
-            if (prim[i]) {
-                primzahlen.add(i); // Methoden-Aufruf
+    // Neuen Namen eintragen
+    namen[namen.length - 1] = name;
 
-                for (int k = 2 * i; k < prim.length; k += i) {
-                    prim[k] = false;
-                }
-            }
-        }
-        return primzahlen.toArray(); // Methoden-Aufruf
-    }
+    name = Konsole.readString("> ");  // nächster Name
 }
 ```
 
-- Leider existiert kein solcher Typ `IntArrayBuilder`
+- Schlauer wäre es, am Anfang ein paar Plätze zu **reservieren**
+- und die Array-Größe nur noch bei Bedarf zu **verdoppeln**:
+
+```
+{_, _}
+{q, _}
+{q, w}
+ ·  ·
+{q, w, e, _}
+{q, w, e, r}
+ ·  ·  ·  ·
+{q, w, e, r, t, _, _, _}
+{q, w, e, r, t, z, _, _}
+{q, w, e, r, t, z, u, _}
+{q, w, e, r, t, z, u, i}
+ ·  ·  ·  ·  ·  ·  ·  ·
+{q, w, e, r, t, z, u, i, o, _, _, _, _, _, _, _}
+{q, w, e, r, t, z, u, i, o, p, _, _, _, _, _, _}
+```
+
+- Wie viele Namen mussten insgesamt umkopiert werden? ·
+- 2+4+8 = 14
+- Bei 1000 Namen wären das nur noch 2+4+8+16+32+64+128+256+512 = 1022 Kopien
+
+```java
+String[] namen = new String[2]; // Platz für 2 Namen
+int used = 0;                   //    bisher 0 Namen eingetragen
+System.out.println("Bitte beliebig viele Namen eingeben:");
+
+String name = Konsole.readString("> "); // erster Name
+while (!name.isBlank()) {
+
+    // Alle Array-Einträge mit Namen belegt?
+    if (used == namen.length) {
+        // Dann alte Namen umkopieren               ///
+        namen = java.util.Arrays.copyOf(namen, used * 2);
+    }
+
+    // Neuen Namen eintragen
+    namen[used++] = name;
+
+    name = Konsole.readString("> ");  // nächster Name
+}
+```
+
+- Ursprünglich ging es in unserem Programm ausschließlich um das Sortieren von Namen
+- Nun müssen unsere Kollegen leider auch noch das Array-Wachstum verstehen
+- Wünschenswert wäre ein spezieller Typ, der dieses Array-Wachstum versteckt:
+
+```java
+StringArrayBuilder builder = new StringArrayBuilder(2);
+System.out.println("Bitte beliebig viele Namen eingeben:");
+
+String name = Konsole.readString("> "); // erster Name
+while (!name.isBlank()) {
+
+    // Neuen Namen eintragen
+    builder.add(name);
+
+    name = Konsole.readString("> ");  // nächster Name
+}
+
+String[] namen = builder.toArray();
+```
+
+- Leider existiert kein solcher Typ `StringArrayBuilder`
 - Wir können ihn aber selber definieren:
 
 ```java
 //           Klasse
-public class IntArrayBuilder {
+public class StringArrayBuilder {
 
-    //      Zustandsfelder
-    private int[] array;
-    private int used;
+    //               Zustandsfelder
+    private String[] array;
+    private int      used;
 
-    //     Konstruktor   
-    public IntArrayBuilder(int capacity) {
+    //     Konstruktor
+    public StringArrayBuilder(int capacity) {
         // Initialisierung der Zustandsfelder
-        array = new int[capacity];
+        array = new String[capacity];
         used = 0;
     }
 
-    //     Methode
-    public void add(int entry) {
+    //          Methode
+    public void add(String entry) {
         if (used == array.length) {
             array = java.util.Arrays.copyOf(array, used * 2);
         }
         array[used++] = entry;
     }
 
-    //     Methode
-    public int[] toArray() {
+    //              Methode
+    public String[] toArray() {
         return java.util.Arrays.copyOf(array, used);
     }
 }
 ```
 
+- Zustandsfelder, Konstruktoren und Methoden einer Klasse gehören logisch zusammen
+- Wie teilt man ein großes Programm sinnvoll in mehrere Klassen auf?
+- Das ist eine Kunst für sich (siehe z.B. Domain-Driven Design)
+
 ### Objektorientierte Grundlagen
 
-- Eine Java-Klasse hat 2 Daseinsberechtigungen:
-  1. Namensraum für statische Methoden und Konstanten
-  2. Beschreibung von Zustand und Verhalten ihrer *Objekte*
-- `new IntArrayBuilder(10)` erzeugt ein neues Objekt der Klasse `IntArrayBuilder`:
-  - Java reserviert genügend Heap-Speicher für die beiden *Zustandsfelder* `array` und `used`
+- `new StringArrayBuilder(2)` erzeugt ein neues Objekt der Klasse `StringArrayBuilder`:
+  - Java reserviert genügend Speicher für die beiden *Zustandsfelder* `array` und `used`
   - Java überschreibt den reservierten Speicher aus Sicherheitsgründen mit `0`-Bytes
-  - Java führt den *Konstruktor* `IntArrayBuilder(int capacity)` aus, um die Zustandsfelder zu initialisieren
-  - Das Ergebnis von `new IntArrayBuilder(10)` ist eine Referenz auf das soeben erzeugte Objekt
+  - Java führt den *Konstruktor* `StringArrayBuilder(int capacity)` aus, um die Zustandsfelder zu initialisieren
+  - Das Ergebnis von `new StringArrayBuilder(2)` ist eine Referenz auf das soeben erzeugte Objekt
 - Anschließend können *Methoden* an dem Objekt aufgerufen werden:
-  - `primzahlen.add(i)`
-  - `primzahlen.toArray()`
+  - `builder.add(name)`
+  - `builder.toArray()`
   - allgemein `objekt.methode(argumente)`
-  - Beim Methoden-Aufruf werden Argumente wie gewohnt an Parameter gebunden: `entry = i`
-  - Außerdem wird das Objekt vor dem Punkt an die `this`-Referenz gebunden: `this = primzahlen`
 
 ### Woran erkenne ich einen Konstruktor?
 
@@ -129,15 +225,15 @@ public class IntArrayBuilder {
   - `"vodkatrinken".contains("katrin")`
   - allgemein `objekt.methode(argumente)`
 - Normale Methoden kann man nicht an einer Klasse aufrufen:
-  - ❌ `String.length()` — Die Länge *welchen* Strings? Es schwirren Tausende im Arbeitsspeicher rum...
-  - ❌ `IntArrayBuilder.toArray()` — *Welchen* IntArrayBuilder in ein Array kopieren?
+  - ❌ `String.length()` — Die Länge *welchen* Strings? Es schwirren Tausende im Speicher rum...
+  - ❌ `StringArrayBuilder.toArray()` — *Welchen* StringArrayBuilder in ein Array kopieren?
 
 ### Wozu `private` Zustandsfelder?
 
 1. **Konsistenz:** Private Zustandsfelder können nicht von anderen Klassen in einen inkonsistenten Zustand gebracht werden
-2. **Mentale Entlastung:** Andere Klassen brauchen gar nicht wissen, dass es diese privaten Zustandsfelder überhaupt gibt
+2. **Mentale Entlastung:** Andere Klassen brauchen gar nicht wissen, dass diese privaten Zustandsfelder überhaupt existieren
 3. **Kapselung/Wartung:** Die Auswahl privater Zustandsfelder kann sich über die Jahre ändern
-   - siehe `java.lang.String`
+   - Parade-Beispiel `java.lang.String`, siehe unten
 
 ### java.lang.String im Wandel der Zeit
 
@@ -150,14 +246,14 @@ public class String {
     // ...
 
     public char charAt(int index) {
-        return value[index];
+        return value[index]; // einfach
     }
 
     // ...
 }
 ```
 
-- Sehr viele Strings verwenden aber nur die ersten 256 von 65536 möglichen `char`s:
+- In der Praxis verwenden viele Strings aber nur die ersten 256 von 65536 möglichen `char`s:
 
 ```
 
@@ -174,21 +270,18 @@ public class String {
 
 ```java
 public class String {
+
     private final byte[] value;
-    // LATIN1 oder UTF16
-    private final byte coder;
+    private final byte   coder; // LATIN1 (0) oder UTF16 (1)
 
     // ...
 
     public char charAt(int index) {
-        // stark vereinfacht dargestellt:
+        // VIEL komplizierter als früher!
         if (coder == LATIN1) {
-            // 8 Bit vorzeichenlos auf 16 Bit erweitern
-            return (char) (value[index] & 255);
+            // 1 byte in 1 char umwandeln
         } else {
-            // zwei Bytes zu 16 Bit zusammenkleben:
-            index *= 2;
-            return (value[index] & 255) << 8 | (value[index + 1] & 255);
+            // 2 byte zu 1 char kombinieren
         }
     }
 
@@ -201,7 +294,7 @@ public class String {
 - Viele Java-Entwickler wissen bis heute nichts von dieser Optimierung
   - und *brauchen* das auch gar nicht wissen!
 
-### Tic Tac Toe
+### Tic Tac Toe (★☆☆☆☆)
 
 - Starte die (`main`-Methode in der) Klasse `TicTacToeGUI`
 - Klicke zufällig auf Knöpfe
@@ -219,7 +312,7 @@ public class String {
   - Die besetzte Position liegt aber nur auf höchstens 4 Gewinn-Reihen
   - 🏆 Optimiere die Gewinn-Prüfung basierend auf dieser Erkenntnis
 
-### Point Cloud
+### Point Cloud (★★☆☆☆)
 
 - Starte die (`main`-Methode in der) Klasse `Cloud`
 - Studiere die Klasse `Point` und identifiziere:
@@ -236,17 +329,20 @@ public class String {
   - Berücksichtige `mass` in der Methode `paint` für die Größe des gezeichneten Quadrats
 - 🏆 Verpasse den Punkten eine dritte Dimension
 
-### Tetris
+### Tetris (★★★★★)
 
 - Starte die (`main`-Methode in der) Klasse `TetrisGUI`
   - Was funktioniert bereits?
   - Was funktioniert noch nicht?
-- Implementiere die Methode `rotate`
-  - Beachte die Zustandsfelder `rotation` und `shape`
-  - Was passiert, wenn du einen vertikalen `I`-Stein am Rand drehst?
+- **Plenum:** Wir implementieren gemeinsam die Methode `rotate`
+  - Dazu wühlen wir uns erst mal gemeinsam durch die Klasse `Tetris`
+  - Relevant sind die beiden Zustandsfelder `rotation` und `shape`
+  - Was passiert, wenn wir einen vertikalen `I`-Stein am Rand drehen?
 - Implementiere die Methode `removeCompleteLines` in 3 Schritten:
   1. Falls die unterste Zeile voll ist, überschreibe sie mit Nullen
+     - Tipp: `java.util.Arrays.fill`
   2. Falls die unterste Zeile voll ist, kopiere die Zeilen darüber 1 Zeile nach unten
+     - Tipp: `System.arraycopy`
   3. Führe Schritt 2 nicht nur für die unterste Zeile aus, sondern für *alle* Zeilen
 - Implementiere die Methode `insertPenaltyLines`
   - Strafzeilen werden ganz unten eingefügt
@@ -254,7 +350,6 @@ public class String {
   - Verwende als Farbwert `9`
 - Bisher fällt der aktuelle Stein 1x pro Sekunde (alle 30 Ticks)
   - Für jede bisher entfernte Reihe soll der Stein 1 Tick schneller fallen
-- Verlängere den langen `I`-Stein um 25%
 - Angenommen, es werden erst `m` Strafzeilen geschickt und dann `n` Strafzeilen
   - Alle `m` Strafzeilen sollen dieselbe (zufällige) Leer-Spalte haben
   - Alle `n` Strafzeilen sollen dieselbe (zufällige) Leer-Spalte haben

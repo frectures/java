@@ -95,7 +95,7 @@ Listen-Klasse: class java.util.ArrayList
 ```
 
 - `Files.readAllLines` liefert also de facto ein `ArrayList`-Objekt zurück
-  - `ArrayList` verwendet dieselbe Längen-Verdoppelung wie unser `IntArrayBuilder`
+  - `ArrayList` verwendet dieselbe Längen-Verdoppelung wie unser `StringArrayBuilder`
 - Den Aufrufer geht die konkrete Klasse `ArrayList` aber gar nichts an
   - Ihn hat nur der abstrakte Ergebnistyp `List` zu interessieren
   - “Program to an Interface, not an Implementation”
