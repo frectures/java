@@ -36,7 +36,7 @@ public class MobyDick {
 ```
 
 - `Files.readAllLines` liefert eine `List<String>`
-- Dabei legt `<String>` den Elementtyp fest: "eine Liste von Strings"
+- Dabei legt `<String>` den Elementtyp fest: “eine Liste von Strings”
 - `List` ist ein Interface, welches das allgemeinere Interface `Collection` erweitert:
 
 ```java
@@ -90,15 +90,15 @@ public interface List<E> extends Collection<E> {
 - Das Programm schreibt auf die Konsole:
 
 ```
-Anzahl Zeilen: 21940
+Anzahl Zeilen: 21936
 Listen-Klasse: class java.util.ArrayList
 ```
 
 - `Files.readAllLines` liefert also de facto ein `ArrayList`-Objekt zurück
-  - `ArrayList` verwendet intern ein Array, daher der Name
+  - `ArrayList` verwendet dieselbe Längen-Verdoppelung wie unser `StringArrayBuilder`
 - Den Aufrufer geht die konkrete Klasse `ArrayList` aber gar nichts an
   - Ihn hat nur der abstrakte Ergebnistyp `List` zu interessieren
-  - "Program to an Interface, not an Implementation"
+  - “Program to an Interface, not an Implementation”
 
 ### Wörter
 
@@ -197,7 +197,7 @@ Listen-Klasse: class java.util.ArrayList
 | whale     |      11010111101101011010010**1001** | 9                          |
 
 - `"the".hashCode()` = `'t'*31*31 + 'h'*31 + 'e'` = `114801` = `0b11100000001110001`
-- Die unteren 4 Bits `hash & 0b1111` legen die "Zeile" von 0 bis 15 fest ¹
+- Die unteren 4 Bits `hash & 0b1111` legen die “Zeile” von 0 bis 15 fest ¹
 - Das neunte Wort `"the"` 👈 wird *nicht* erneut gespeichert
   - weil in Zeile 1 bereits ein `"the"` gespeichert ist
   - Andere Zeilen mussten dafür gar nicht untersucht werden! 🚀
@@ -249,6 +249,47 @@ Listen-Klasse: class java.util.ArrayList
 > **Hyrum's Law:** “With a sufficient number of users of an API,  
 > it does not matter what you promise in the contract;  
 > All observable behaviors of your system will be depended on by somebody.”
+
+### StringSet
+
+- Vervollständige die Klasse `StringSet` und verwende sie für Moby Dick:
+
+```java
+public class StringSet {
+    // Grundidee: Viele sehr kurze Arrays anstatt einem langen Array
+    private final String[][] arrays;
+
+    public StringSet() {
+        arrays = new String[32768][]; // MUSS eine Zweierpotenz sein!
+        java.util.Arrays.fill(arrays, new String[0]); // anstatt null
+    }
+
+    public void add(String s) {
+        // Aus jedem String kann man seine zugehörige Zeile berechnen
+        int zeile = s.hashCode() & (arrays.length - 1);
+
+        // Strings in derselben Zeile teilen sich dasselbe innere Array
+        String[] array = arrays[zeile];
+
+        // TODO Wenn das Wort noch nicht enthalten ist, füge es hinzu.
+        // TODO Dazu muss das innere Array um 1 Element vergrößert werden. (+1)
+    }
+
+    public int size() {
+        // TODO Entweder die Längen aller inneren Arrays aufaddieren
+        // TODO oder ein neues Zustandsfeld beim Einfügen pflegen
+        return 123;
+    }
+
+    public String[] first10() {
+        // TODO
+        return arrays[0];
+    }
+}
+```
+
+- Probiere verschiedene 2er-Potenzen für die Länge von `arrays` aus
+  - Welchen Einfluss hat das auf die gemessene Zeit?
 
 ### Map
 
