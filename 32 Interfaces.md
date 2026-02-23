@@ -171,10 +171,12 @@ Tetris[] games = {
 
 ¹ Seit Java 8 können Interfaces auch konkrete `default`-Methoden (mit Rümpfen) enthalten
 
-### Bekannte Informatiker
+### Prägende Informatiker
 
 - Starte die (`main`-Methode in der) Klasse `Informatiker`
-  - Probiere aus, was die 4 Buttons bewirken
+- Probiere aus, was die 3 Buttons bewirken
+  - Was passiert, wenn du mehrfach auf den Button `Alter` klickst?
+  - Warum tritt dieser Effekt nicht bei den anderen 2 Buttons auf?
 - Studiere das Interface `Vergleicher` und seine implementierenden Klassen:
   - Rechte Maustaste in Zeile 3 auf `Vergleicher`
   - Go To

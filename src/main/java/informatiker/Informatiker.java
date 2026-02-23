@@ -17,44 +17,46 @@ public class Informatiker {
     private static void createAndShowGUI() {
         // TODO weitere Vergleicher hinzufügen
         Vergleicher[] alleVergleicher = {
-                new Unsortiert(),
                 new PerNachname(),
                 new PerAlter(),
                 new Zweistufig(new PerAlter(), new PerNachname()),
         };
 
         Person[] personen = {
-                new Person(10, " Ada", " Lovelace", 1815, false),
-                new Person(11, " Charles", " Babbage", 1791, true),
-                new Person(12, " Grace", " Hopper", 1906, false),
-                new Person(13, " Konrad", " Zuse", 1910, true),
+                new Person(" Ada", " Lovelace", 1815, false, " Analytical Engine"),
+                new Person(" Alan", " Turing", 1912, true, " Enigma"),
+                new Person(" Charles", " Babbage", 1791, true, " Analytical Engine"),
+                new Person(" Joan", " Clarke", 1917, false, " Enigma"),
+                new Person(" Konrad", " Zuse", 1910, true, " erster moderner Computer"),
 
-                new Person(20, " Alan", " Kay", 1940, true),
-                new Person(21, " Alonzo", " Church", 1903, true),
-                new Person(22, " Brian", " Kernighan", 1942, true),
-                new Person(23, " Dennis", " Ritchie", 1941, true),
-                new Person(24, " John", " Baccus", 1924, true),
-                new Person(25, " Kristen", " Nygaard", 1926, true),
-                new Person(26, " Niklaus", " Wirth", 1934, true),
-                new Person(27, " Ole-Johan", " Dahl", 1931, true),
+                new Person(" Alonzo", " Church", 1903, true, " Lambda-Kalkül"),
+                new Person(" Claude", " Shannon", 1916, true, " Abtast-Theorem"),
+                new Person(" George", " Boole", 1815, true, " boolean"),
+                new Person(" Harry", " Nyquist", 1889, true, " Abtast-Theorem"),
+                new Person(" John", " Neumann von", 1903, true, " Von-Neumann-Architektur"),
+                new Person(" Kurt", " Goedel", 1906, true, " Entscheidungsproblem"),
+                new Person(" Richard", " Hamming", 1915, true, " Hamming-Abstand"),
 
-                new Person(30, " Ken", " Thompson", 1943, true),
-                new Person(31, " Linus", " Torvalds", 1969, true),
-                new Person(32, " Richard", " Stallman", 1953, true),
+                new Person(" Adele", " Goldberg", 1945, false, " Smalltalk"),
+                new Person(" Alan", " Kay", 1940, true, " Smalltalk"),
+                new Person(" John", " Backus", 1924, true, " Fortran"),
+                new Person(" John", " McCarthy", 1927, true, " LISP"),
+                new Person(" Kristen", " Nygaard", 1926, true, " Simula"),
+                new Person(" Ole-Johan", " Dahl", 1931, true, " Simula"),
 
-                new Person(40, " Alan", " Turing", 1912, true),
-                new Person(41, " Claude", " Shannon", 1916, true),
-                new Person(42, " George", " Boole", 1815, true),
-                new Person(43, " Harry", " Nyquist", 1889, true),
-                new Person(44, " John", " Neumann von", 1903, true),
-                new Person(45, " Kurt", " Goedel", 1906, true),
-                new Person(46, " Richard", " Hamming", 1915, true),
+                new Person(" Barbara", " Liskov", 1939, false, " das L in SOLID"),
+                new Person(" Christiane", " Floyd", 1943, false, " STEPS"),
+                new Person(" Edsger", " Dijkstra", 1930, true, " Strukturierte Programmierung"),
+                new Person(" Frances", " Allan", 1932, false, " Compiler-Optimierungen"),
+                new Person(" Grace", " Hopper", 1906, false, " der erste Compiler"),
+                new Person(" Kateryna", " Yushchenko", 1919, false, " Zeiger"),
+                new Person(" Margaret", " Hamilton", 1936, false, " Software Engineering"),
 
-                new Person(50, " Christiane", " Floyd", 1943, false),
-                new Person(51, " Donald", " Knuth", 1938, true),
-                new Person(52, " Edsger", " Dijkstra", 1930, true),
-                new Person(53, " Herman", " Hollerith", 1860, true),
-                new Person(54, " Tony", " Hoare", 1934, true),
+                new Person(" Donald", " Knuth", 1938, true, " TeX"),
+                new Person(" Herman", " Hollerith", 1860, true, " Lochkarten"),
+                new Person(" Radia", " Perlman", 1951, false, " Internet Routing"),
+                new Person(" Tim", " Berners-Lee", 1955, true, " World Wide Web"),
+                new Person(" Tony", " Hoare", 1934, true, " Quicksort"),
         };
 
         JTable table = new JTable();
@@ -73,7 +75,7 @@ public class Informatiker {
 
             @Override
             public int getColumnCount() {
-                return 4;
+                return 5;
             }
 
             @Override
@@ -83,6 +85,7 @@ public class Informatiker {
                     case 1 -> "Vorname";
                     case 2 -> "Geburtsjahr";
                     case 3 -> "Geschlecht";
+                    case 4 -> "Einfluss";
                     default -> throw new IllegalArgumentException("" + column);
                 };
             }
@@ -95,6 +98,7 @@ public class Informatiker {
                     case 1 -> person.vorname();
                     case 2 -> formatiertesJahr(person.geburtsjahr());
                     case 3 -> person.maennlich() ? "   ♂" : "♀   ";
+                    case 4 -> person.einfluss();
                     default -> throw new IllegalArgumentException("" + columnIndex);
                 };
             }
@@ -116,7 +120,7 @@ public class Informatiker {
         table.getColumnModel().getColumn(2).setCellRenderer(renderer);
         table.getColumnModel().getColumn(3).setCellRenderer(renderer);
 
-        JFrame frame = new JFrame("Bekannte Informatiker");
+        JFrame frame = new JFrame("Prägende Informatiker");
         frame.add(buttons, BorderLayout.NORTH);
         frame.add(new JScrollPane(table), BorderLayout.CENTER);
         frame.pack();
@@ -127,28 +131,33 @@ public class Informatiker {
 
     private static String formatiertesJahr(int jahr) {
         return switch (jahr) {
-            case 1791 -> "1791                     ";
-            case 1815 -> " 1815                    ";
-            case 1860 -> "  1860                   ";
-            case 1889 -> "   1889                  ";
-            case 1903 -> "    1903                 ";
-            case 1906 -> "     1906                ";
-            case 1910 -> "      1910               ";
-            case 1912 -> "       1912              ";
-            case 1915 -> "        1915             ";
-            case 1916 -> "         1916            ";
-            case 1924 -> "          1924           ";
-            case 1926 -> "           1926          ";
-            case 1930 -> "            1930         ";
-            case 1931 -> "             1931        ";
-            case 1934 -> "              1934       ";
-            case 1938 -> "               1938      ";
-            case 1940 -> "                1940     ";
-            case 1941 -> "                 1941    ";
-            case 1942 -> "                  1942   ";
-            case 1943 -> "                   1943  ";
-            case 1953 -> "                    1953 ";
-            case 1969 -> "                     1969";
+            case 1791 -> "1791                          ";
+            case 1815 -> " 1815                         ";
+            case 1860 -> "  1860                        ";
+            case 1889 -> "   1889                       ";
+            case 1903 -> "    1903                      ";
+            case 1906 -> "     1906                     ";
+            case 1910 -> "      1910                    ";
+            case 1912 -> "       1912                   ";
+            case 1915 -> "        1915                  ";
+            case 1916 -> "         1916                 ";
+            case 1917 -> "          1917                ";
+            case 1919 -> "           1919               ";
+            case 1924 -> "            1924              ";
+            case 1926 -> "             1926             ";
+            case 1927 -> "              1927            ";
+            case 1930 -> "               1930           ";
+            case 1931 -> "                1931          ";
+            case 1932 -> "                 1932         ";
+            case 1934 -> "                  1934        ";
+            case 1936 -> "                   1936       ";
+            case 1938 -> "                    1938      ";
+            case 1939 -> "                     1939     ";
+            case 1940 -> "                      1940    ";
+            case 1943 -> "                       1943   ";
+            case 1945 -> "                        1945  ";
+            case 1951 -> "                         1951 ";
+            case 1955 -> "                          1955";
             default -> throw new IllegalArgumentException("" + jahr);
         };
     }
