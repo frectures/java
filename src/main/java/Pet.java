@@ -18,13 +18,13 @@ abstract class Pet {
     protected abstract String noise();
 
 
-    public static void main(String[] args) {
+    static void main() {
         List<Pet> pets = List.of(
                 new Cat("Snowball"),
                 new Dog("Santa's Little Helper")
         );
         for (Pet pet : pets) {
-            System.out.println(pet);
+            IO.println(pet);
         }
     }
 }

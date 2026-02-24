@@ -7,7 +7,7 @@ List<String> sorten = List.of("Vanille", "Erdbeer", "Schoko");
 
 for (String sorte : sorten) {
 
-    System.out.println("1x " + sorte + "-Eis, bitte!");
+    IO.println("1x " + sorte + "-Eis, bitte!");
 }
 ```
 
@@ -20,7 +20,7 @@ Iterator<String> iterator = sorten.iterator();
 while (iterator.hasNext()) {
     String sorte = iterator.next();
 
-    System.out.println("1x " + sorte + "-Eis, bitte!");
+    IO.println("1x " + sorte + "-Eis, bitte!");
 }
 ```
 

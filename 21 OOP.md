@@ -7,22 +7,22 @@
 
 ```java
 String[] namen = new String[3];
-System.out.println("Bitte 3 Namen eingeben:");
+IO.println("Bitte 3 Namen eingeben:");
 
-namen[0] = Konsole.readString("> ");
-namen[1] = Konsole.readString("> ");
-namen[2] = Konsole.readString("> ");
+namen[0] = IO.readln("> ");
+namen[1] = IO.readln("> ");
+namen[2] = IO.readln("> ");
 ```
 
 - Später dann der Anwender des Programms:
 
 ```java
-int n = Konsole.readInt("Wie viele Namen sortieren? ");
+int n = Integer.parseInt(IO.readln("Wie viele Namen sortieren? "));
 String[] namen = new String[n];
-System.out.println("Bitte " + n + " Namen eingeben:");
+IO.println("Bitte " + n + " Namen eingeben:");
 
 for (int i = 0; i < n; ++i) {
-    namen[i] = Konsole.readString("> ");
+    namen[i] = IO.readln("> ");
 }
 ```
 
@@ -76,18 +76,18 @@ for (int i = 0; i < n; ++i) {
 
 ```java
 String[] namen = new String[0];
-System.out.println("Bitte beliebig viele Namen eingeben:");
+IO.println("Bitte beliebig viele Namen eingeben:");
 
-String name = Konsole.readString("> "); // erster Name
+String name = IO.readln("> "); // erster Name
 while (!name.isBlank()) {
 
-    // Alte Namen umkopieren                            ///
-    namen = java.util.Arrays.copyOf(namen, namen.length + 1);
+    // Alte Namen umkopieren                  ///
+    namen = Arrays.copyOf(namen, namen.length + 1);
 
     // Neuen Namen eintragen
     namen[namen.length - 1] = name;
 
-    name = Konsole.readString("> ");  // nächster Name
+    name = IO.readln("> ");  // nächster Name
 }
 ```
 
@@ -118,21 +118,21 @@ while (!name.isBlank()) {
 ```java
 String[] namen = new String[2]; // Platz für 2 Namen
 int used = 0;                   //    bisher 0 Namen eingetragen
-System.out.println("Bitte beliebig viele Namen eingeben:");
+IO.println("Bitte beliebig viele Namen eingeben:");
 
-String name = Konsole.readString("> "); // erster Name
+String name = IO.readln("> "); // erster Name
 while (!name.isBlank()) {
 
     // Alle Array-Einträge mit Namen belegt?
     if (used == namen.length) {
-        // Dann alte Namen umkopieren               ///
-        namen = java.util.Arrays.copyOf(namen, used * 2);
+        // Dann alte Namen umkopieren     ///
+        namen = Arrays.copyOf(namen, used * 2);
     }
 
     // Neuen Namen eintragen
     namen[used++] = name;
 
-    name = Konsole.readString("> ");  // nächster Name
+    name = IO.readln("> ");  // nächster Name
 }
 ```
 
@@ -142,15 +142,15 @@ while (!name.isBlank()) {
 
 ```java
 StringArrayBuilder builder = new StringArrayBuilder(2);
-System.out.println("Bitte beliebig viele Namen eingeben:");
+IO.println("Bitte beliebig viele Namen eingeben:");
 
-String name = Konsole.readString("> "); // erster Name
+String name = IO.readln("> "); // erster Name
 while (!name.isBlank()) {
 
     // Neuen Namen eintragen
     builder.add(name);
 
-    name = Konsole.readString("> ");  // nächster Name
+    name = IO.readln("> ");  // nächster Name
 }
 
 String[] namen = builder.toArray();
@@ -212,7 +212,7 @@ public class StringArrayBuilder {
 - Konstruktoren haben *niemals* einen Ergebnistyp und müssen wie die Klasse heißen:
   - `public NameDerKlasse()`
 
-### Wieso steht kein `static` mehr bei den Methoden?
+### Warum sind in der `String`-Klasse manche Methoden `static` und andere nicht?
 
 - Statische Methoden werden nicht an Objekten aufgerufen, sondern an der Klasse selbst:
   - `String.valueOf(42)`
@@ -226,13 +226,12 @@ public class StringArrayBuilder {
   - allgemein `objekt.methode(argumente)`
 - Normale Methoden kann man nicht an einer Klasse aufrufen:
   - ❌ `String.length()` — Die Länge *welchen* Strings? Es schwirren Tausende im Speicher rum...
-  - ❌ `StringArrayBuilder.toArray()` — *Welchen* StringArrayBuilder in ein Array kopieren?
 
 ### Wozu `private` Zustandsfelder?
 
 1. **Konsistenz:** Private Zustandsfelder können nicht von anderen Klassen in einen inkonsistenten Zustand gebracht werden
 2. **Mentale Entlastung:** Andere Klassen brauchen gar nicht wissen, dass diese privaten Zustandsfelder überhaupt existieren
-3. **Kapselung/Wartung:** Die Auswahl privater Zustandsfelder kann sich über die Jahre ändern
+3. **Wartung:** Die Auswahl privater Zustandsfelder kann sich über die Jahre ändern
    - Parade-Beispiel `java.lang.String`, siehe unten
 
 ### java.lang.String im Wandel der Zeit
@@ -296,11 +295,11 @@ public class String {
 
 ### Tic Tac Toe (★☆☆☆☆)
 
-- Starte die (`main`-Methode in der) Klasse `TicTacToeGUI`
+- Starte die (`main`-Methode in der) Klasse `ttt/TicTacToeGUI.java`
 - Klicke zufällig auf Knöpfe
   - Was funktioniert bereits?
   - Was funktioniert noch nicht?
-- Studiere die Klasse `TicTacToe` und identifiziere:
+- Studiere die andere Klasse `TicTacToe` (**ohne** `GUI`!) und identifiziere:
   - Zustandsfeld(er)
   - Konstruktor(en)
   - Methode(n)
@@ -314,7 +313,7 @@ public class String {
 
 ### Point Cloud (★★☆☆☆)
 
-- Starte die (`main`-Methode in der) Klasse `Cloud`
+- Starte die (`main`-Methode in der) Klasse `gravity/Cloud.java`
 - Studiere die Klasse `Point` und identifiziere:
   - Zustandsfeld(er)
   - Konstruktor(en)
@@ -331,11 +330,11 @@ public class String {
 
 ### Tetris (★★★★★)
 
-- Starte die (`main`-Methode in der) Klasse `TetrisGUI`
+- Starte die (`main`-Methode in der) Klasse `tetris/TetrisGUI.java`
   - Was funktioniert bereits?
   - Was funktioniert noch nicht?
 - **Plenum:** Wir implementieren gemeinsam die Methode `rotate`
-  - Dazu wühlen wir uns erst mal gemeinsam durch die Klasse `Tetris`
+  - Dazu wühlen wir uns erst mal gemeinsam durch die Klasse `Tetris` (**ohne** `GUI`!)
   - Relevant sind die beiden Zustandsfelder `rotation` und `shape`
   - Was passiert, wenn wir einen vertikalen `I`-Stein am Rand drehen?
 - Implementiere die Methode `removeCompleteLines` in 3 Schritten:

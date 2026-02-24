@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 public class TetrisGUI {
     private static final int CELL_SIZE = 32;
 
-    public static void main(String[] args) {
+    static void main() {
         // https://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         EventQueue.invokeLater(TetrisGUI::createAndShowGUI);
     }

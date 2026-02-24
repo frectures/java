@@ -51,9 +51,9 @@ public class JGround {
             "import java.nio.file.*;",
             "import java.util.*;",
             "import java.util.stream.*;",
-            "void println(Object x) { System.out.println(x); }",
-            "void println(        ) { System.out.println( ); }",
-            "void print  (Object x) { System.out.print  (x); }",
+            "void println(Object x) { IO.println(x); }",
+            "void println(        ) { IO.println( ); }",
+            "void print  (Object x) { IO.print  (x); }",
 
             "import cafe.Assertions;",
             "import static cafe.Assertions.*;",
@@ -100,7 +100,7 @@ public class JGround {
             Math.pow(square(3) + square(4), 0.5);
             """;
 
-    public static void main(String[] args) {
+    static void main() {
         Locale.setDefault(Locale.ENGLISH); // JShell diagnostics
         // https://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         EventQueue.invokeLater(JGround::createAndShowGUI);

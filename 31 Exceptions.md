@@ -6,15 +6,13 @@
 - Wie gehen Java-Programme mit solchen Problemen um?
 
 ```java
-public class MobyDick {
-    public static void main(String[] args) {
+void main() {
 
-        Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
+    Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
 
-        String inhalt = Files.readString(pfad);
+    String inhalt = Files.readString(pfad);
 
-        System.out.println("Anzahl Zeichen: " + inhalt.length());
-    }
+    IO.println("Anzahl Zeichen: " + inhalt.length());
 }
 ```
 
@@ -45,22 +43,21 @@ public class Exception extends Throwable
 - Woher weiß der Java-Compiler, dass `Files.readString(pfad)` evtl. eine `IOException` werfen könnte?
 
 ```java
-                                           //////////////////
-public static String readString(Path path) throws IOException
+                             //////////////////
+String readString(Path path) throws IOException
 ```
 
 - Mit derselben `throws`-Klausel könnten wir auch unsere `main`-Methode deklarieren:
 
 ```java
-public class MobyDick {                    //////////////////
-    public static void main(String[] args) throws IOException {
+            //////////////////
+void main() throws IOException {
 
-        Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
+    Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
 
-        String inhalt = Files.readString(pfad);
+    String inhalt = Files.readString(pfad);
 
-        System.out.println("Anzahl Zeichen: " + inhalt.length());
-    }
+    IO.println("Anzahl Zeichen: " + inhalt.length());
 }
 ```
 
@@ -69,16 +66,8 @@ public class MobyDick {                    //////////////////
 
 ```
 Exception in thread "main" java.nio.file.NoSuchFileException: /home/fred/Downloads/2701-0.txt
-	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92)
-	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
-	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
-	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:218)
-	at java.base/java.nio.file.Files.newByteChannel(Files.java:380)
-	at java.base/java.nio.file.Files.newByteChannel(Files.java:432)
-	at java.base/java.nio.file.Files.readAllBytes(Files.java:3288)
-	at java.base/java.nio.file.Files.readString(Files.java:3366)
-	at java.base/java.nio.file.Files.readString(Files.java:3325)
-	at MobyDick.main(MobyDick.java:10)
+    ...
+	at MobyDick.main(MobyDick.java:5)
 ```
 
 ```java
@@ -97,22 +86,20 @@ public class FileSystemException extends IOException
 - Anstatt die Exception aus `main` entgleiten zu lassen, sollten wir sie fangen und behandeln:
 
 ```java
-public class MobyDick {
-    public static void main(String[] args) {
-          try {
-              Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
+void main() {
+    try {
+        Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
 
-              String inhalt = Files.readString(pfad);
+        String inhalt = Files.readString(pfad);
 
-              System.out.println("Anzahl Zeichen: " + inhalt.length());
+        IO.println("Anzahl Zeichen: " + inhalt.length());
 
-          } catch (NoSuchFileException ex) {
-              System.out.println("Datei nicht gefunden, bitte hier herunterladen:");
-              System.out.println("https://www.gutenberg.org/files/2701/2701-0.txt");
+    } catch (NoSuchFileException ex) {
+        IO.println("Datei nicht gefunden, bitte hier herunterladen:");
+        IO.println("https://www.gutenberg.org/files/2701/2701-0.txt");
 
-          } catch (IOException ex) {
-              System.out.println("Sonstiges Problem beim Lesen der Datei: " + ex);
-          }
+    } catch (IOException ex) {
+        IO.println("Sonstiges Problem beim Lesen der Datei: " + ex);
     }
 }
 ```
@@ -120,26 +107,24 @@ public class MobyDick {
 - Man könnte das Programm sogar weiterlaufen lassen, bis das Problem behoben ist:
 
 ```java
-public class MobyDick {
-    public static void main(String[] args) {
-        while (true) {
-            try {
-                Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
+void main() {
+    while (true) {
+        try {
+            Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
 
-                String inhalt = Files.readString(pfad);
+            String inhalt = Files.readString(pfad);
 
-                System.out.println("Anzahl Zeichen: " + inhalt.length());
-                return;
+            IO.println("Anzahl Zeichen: " + inhalt.length());
+            return;
 
-            } catch (NoSuchFileException ex) {
-                System.out.println("Datei nicht gefunden, bitte hier herunterladen:");
-                System.out.println("https://www.gutenberg.org/files/2701/2701-0.txt");
+        } catch (NoSuchFileException ex) {
+            IO.println("Datei nicht gefunden, bitte hier herunterladen:");
+            IO.println("https://www.gutenberg.org/files/2701/2701-0.txt");
 
-            } catch (IOException ex) {
-                System.out.println("Sonstiges Problem beim Lesen der Datei: " + ex);
-            }
-            Konsole.readString("Drücken Sie Enter, sobald Sie das Problem behoben haben...");
+        } catch (IOException ex) {
+            IO.println("Sonstiges Problem beim Lesen der Datei: " + ex);
         }
+        IO.readln("Drücken Sie Enter, sobald Sie das Problem behoben haben...");
     }
 }
 ```

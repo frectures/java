@@ -1,25 +1,23 @@
-public class Fibonacci {
-    public static long[] berechneFibonacciZahlen(int n) {
-        if (n < 2) n = 2;
-        if (n > 93) n = 93;
+long[] berechneFibonacciZahlen(int n) {
+    if (n < 2) n = 2;
+    if (n > 93) n = 93;
 
-        long[] fib = new long[n];
-        fib[0] = 0L;
-        fib[1] = 1L;
+    long[] fib = new long[n];
+    fib[0] = 0L;
+    fib[1] = 1L;
 
-        for (int i = 2; i < n; ++i) {
-            fib[i] = fib[i - 2] + fib[i - 1];
-        }
-
-        return fib;
+    for (int i = 2; i < n; ++i) {
+        fib[i] = fib[i - 2] + fib[i - 1];
     }
 
-    public static void main(String[] args) {
-        int n = Konsole.readInt("Wie viele Fibonacci-Zahlen? ");
+    return fib;
+}
 
-        long[] fib = berechneFibonacciZahlen(n);
+void main() {
+    int n = Integer.parseInt(IO.readln("Wie viele Fibonacci-Zahlen? "));
 
-        System.out.println(fib.length + " Fibonacci-Zahlen:");
-        System.out.println(java.util.Arrays.toString(fib));
-    }
+    long[] fib = berechneFibonacciZahlen(n);
+
+    IO.println(fib.length + " Fibonacci-Zahlen:");
+    IO.println(Arrays.toString(fib));
 }

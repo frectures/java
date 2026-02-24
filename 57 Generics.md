@@ -5,13 +5,13 @@
 - Was schreibt folgendes Programm auf die Konsole?
 
 ```java
-public static void printAll(List<Object> objects) {
+void printAll(List<Object> objects) {
     for (Object object : objects) {
-        System.out.print(object);
+        IO.print(object);
     }
 }
 
-public static void main(String[] args) {
+void main() {
     List<Object> objects = List.of("hello", "world");
     printAll(objects);
 
@@ -34,9 +34,9 @@ Provided:      List<String>
 - Weil `printAll` auch ein Objekt hinzufügen *könnte*:
 
 ```java
-public static void printAll(List<Object> objects) {
+void printAll(List<Object> objects) {
     for (Object object : objects) {
-        System.out.print(object);
+        IO.print(object);
     }
     objects.add(123);
 }
@@ -51,9 +51,9 @@ public static void printAll(List<Object> objects) {
 - Der Elementtyp muss `Object` *oder spezieller* sein:
 
 ```java
-public static void printAll(List<? extends Object> list) {
+void printAll(List<? extends Object> list) {
     for (Object object : list) {
-        System.out.print(object);
+        IO.print(object);
     }
     list.add(null);
 }
@@ -67,7 +67,7 @@ public static void printAll(List<? extends Object> list) {
 - Für `<? extends Object>` gibt es die Abkürzung `<?>`:
 
 ```java
-public static void printAll(List<?> list)
+void printAll(List<?> list)
 ```
 
 ### Kontravarianz
@@ -75,18 +75,18 @@ public static void printAll(List<?> list)
 - Was schreibt folgendes Programm auf die Konsole?
 
 ```java
-public static void greet(List<String> strings) {
+void greet(List<String> strings) {
     strings.add("hello");
 }
 
-public static void main(String[] args) {
+void main() {
     List<String> strings = new ArrayList<>();
     greet(strings);
-    System.out.println(strings);
+    IO.println(strings);
 
     List<Object> objects = new ArrayList<>();
     greet(objects);
-    System.out.println(objects);
+    IO.println(objects);
 }
 ```
 
@@ -101,8 +101,8 @@ Provided:      List<Object>
 - Dann ändern wir den Parametertyp von `greet` halt:
 
 ```java
-public static void greet(List<Object> objects) {
-    objects.add("hello");     //////
+void greet(List<Object> objects) {
+    objects.add("hello");
 }
 ```
 
@@ -116,11 +116,11 @@ Provided:      List<String>
 - Können wir nicht einfache beide `greet`-Methoden anbieten?
 
 ```java
-public static void greet(List<Object> objects) {
+void greet(List<Object> objects) {
     objects.add("hello");
 }
 
-public static void greet(List<String> strings) {
+void greet(List<String> strings) {
     strings.add("hello");
 }
 ```
@@ -137,8 +137,8 @@ both methods have the same erasure
 - Der Elementtyp muss `String` *oder allgemeiner* sein:
 
 ```java
-public static void greet(List<? super String> list) {
-    list.add("hello");   ////////////////
+void greet(List<? super String> list) {
+    list.add("hello");
 }
 ```
 

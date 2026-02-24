@@ -1,18 +1,16 @@
-public class NamenSortieren {
-    public static void main(String[] args) {
+void main() {
 
-        String[] namen = new String[3];
-        System.out.println("Bitte 3 Namen eingeben:");
+    String[] namen = new String[3];
+    IO.println("Bitte 3 Namen eingeben:");
 
-        namen[0] = Konsole.readString("> ");
-        namen[1] = Konsole.readString("> ");
-        namen[2] = Konsole.readString("> ");
+    namen[0] = IO.readln("> ");
+    namen[1] = IO.readln("> ");
+    namen[2] = IO.readln("> ");
 
-        java.util.Arrays.sort(namen);
-        System.out.println("\nAufsteigend sortiert:");
+    Arrays.sort(namen);
+    IO.println("\nAufsteigend sortiert:");
 
-        System.out.println(namen[0]);
-        System.out.println(namen[1]);
-        System.out.println(namen[2]);
-    }
+    IO.println(namen[0]);
+    IO.println(namen[1]);
+    IO.println(namen[2]);
 }

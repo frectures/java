@@ -7,7 +7,7 @@ List<String> sorten = Arrays.asList("Vanille", "Erdbeer", "Schoko");
 
 Collections.sort(sorten);
 
-System.out.println(sorten); // [Erdbeer, Schoko, Vanille]
+IO.println(sorten); // [Erdbeer, Schoko, Vanille]
 ```
 
 - Woher weiß Java, dass...
@@ -102,7 +102,7 @@ private static final Comparator<Person> compareAgeDescendingNameEmail = new Comp
     }
 };
 
-public static void sortAgeDescendingNameEmail(List<Person> persons) {
+void sortAgeDescendingNameEmail(List<Person> persons) {
     Collections.sort(persons, compareAgeDescendingNameEmail);
 }
 ```
@@ -115,7 +115,7 @@ private static final Comparator<Person> compareAgeDescendingNameEmail = Comparat
         .thenComparing(Person::getName)
         .thenComparing(Person::getEmail);
 
-public static void sortAgeDescendingNameEmail(List<Person> persons) {
+void sortAgeDescendingNameEmail(List<Person> persons) {
     persons.sort(compareAgeDescendingNameEmail);
 }
 ```

@@ -3,7 +3,7 @@
 ### HttpUrlConnection (1997)
 
 ```java
-public static String download(String url) throws IOException {
+String download(String url) throws IOException {
 
     var connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
     connection.setRequestMethod("GET");
@@ -24,7 +24,7 @@ public static String download(String url) throws IOException {
 ### HttpClient (2018)
 
 ```java
-public static String download(String url) throws IOException, InterruptedException {
+String download(String url) throws IOException, InterruptedException {
 
     HttpClient client = HttpClient.newBuilder().build();
 
@@ -54,7 +54,7 @@ public static String download(String url) throws IOException, InterruptedExcepti
   - den Benutzer nach einem Passwort fragt, und
   - ihm verrät, wie viele bekannte Accounts dieses Passwort nutzen
 - Brotkrümel:
-  - `Konsole.readString`
+  - `IO.readln`
   - `MessageDigest.getInstance`
   - `HexFormat.of`
   - `String.substring`

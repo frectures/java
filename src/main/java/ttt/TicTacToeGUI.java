@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TicTacToeGUI {
-    public static void main(String[] args) {
+    static void main() {
         // https://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         EventQueue.invokeLater(TicTacToeGUI::createAndShowGUI);
     }

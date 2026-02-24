@@ -181,13 +181,13 @@ abstract class Pet {
     protected abstract String noise();
 
 
-    public static void main(String[] args) {
+    static void main() {
         List<Pet> pets = List.of(
                 new Cat("Snowball"),
                 new Dog("Santa's Little Helper")
         );
         for (Pet pet : pets) {
-            System.out.println(pet);
+            IO.println(pet);
         }
     }
 }
@@ -320,18 +320,18 @@ public class StringArrayWrapper extends AbstractList<String> {
     }
 
 
-    public static void main(String[] args) {
+    static void main() {
         List<String> words = new StringArrayWrapper(new String[]{"the", "beauty", "and", "the", "beast"});
         int and = words.indexOf("and");
 
         List<String> before = words.subList(0, and);
         List<String> after = words.subList(and + 1, words.size());
 
-        System.out.println(before);
-        System.out.println(after);
+        IO.println(before);
+        IO.println(after);
 
         Collections.sort(words);
-        System.out.println(words);
+        IO.println(words);
     }
 }
 ```

@@ -6,17 +6,14 @@
 ### return
 
 ```java
-public class Zahlenraten {
+int zufallszahl() {
+    return (int) (Math.random() * 10) + 1;
+}
 
-    public static int zufallszahl() {
-        return (int) (Math.random() * 10) + 1;
-    }
+void main() {
 
-    public static void main(String[] args) {
-
-        int ausgedacht = zufallszahl();
-        // ...
-    }
+    int ausgedacht = zufallszahl();
+    // ...
 }
 ```
 
@@ -26,19 +23,16 @@ public class Zahlenraten {
 ### Parameter/Argumente
 
 ```java
-public class Zahlenraten {
+int zufallszahl(int von, int bis) {
+    int anzahl = bis - von + 1;
+    return (int) (Math.random() * anzahl) + von;
+}
 
-    public static int zufallszahl(int von, int bis) {
-        int anzahl = bis - von + 1;
-        return (int) (Math.random() * anzahl) + von;
-    }
+void main() {
 
-    public static void main(String[] args) {
-
-        int einfach = zufallszahl(1, 10);
-        int schwierig = zufallszahl(0, 100);
-        // ...
-    }
+    int einfach = zufallszahl(1, 10);
+    int schwierig = zufallszahl(0, 100);
+    // ...
 }
 ```
 
@@ -52,30 +46,28 @@ public class Zahlenraten {
 ### Einloggen
 
 ```java
-public class Einloggen {
-    public static boolean einloggen(int passwortHashCode, int erlaubteVersuche) {
+boolean einloggen(int passwortHashCode, int erlaubteVersuche) {
 
-        String passwort = Konsole.readString("Passwort? ");
-        int versuche = 1;
+    String passwort = IO.readln("Passwort? ");
+    int versuche = 1;
 
-        while (passwort.hashCode() != passwortHashCode) {
-            System.out.println("falsches Passwort");
-            if (versuche == erlaubteVersuche) return false;
+    while (passwort.hashCode() != passwortHashCode) {
+        IO.println("falsches Passwort");
+        if (versuche == erlaubteVersuche) return false;
 
-            passwort = Konsole.readString("Passwort? ");
-            versuche = versuche + 1;
-        }
-
-        return true;
+        passwort = IO.readln("Passwort? ");
+        versuche = versuche + 1;
     }
 
-    public static void main(String[] args) {
-        boolean erfolgreich = einloggen(-1249690433, 5);
-        if (erfolgreich) {
-            System.out.println("Willkommen im System!");
-        } else {
-            System.out.println("zu viele Fehlversuche");
-        }
+    return true;
+}
+
+void main() {
+    boolean erfolgreich = einloggen(-1249690433, 5);
+    if (erfolgreich) {
+        IO.println("Willkommen im System!");
+    } else {
+        IO.println("zu viele Fehlversuche");
     }
 }
 ```

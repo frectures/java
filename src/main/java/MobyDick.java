@@ -1,14 +1,8 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+void main() throws IOException {
 
-public class MobyDick {
-    public static void main(String[] args) throws IOException {
+    Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
 
-        Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
+    String inhalt = Files.readString(pfad);
 
-        String inhalt = Files.readString(pfad);
-
-        System.out.println("Anzahl Zeichen: " + inhalt.length());
-    }
+    IO.println("Anzahl Zeichen: " + inhalt.length());
 }

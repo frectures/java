@@ -173,7 +173,7 @@ Tetris[] games = {
 
 ### Prägende Informatiker
 
-- Starte die (`main`-Methode in der) Klasse `Informatiker`
+- Starte die (`main`-Methode in der) Klasse `informatiker/Informatiker.java`
 - Probiere aus, was die 3 Buttons bewirken
   - Was passiert, wenn du mehrfach auf den Button `Alter` klickst?
   - Warum tritt dieser Effekt nicht bei den anderen 2 Buttons auf?
@@ -198,7 +198,7 @@ einstufen
 
 ### JSON
 
-- Starte die (`main`-Methode in der) Klasse `Freddy`
+- Starte die (`main`-Methode in der) Klasse `json/Freddy.java`
   - Kennst du das JSON-Austauschformat?
   - Fällt dir in der Konsole **ein Fehler** auf?
 - Studiere folgende Typen in dieser Reihenfolge:

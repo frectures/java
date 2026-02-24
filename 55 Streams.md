@@ -3,7 +3,7 @@
 ### Java 5
 
 ```java
-public static List<String> adultDomains(List<Person> persons) {
+List<String> adultDomains(List<Person> persons) {
     Set<String> domains = new HashSet<String>();
     for (Person person : persons) {
         if (person.isAdult()) {
@@ -19,7 +19,7 @@ public static List<String> adultDomains(List<Person> persons) {
 ### Java 8
 
 ```java
-public static List<String> adultDomains(List<Person> persons) {
+List<String> adultDomains(List<Person> persons) {
                 // source:
     return persons.stream()                           // Stream<Person>
                 // intermediate operations:
@@ -58,7 +58,7 @@ Stream.iterate(ONE, x -> x.add(TWO))  // 1, 3,  5,  7,  9, ...
 Stream.iterate(ONE, x -> x.add(TWO))
       .map(x -> x.multiply(x))
 // How often is x.multiply(x) called?
-      .forEach(x -> System.out.println(x) + " should be odd");
+      .forEach(x -> IO.println(x) + " should be odd");
 
 
 Stream.iterate(ONE, x -> x.add(TWO))
@@ -91,7 +91,7 @@ Stream.iterate(ONE, x -> x.add(TWO))
 Simple lambdas can often be replaced with method references:
 
 ```java
-public static List<String> adultDomains(List<Person> persons) {
+List<String> adultDomains(List<Person> persons) {
 
     return persons.stream()                // Stream<Person>
                   .filter(Person::isAdult)
@@ -103,7 +103,8 @@ public static List<String> adultDomains(List<Person> persons) {
 }
 
 
-public static Map<String, List<Email>> emailsByDomain(List<Person> persons) {
+Map<String, List<Email>> emailsByDomain(List<Person> persons) {
+
     return persons.stream()
                   .map(Person::getEmail)
                   .collect(Collectors.groupingBy(Email::getDomain));
@@ -127,7 +128,7 @@ public static Map<String, List<Email>> emailsByDomain(List<Person> persons) {
 ### Freditor
 
 ```java
-private List<Path> sortedFiles() {
+List<Path> sortedFiles() {
     try (Stream<Path> applicationFiles = Files.list(applicationDirectory)) {
         return applicationFiles
                 .filter(Files::isRegularFile)
@@ -144,7 +145,7 @@ private List<Path> sortedFiles() {
 ### Pangit
 
 ```java
-public static Stream<GitBlob> findGitBlobs(Path root, Consumer<GitBlob> gitBlobConsumer) throws IOException {
+Stream<GitBlob> findGitBlobs(Path root, Consumer<GitBlob> gitBlobConsumer) throws IOException {
     return Files.walk(root)                   // Stream<Path>
                 .filter(GitBlob::isGitObject)
                 .map(GitBlob::gitBlobOrNull)  // Stream<GitBlob>

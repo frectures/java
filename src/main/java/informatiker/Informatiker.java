@@ -9,7 +9,7 @@ import java.util.Random;
 public class Informatiker {
     private static final float SCALE_FONT_SIZE = 1.5f;
 
-    public static void main(String[] args) {
+    static void main() {
         // https://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         EventQueue.invokeLater(Informatiker::createAndShowGUI);
     }

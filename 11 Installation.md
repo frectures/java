@@ -40,6 +40,7 @@
   - [Records](https://openjdk.org/jeps/395)
   - [Pattern Matching](https://openjdk.org/jeps/441)
   - [Virtual Threads](https://openjdk.org/jeps/444)
+  - [Compact Source Files](https://openjdk.org/jeps/512)
 - Zukunftsmusik
   - [Value Classes and Objects](https://openjdk.org/jeps/401)
 
@@ -66,42 +67,32 @@
 - Die Standard-Empfehlung ist https://adoptium.net
 - Alle Distributionen werden aus demselben Quellcode gebaut https://github.com/openjdk/jdk
 
-### Echo
+### Greet.java
 
 ```java
-// Datei Echo.java
-public class Echo {
+// Die Programm-Ausführung startet in der main-Methode
+void main() {
+    // Fordert den Benutzer auf, seinen Namen auf der Tastatur einzutippen.
+    // Die eingetippte Zeichenkette wird in der Variable 'name' gespeichert.
+    String name = IO.readln("Ihr Name? ");
 
-    // Die Programm-Ausführung startet in der main-Methode
-    public static void main(String[] args) {
-
-        // Schreibt ohne Zeilenumbruch auf die Konsole
-        System.out.print("Sie haben das Echo-Programm gestartet ");
-
-        // Schreibt mit Zeilenumbruch auf die Konsole
-        System.out.println("und folgende Kommandozeilen-Argumente übergeben:");
-
-        // Schleift über alle Kommandozeilen-Argumente
-        for (String arg : args) {
-
-            // Strings werden mit + verkettet
-            System.out.println("- " + arg);
-        }
-    }
+    // Wünscht dem Benutzer einen guten Tag.
+    IO.println("Guten Tag, " + name + "!");
 }
 ```
 
 - getrennt übersetzen und ausführen:
-  - `javac Echo.java` übersetzt nach Bytecode `Echo.class`
-  - `java Echo apfel banane` führt Bytecode `Echo.class` aus
-  - `javap -c Echo` zeigt Bytecode bei Interesse an
+  - `javac Greet.java` übersetzt nach Bytecode `Greet.class`
+  - `java Greet` führt Bytecode `Greet.class` aus
+  - `javap -c Greet` zeigt Bytecode bei Interesse an
 - Seit Java 11 kann man einzelne `.java`-Dateien direkt starten, ohne Erzeugung einer `.class`-Datei:
-  - `java Echo.java apfel banane`
+  - `java Greet.java`
 
 > **Übung:**
 > - Installiere Java von https://adoptium.net
-> - Tippe `Echo.java` mit einem beliebigen Text-Editor ab
->   - die grünen Kommentare sind optional
+> - Tippe obiges Programm mit einem beliebigen Text-Editor ab
+>   - Die Kommentare (beginnend mit `//`) sind optional
+>   - Speichere die Datei als `Greet.java` in deinem Home-Verzeichnis
 > - Starte das Programm von der Konsole
 >   - Windows: Eingabeaufforderung
 >   - macOS: Terminal
@@ -117,35 +108,33 @@ public class Echo {
 > **Übung:**
 > - Prüfe, ob IntelliJ IDEA bereits auf deinem Rechner installiert ist
 >   - Falls nicht, installiere IntelliJ IDEA von https://www.jetbrains.com/idea/download
->   - Für die Schulung ist die 👇Community-Edition👇 ausreichend
 >   - Nach dem Download ⚠️ **NUR 1x KLICKEN** ⚠️ auf `ideaIC...` und Geduld haben, sonst öffnet sich der Installierer mehrfach
 > - Starte IntelliJ IDEA
 > - Erster Start? **dann** Clone Repository, **sonst** Main Menu/File/New/Project from Version Control
 >   - URL: https://github.com/frectures/java.git
 >   - Clone
 >   - dazu muss ggf. Git nachinstalliert werden
-> - Doppelklick auf `java/src/main/java/Main.java`
+> - Doppelklick auf `java/src/main/java/Alter.java`
 >   - ggf. Warnhinweis bzgl. JDK-Konfiguration folgen
 >   - Klick auf das grüne Dreieck in Zeile 1
->   - Run 'Main.main()'
+>   - Run 'Alter.main()'
+>   - Klick in die Konsole unten, um ihr den Fokus zu geben
+>   - Name und Alter eintippen
 > - Modifiziere das Programm, so dass Vorname und Nachname getrennt abgefragt werden
 > - Was passiert, wenn man die Klammern um `(alter + 1)` entfernt?
 
 ```java
-public class Main {
-    public static void main(String[] args) {
+void main() {
+    // Liest einen String von der Konsole
+    String name = IO.readln("Wie heißt du? ");
 
-        // Liest einen String von der Konsole
-        String name = Konsole.readString("Wie heißt du? ");
+    // Liest eine Ganzzahl von der Konsole
+    int alter = Integer.parseInt(IO.readln("Wie alt bist du? "));
 
-        // Liest eine Ganzzahl von der Konsole
-        int alter = Konsole.readInt("Wie alt bist du? ");
-        
-        if (alter < 0 || alter > 123) {
-            System.out.println("Das glaube ich nicht...");
-        } else {
-            System.out.println("In einem Jahr bist du " + (alter + 1) + ", " + name + "!");
-        }
+    if (alter < 0 || alter > 123) {
+        IO.println("Das glaube ich nicht...");
+    } else {
+        IO.println("In einem Jahr bist du " + (alter + 1) + ", " + name + "!");
     }
 }
 ```

@@ -5,7 +5,7 @@ public class ArrayView<E> {
         this.array = array;
     }
 
-    public static void main(String[] args) {
+    static void main() {
         ArrayView<String> sorten = new ArrayView<>(new String[]{"Vanille", "Erdbeer", "Schoko"});
     }
 }

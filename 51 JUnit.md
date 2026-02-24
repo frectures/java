@@ -2,33 +2,21 @@
 
 ### Motivation
 
-- In der Grundlagen-Schulung haben wir nur manuell "getestet" bzw. ausprobiert:
+- In der Grundlagen-Schulung hatten wir nur manuell "getestet" bzw. ausprobiert:
 
 ```java
-public class TextAnalyse {
-    public static boolean enthaeltLeertaste(String text) { /* ... */ }
+void main() {
+    String zeile = IO.readln("Text? ");
 
-    public static int anzahlLeertasten(String text) { /* ... */ }
-
-    public static int anzahlVokale(String text) { /* ... */ }
-
-    public static int vokalVielfalt(String text) { /* ... */ }
-
-    public static boolean istPalindrom(String text) { /* ... */ }
-
-    public static void main(String[] args) {
-        String zeile = Konsole.readString("Text? ");
-
-        System.out.println("enthaeltLeertaste: " + enthaeltLeertaste(zeile));
-        System.out.println("anzahlLeertasten: " + anzahlLeertasten(zeile));
-        System.out.println("anzahlVokale: " + anzahlVokale(zeile));
-        System.out.println("vokalVielfalt: " + vokalVielfalt(zeile));
-        System.out.println("istPalindrom: " + istPalindrom(zeile));
-    }
+    IO.println("enthaeltLeertaste: " + enthaeltLeertaste(zeile));
+    IO.println("anzahlLeertasten: " + anzahlLeertasten(zeile));
+    IO.println("anzahlVokale: " + anzahlVokale(zeile));
+    IO.println("vokalVielfalt: " + vokalVielfalt(zeile));
+    IO.println("istPalindrom: " + istPalindrom(zeile));
 }
 ```
 
-- Wir müssen uns selber von der Korrektheit der Ausgaben erzeugen
+- Wir mussten uns selber von der Korrektheit der Ausgaben überzeugen
 - Bei jeder Änderung mussten wir erneut sinnvolle Texte eingeben
 - Wahrscheinlich denken wir nicht ständig an alle Randfälle
 - Deutlich sinnvoller sind automatisierte Tests mit JUnit:
@@ -39,59 +27,59 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TextAnalyseTest {
+public class PalindromTest {
     @Test
     public void leererStringPalindrom() {
-        assertTrue(TextAnalyse.istPalindrom(""));
+        assertTrue(Palindrom.istPalindrom(""));
     }
 
     @Test
     public void einZeichenPalindrom() {
-        assertTrue(TextAnalyse.istPalindrom("a"));
-        assertTrue(TextAnalyse.istPalindrom(" "));
-        assertTrue(TextAnalyse.istPalindrom("\n"));
+        assertTrue(Palindrom.istPalindrom("a"));
+        assertTrue(Palindrom.istPalindrom(" "));
+        assertTrue(Palindrom.istPalindrom("\n"));
     }
 
     @Test
     public void zweiZeichenPalindrom() {
-        assertTrue(TextAnalyse.istPalindrom("aa"));
-        assertTrue(TextAnalyse.istPalindrom("bb"));
+        assertTrue(Palindrom.istPalindrom("aa"));
+        assertTrue(Palindrom.istPalindrom("bb"));
 
-        assertFalse(TextAnalyse.istPalindrom("ab"));
-        assertFalse(TextAnalyse.istPalindrom("ba"));
+        assertFalse(Palindrom.istPalindrom("ab"));
+        assertFalse(Palindrom.istPalindrom("ba"));
     }
 
     @Test
     public void dreiZeichenPalindrom() {
-        assertTrue(TextAnalyse.istPalindrom("aaa"));
-        assertTrue(TextAnalyse.istPalindrom("ada"));
-        assertTrue(TextAnalyse.istPalindrom("dad"));
-        assertTrue(TextAnalyse.istPalindrom("ddd"));
+        assertTrue(Palindrom.istPalindrom("aaa"));
+        assertTrue(Palindrom.istPalindrom("ada"));
+        assertTrue(Palindrom.istPalindrom("dad"));
+        assertTrue(Palindrom.istPalindrom("ddd"));
 
-        assertFalse(TextAnalyse.istPalindrom("aad"));
-        assertFalse(TextAnalyse.istPalindrom("add"));
-        assertFalse(TextAnalyse.istPalindrom("daa"));
-        assertFalse(TextAnalyse.istPalindrom("dda"));
+        assertFalse(Palindrom.istPalindrom("aad"));
+        assertFalse(Palindrom.istPalindrom("add"));
+        assertFalse(Palindrom.istPalindrom("daa"));
+        assertFalse(Palindrom.istPalindrom("dda"));
     }
 
     @Test
     public void bekanntePalindrome() {
-        assertTrue(TextAnalyse.istPalindrom("beheb"));
-        assertTrue(TextAnalyse.istPalindrom("handnah"));
-        assertTrue(TextAnalyse.istPalindrom("level"));
-        assertTrue(TextAnalyse.istPalindrom("neppen"));
-        assertTrue(TextAnalyse.istPalindrom("regal-lager"));
+        assertTrue(Palindrom.istPalindrom("beheb"));
+        assertTrue(Palindrom.istPalindrom("handnah"));
+        assertTrue(Palindrom.istPalindrom("level"));
+        assertTrue(Palindrom.istPalindrom("neppen"));
+        assertTrue(Palindrom.istPalindrom("regal-lager"));
     }
 
     @Test
     public void grossUndKleinschreibung() {
-        assertTrue(TextAnalyse.istPalindrom("Anna"));
-        assertTrue(TextAnalyse.istPalindrom("Hannah"));
-        assertTrue(TextAnalyse.istPalindrom("Kajak"));
-        assertTrue(TextAnalyse.istPalindrom("Neffen"));
-        assertTrue(TextAnalyse.istPalindrom("Otto"));
-        assertTrue(TextAnalyse.istPalindrom("Radar"));
-        assertTrue(TextAnalyse.istPalindrom("Reittier"));
+        assertTrue(Palindrom.istPalindrom("Anna"));
+        assertTrue(Palindrom.istPalindrom("Hannah"));
+        assertTrue(Palindrom.istPalindrom("Kajak"));
+        assertTrue(Palindrom.istPalindrom("Neffen"));
+        assertTrue(Palindrom.istPalindrom("Otto"));
+        assertTrue(Palindrom.istPalindrom("Radar"));
+        assertTrue(Palindrom.istPalindrom("Reittier"));
     }
 }
 ```
@@ -113,20 +101,24 @@ public class TextAnalyseTest {
 - Wie kommt JUnit an die Test-Methoden ran?
 - Über Annotationen und Reflection
 - Beides Blindflecken vieler Java-Programmierer
-- In `AnnotationenUndReflection` erkennen wir die Test-Methoden selber:
+- In `AnnotationenUndReflection.java` erkennen wir die Test-Methoden selber:
 
 ```java
-for (Method method : TextAnalyseTest.class.getDeclaredMethods()) {
+import org.junit.jupiter.api.Test;
 
-    Test annotation = method.getAnnotation(Test.class);
-    if (annotation != null) {
-        System.out.println("Test-Methode gefunden: " + method);
+void main() {
+    for (Method method : PalindromTest.class.getDeclaredMethods()) {
+
+        Test annotation = method.getAnnotation(Test.class);
+        if (annotation != null) {
+            IO.println("Test-Methode gefunden: " + method);
+        }
     }
 }
 ```
 
 - **Plenum:** Lasst uns die gefunden Test-Methoden ausführen!
-  - `method.invoke(new TextAnalyseTest());`
+  - `method.invoke(new PalindromTest());`
   - Fehlschlagende Tests sollen protokolliert werden
   - Ein Report, wie viele Test bestanden haben, wäre schön
 

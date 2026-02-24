@@ -22,16 +22,12 @@
 ### List
 
 ```java
-import java.util.List;
+void main() throws IOException {
+    Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
 
-public class MobyDick {
-    public static void main(String[] args) throws IOException {
-        Path pfad = Path.of(System.getProperty("user.home"), "Downloads", "2701-0.txt");
-
-        List<String> zeilen = Files.readAllLines(pfad);
-        System.out.println("Anzahl Zeilen: " + zeilen.size());
-        System.out.println("Listen-Klasse: " + zeilen.getClass());
-    }
+    List<String> zeilen = Files.readAllLines(pfad);
+    IO.println("Anzahl Zeilen: " + zeilen.size());
+    IO.println("Listen-Klasse: " + zeilen.getClass());
 }
 ```
 
@@ -105,17 +101,17 @@ Listen-Klasse: class java.util.ArrayList
 - Mit einem regulären Ausdrück kann man alle Wörter hintereinander extrahieren:
 
 ```java
-        String inhalt = Files.readString(pfad);
-        System.out.println("Anzahl Zeichen: " + inhalt.length());
+    String inhalt = Files.readString(pfad);
+    IO.println("Anzahl Zeichen: " + inhalt.length());
 
-        List<String> woerter = new ArrayList<>();
+    List<String> woerter = new ArrayList<>();
 
-        Matcher matcher = Pattern.compile("\\p{IsAlphabetic}+").matcher(inhalt);
-        while (matcher.find()) {           //////////////////
-            String wort = matcher.group();
-            woerter.add(wort.toLowerCase());
-        }
-        System.out.println("Anzahl Wörter hintereinander: " + woerter.size());
+    Matcher matcher = Pattern.compile("\\p{IsAlphabetic}+").matcher(inhalt);
+    while (matcher.find()) {           //////////////////
+        String wort = matcher.group();
+        woerter.add(wort.toLowerCase());
+    }
+    IO.println("Anzahl Wörter hintereinander: " + woerter.size());
 ```
 
 ### Wortschatz
@@ -123,25 +119,25 @@ Listen-Klasse: class java.util.ArrayList
 - Der Wortschatz besteht aus allen *verschiedenen* Wörtern im Text:
 
 ```java
-        Collection<String> wortschatz = new ArrayList<>();
+    Collection<String> wortschatz = new ArrayList<>();
 
-        long before = System.currentTimeMillis();
-        for (String wort : woerter) {
-            if (!wortschatz.contains(wort)) {
-                // Duplikate verhindern
-                wortschatz.add(wort);
-            }
+    long before = System.currentTimeMillis();
+    for (String wort : woerter) {
+        if (!wortschatz.contains(wort)) {
+            // Duplikate verhindern
+            wortschatz.add(wort);
         }
-        long after = System.currentTimeMillis();
-        System.out.println(after - before + " ms");
+    }
+    long after = System.currentTimeMillis();
+    IO.println(after - before + " ms");
 
-        System.out.println("Anzahl unterschiedlicher Wörter: " + wortschatz.size());
-        System.out.println("Die ersten 10 Wörter im Wortschatz:");
-        int i = 0;
-        for (String wort : wortschatz) {
-            System.out.println(wort);
-            if (++i == 10) break;
-        }
+    IO.println("Anzahl unterschiedlicher Wörter: " + wortschatz.size());
+    IO.println("Die ersten 10 Wörter im Wortschatz:");
+    int i = 0;
+    for (String wort : wortschatz) {
+        IO.println(wort);
+        if (++i == 10) break;
+    }
 ```
 
 > **Plenum:**
@@ -207,14 +203,14 @@ Listen-Klasse: class java.util.ArrayList
 ### Keine Duplikate
 
 ```java
-        Set<String> wortschatz = new HashSet<>();
+    Set<String> wortschatz = new HashSet<>();
 
-        for (String wort : woerter) {
-            if (!wortschatz.contains(wort)) {
-                // Duplikate verhindern
-                wortschatz.add(wort);
-            }
+    for (String wort : woerter) {
+        if (!wortschatz.contains(wort)) {
+            // Duplikate verhindern
+            wortschatz.add(wort);
         }
+    }
 ```
 
 - Mengen enthalten grundsätzlich keine Duplikate
@@ -222,25 +218,25 @@ Listen-Klasse: class java.util.ArrayList
 - Deshalb ist das `if` bei den `Set`-Klassen redundant:
 
 ```java
-        Set<String> wortschatz = new HashSet<>();
+    Set<String> wortschatz = new HashSet<>();
 
-        for (String wort : woerter) {
-            wortschatz.add(wort);
-        }
+    for (String wort : woerter) {
+        wortschatz.add(wort);
+    }
 ```
 
 - Anstatt jedes Element einzeln hinzuzufügen, kann man `addAll` verwenden:
 
 ```java
-        Set<String> wortschatz = new HashSet<>();
+    Set<String> wortschatz = new HashSet<>();
 
-        wortschatz.addAll(woerter);
+    wortschatz.addAll(woerter);
 ```
 
 - Zuletzt kann man diese beiden Zeilen zu einer einzigen verschmelzen:
 
 ```java
-        Set<String> wortschatz = new HashSet<>(woerter);
+    Set<String> wortschatz = new HashSet<>(woerter);
 ```
 
 - Lustigerweise führt das zu einer anderen Iterations-Reihenfolge der Elemente
@@ -250,9 +246,9 @@ Listen-Klasse: class java.util.ArrayList
 > it does not matter what you promise in the contract;  
 > All observable behaviors of your system will be depended on by somebody.”
 
-### StringSet
+### StringSet.java
 
-- Vervollständige die Klasse `StringSet` und verwende sie für Moby Dick:
+- Vervollständige die Klasse `StringSet.java` und verwende sie für Moby Dick:
 
 ```java
 public class StringSet {
@@ -296,74 +292,72 @@ public class StringSet {
 - Rückblick auf eine ältere Beispiel-Methode `zaehleZeichen`:
 
 ```java
-    public static long[] zaehleZeichen(String text) {
-        //                                          65536
-        long[] zaehler = new long[Character.MAX_VALUE + 1];
+int[] zaehleZeichen(String text) {
 
-        for (char codeUnit : text.toCharArray()) {
-            zaehler[codeUnit] += 1;
-        }
+    int[] zaehler = new int[65536];
 
-        return zaehler;
+    for (char ch : text.toCharArray()) {
+        zaehler[ch] += 1;
     }
+
+    return zaehler;
+}
 ```
 
 - Leider kommt die Methode nicht mit Zeichen zurecht, die 2 `char`s benötigen 😭
 - Lösung: `int` statt `char`
 
 ```java
-    public static long[] zaehleZeichen(String text) {
-        //                                             1114112
-        long[] zaehler = new long[Character.MAX_CODE_POINT + 1];
+long[] zaehleZeichen(String text) {
 
-        for (int codePoint : text.codePoints().toArray()) {
-            zaehler[codePoint] += 1;
-        }
+    long[] zaehler = new long[1114112];
 
-        return zaehler;
+    for (int codePoint : text.codePoints().toArray()) {
+        zaehler[codePoint] += 1;
     }
+
+    return zaehler;
+}
 ```
 
 - Nun verbraucht das Array allerdings 8,8 MB statt 0,52 MB...
 - Wenn die meisten Einträge in einem `T[]` nie angefasst werden, ist `Map<Integer, T>` eine speichersparende Alternative:
 
 ```java
-public class ZeichenHaeufigkeit {
-    public static Map<Integer, Long> zaehleZeichen(String text) {
+Map<Integer, Long> zaehleZeichen(String text) {
 
-        Map<Integer, Long> zaehler = new TreeMap<>();
+    Map<Integer, Long> zaehler = new TreeMap<>();
 
-        for (int codePoint : text.codePoints().toArray()) {
+    for (int codePoint : text.codePoints().toArray()) {
 
-            Long n = zaehler.get(codePoint);
-            // get liefert null, falls kein Eintrag zu dem Schlüssel existiert
-            if (n == null) {
-                // neuen Eintrag anlegen
-                zaehler.put(codePoint, 1L);
-            } else {
-                // alten Eintrag ersetzen
-                zaehler.put(codePoint, n + 1);
-            }
+        Long n = zaehler.get(codePoint);
+        // get liefert null, falls kein Eintrag zu dem Schlüssel existiert
+        if (n == null) {
+            // neuen Eintrag anlegen
+            zaehler.put(codePoint, 1L);
+        } else {
+            // alten Eintrag ersetzen
+            zaehler.put(codePoint, n + 1);
         }
-
-        return zaehler;
     }
 
-    public static void main(String[] args) {
-        String text = Konsole.readString("Text? ");
+    return zaehler;
+}
 
-        Map<Integer, Long> zaehler = zaehleZeichen(text);
+void main() {
+    String text = IO.readln("Text? ");
 
-        for (Map.Entry<Integer, Long> entry : zaehler.entrySet()) {
+    Map<Integer, Long> zaehler = zaehleZeichen(text);
 
-            int codePoint = entry.getKey();
-            long count = entry.getValue();
+    for (Map.Entry<Integer, Long> entry : zaehler.entrySet()) {
 
-            if (codePoint <= Character.MAX_VALUE) {
-                System.out.println(            (char) codePoint  + ": " + count);
-            } else {
-                System.out.println(Character.toString(codePoint) + ": " + count);
-            }
+        int codePoint = entry.getKey();
+        long count = entry.getValue();
+
+        if (codePoint < 65536) {
+            IO.println(            (char) codePoint  + ": " + count);
+        } else {
+            IO.println(Character.toString(codePoint) + ": " + count);
         }
     }
 }
@@ -382,12 +376,12 @@ public class ZeichenHaeufigkeit {
   - ansonsten `defaultValue`
 
 ```java
-        for (int codePoint : text.codePoints().toArray()) {
+    for (int codePoint : text.codePoints().toArray()) {
 
-            Long n = zaehler.getOrDefault(codePoint, 0L);
+        long n = zaehler.getOrDefault(codePoint, 0L);
 
-            zaehler.put(codePoint, n + 1);
-        }
+        zaehler.put(codePoint, n + 1);
+    }
 ```
 
 > **Übung:**
@@ -398,20 +392,20 @@ public class ZeichenHaeufigkeit {
 >   - weil wahrscheinlich mehrere Wörter gleich selten sind
 
 ```java
-    public static Map<String, Long> zaehleWoerter(String text) {
-        // TODO
-        return null;
-    }
+Map<String, Long> zaehleWoerter(String text) {
+    // TODO
+    return null;
+}
 
-    public static String haeufigstesWort(Map<String, Long> zaehler) {
-        // TODO
-        return null;
-    }
+String haeufigstesWort(Map<String, Long> zaehler) {
+    // TODO
+    return null;
+}
 
-    public static String seltenstesWort(Map<String, Long> zaehler) {
-        // TODO
-        return null;
-    }
+String seltenstesWort(Map<String, Long> zaehler) {
+    // TODO
+    return null;
+}
 ```
 
 ### Wieso `Integer` statt `int`?

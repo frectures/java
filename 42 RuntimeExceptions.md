@@ -6,22 +6,20 @@
 - Bugs führen idealerweise zu einem zeitnahen Abbruch der Programm-Ausführung:
 
 ```java
-public class Main {
-    public static void main(String[] args) {
-        int[] numbers = new int[2];
+void main() {
+    int[] numbers = new int[2];
 
-        numbers[1] = 42;
-        numbers[2] = 97;
+    numbers[1] = 42;
+    numbers[2] = 97;
 
-        System.out.println(java.util.Arrays.toString(numbers));
-    }
+    IO.println(Arrays.toString(numbers));
 }
 ```
 
 ```
 Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException:
  Index 2 out of bounds for length 2
-	at Main.main(Main.java:6)
+	at Main.main(Main.java:5)
 ```
 
 ```java
@@ -48,10 +46,10 @@ public class RuntimeException extends Exception
   - Stattdessen muss der Programmierer das Programm modifizieren, um den Bug zu fixen:
 
 ```diff
--        numbers[1] = 42;
--        numbers[2] = 97;
-+        numbers[0] = 42;
-+        numbers[1] = 97;
+-    numbers[1] = 42;
+-    numbers[2] = 97;
++    numbers[0] = 42;
++    numbers[1] = 97;
 ```
 
 ```bash
@@ -61,22 +59,20 @@ git commit -am "fix bug #123"
 - Ein zweites Beispiel für einen Bug:
 
 ```java
-public class Main {
-    public static void main(String[] args) {
-        String[] strings = new String[2];
+void main() {
+    String[] strings = new String[2];
 
-        System.out.println(strings[0].length());
-        System.out.println(strings[1].length());
+    IO.println(strings[0].length());
+    IO.println(strings[1].length());
 
-        System.out.println(java.util.Arrays.toString(strings));
-    }
+    IO.println(Arrays.toString(strings));
 }
 ```
 
 ```
 Exception in thread "main" java.lang.NullPointerException:
  Cannot invoke "String.length()" because "strings[0]" is null
-	at Main.main(Main.java:5)
+	at Main.main(Main.java:4)
 ```
 
 ```java
@@ -89,8 +85,8 @@ public class NullPointerException extends RuntimeException
 - Der Default-Wert von `String` ist aber nicht `""` sondern `null`
 
 ```diff
--        String[] strings = new String[2];
-+        String[] strings = {"", ""};
+-    String[] strings = new String[2];
++    String[] strings = {"", ""};
 ```
 
 ```bash
