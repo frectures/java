@@ -110,6 +110,10 @@ void main() {
 >   - Falls nicht, installiere IntelliJ IDEA von https://www.jetbrains.com/idea/download
 >   - Nach dem Download ⚠️ **NUR 1x KLICKEN** ⚠️ auf `ideaIC...` und Geduld haben, sonst öffnet sich der Installierer mehrfach
 > - Starte IntelliJ IDEA
+>   - ⚠️ Früher oder später wird folgender Dialog aufploppen: ⚠️
+>   - **Unlock next-level development with free AI!**
+>   - Diesen Dialog rechts oben per `X` schließen, **nicht** rechts unten mit Let's Go bestätigen!
+>   - Ihr wollt selber Java schreiben lernen und nicht einer KI dabei zuschauen
 > - Erster Start? **dann** Clone Repository, **sonst** Main Menu/File/New/Project from Version Control
 >   - URL: https://github.com/frectures/java.git
 >   - Clone
