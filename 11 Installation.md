@@ -140,5 +140,11 @@ void main() {
     } else {
         IO.println("In einem Jahr bist du " + (alter + 1) + ", " + name + "!");
     }
+
+    switch (alter) {
+        case 2, 3, 5, 7, 11 -> IO.println("Du bist ein Primzahl-Kind!");
+
+        case 13, 17, 19 -> IO.println("Du bist ein Primzahl-Teenager!");
+    }
 }
 ```
