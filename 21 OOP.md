@@ -337,12 +337,13 @@ public class String {
   - Dazu wühlen wir uns erst mal gemeinsam durch die Klasse `Tetris` (**ohne** `GUI`!)
   - Relevant sind die beiden Zustandsfelder `rotation` und `shape`
   - Was passiert, wenn wir einen vertikalen `I`-Stein am Rand drehen?
-- Implementiere die Methode `removeCompleteLines` in 3 Schritten:
+- Implementiere die Methode `removeCompleteLines` in 4 Schritten:
   1. Falls die unterste Zeile voll ist, überschreibe sie mit Nullen
      - Tipp: `java.util.Arrays.fill`
   2. Falls die unterste Zeile voll ist, kopiere die Zeilen darüber 1 Zeile nach unten
      - Tipp: `System.arraycopy`
   3. Führe Schritt 2 nicht nur für die unterste Zeile aus, sondern für *alle* Zeilen
+  4. 🏆 Führe Schritt 2 nur für die Zeilen aus, in denen der Stein platziert wurde
 - Implementiere die Methode `insertPenaltyLines`
   - Strafzeilen werden ganz unten eingefügt
   - Die Strafzeilen haben in einer zufälligen Spalte eine Lücke
