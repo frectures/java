@@ -43,31 +43,30 @@ void main() {
   - Der Parameter `von` wird mit dem Argument `0` initialisiert
   - Der Parameter `bis` wird mit dem Argument `100` initialisiert
 
-### Einloggen
+### Mathematische Funktionen
+
+- In der Mathematik werden Funktionen wie folgt notiert:
+
+```
+square: N -> N
+
+square(x) = x²
+```
+
+- Obige Beispiel-Funktion kann mit folgender Java-Methode umgesetzt werden:
 
 ```java
-boolean einloggen(int passwortHashCode, int erlaubteVersuche) {
-
-    String passwort = IO.readln("Passwort? ");
-    int versuche = 1;
-
-    while (passwort.hashCode() != passwortHashCode) {
-        IO.println("falsches Passwort");
-        if (versuche == erlaubteVersuche) return false;
-
-        passwort = IO.readln("Passwort? ");
-        versuche = versuche + 1;
-    }
-
-    return true;
+int square(int x)
+{
+    return x * x;
 }
 
-void main() {
-    boolean erfolgreich = einloggen(-1249690433, 5);
-    if (erfolgreich) {
-        IO.println("Willkommen im System!");
-    } else {
-        IO.println("zu viele Fehlversuche");
-    }
-}
+square(5); // 25
+square(7); // 49
 ```
+
+> **Plenum:**
+> - Schreibe eine Java-Methode für die Funktion `cube(x) = x³`
+> - Schreibe eine Java-Methode für die Funktion `hypercube(x) = x^4`
+> - Kannst du `hypercube` mit 2 Multiplikationen und 1 Variable lösen?
+> - Kannst du `hypercube` mit `square` lösen, ohne Multiplikation und Variable?
