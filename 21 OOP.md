@@ -212,21 +212,6 @@ public class StringArrayBuilder {
 - Konstruktoren haben *niemals* einen Ergebnistyp und müssen wie die Klasse heißen:
   - `public NameDerKlasse()`
 
-### Warum sind in der `String`-Klasse manche Methoden `static` und andere nicht?
-
-- Statische Methoden werden nicht an Objekten aufgerufen, sondern an der Klasse selbst:
-  - `String.valueOf(42)`
-  - `String.format("%08x", 123456789)`
-  - `String.join(" und ", namen)`
-  - allgemein `Klasse.methode(argumente)`
-- Normale Methoden werden dagegen an Objekten einer Klasse aufgerufen:
-  - `"Montag".length()`
-  - `"hallo welt".charAt(5)`
-  - `"vodkatrinken".contains("katrin")`
-  - allgemein `objekt.methode(argumente)`
-- Normale Methoden kann man nicht an einer Klasse aufrufen:
-  - ❌ `String.length()` — Die Länge *welchen* Strings? Es schwirren Tausende im Speicher rum...
-
 ### Wozu `private` Zustandsfelder?
 
 1. **Konsistenz:** Private Zustandsfelder können nicht von anderen Klassen in einen inkonsistenten Zustand gebracht werden
@@ -319,7 +304,7 @@ public class String {
   - Konstruktor(en)
   - Methode(n)
 - Wenn zwei Punkte sich sehr nahe kommen, werden sie ins Jenseits geschleudert
-  - Physikalisch können sich die Körper-Mittelpunkte aber nicht näher kommen als `2`
+  - Physikalisch können sich die Körper-Mittelpunkte aber nicht näher kommen als `2` Pixel
   - Sorge deshalb dafür, dass `distanceSquared` den Wert `4` nicht unterschreitet
 - Bisher haben alle Punkte dieselbe (implizite) Masse `5`
   - Ergänze die Klasse `Point` um 1 neues Zustandsfeld `mass`
