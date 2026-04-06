@@ -132,16 +132,25 @@ void main() {
 }
 ```
 
-> **Übung:**
-> - Anstatt fest 3 Namen zu verarbeiten, soll der Anwender bei Programmstart gefragt werden, wie viele Namen er verarbeiten möchte
-> - Falls die eingegebenen Namen bereits aufsteigend sortiert sind, sollen diese nicht erneut auf die Konsole geschrieben werden, sondern lediglich der Hinweis “Die Namen sind bereits aufsteigend sortiert.”
-> - Lagere die Logik zum Erkennen der Sortierung in eine eigene Methode `boolean istSortiert(String[] namen)` aus
-
 | String-Vergleich      | Relative Lage im Wörterbuch |
 | --------------------- | --------------------------- |
 | `s.compareTo(t) < 0`  | `s` kommt vor `t`           |
 | `s.compareTo(t) == 0` | `s` und `t` sind gleich     |
 | `s.compareTo(t) > 0`  | `s` kommt nach `t`          |
+
+> **Übung:**
+> - Sind die eingegebenen Namen bereits aufsteigend sortiert?
+>   - Dann sollen diese *nicht* erneut auf die Konsole geschrieben werden
+>   - sondern lediglich der Hinweis “Die Namen sind bereits aufsteigend sortiert”
+> - Probiere alle 6 Permutationen von `Alice`, `Bob`, `Charlie` aus:
+>   - `Alice`, `Bob`, `Charlie` → “Die Namen sind bereits aufsteigend sortiert”
+>   - `Alice`, `Charlie`, `Bob` → sortieren wie bisher
+>   - `Bob`, `Alice`, `Charlie` → sortieren wie bisher
+>   - `Bob`, `Charlie`, `Alice` → sortieren wie bisher
+>   - `Charlie`, `Alice`, `Bob` → sortieren wie bisher
+>   - `Charlie`, `Bob`, `Alice` → sortieren wie bisher
+> - Lagere die Logik zum Erkennen der Sortierung in eine eigene Methode `boolean istSortiert(String[] namen)` aus
+> - Anstatt fest 3 Namen zu verarbeiten, soll der Anwender bei Programmstart gefragt werden, wie viele Namen er verarbeiten möchte
 
 ### ZeichenZaehlen.java
 
