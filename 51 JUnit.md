@@ -2,7 +2,7 @@
 
 ### Motivation
 
-- In der Grundlagen-Schulung hatten wir nur manuell "getestet" bzw. ausprobiert:
+- In der Grundlagen-Schulung hatten wir nur manuell “getestet” bzw. ausprobiert:
 
 ```java
 void main() {
@@ -16,8 +16,8 @@ void main() {
 }
 ```
 
-- Wir mussten uns selber von der Korrektheit der Ausgaben überzeugen
-- Bei jeder Änderung mussten wir erneut sinnvolle Texte eingeben
+- Wir mussten uns selber von der Korrektheit der Ergebnisse überzeugen
+- Bei jeder Änderung mussten wir erneut sinnvolle Texte eintippen
 - Wahrscheinlich denken wir nicht ständig an alle Randfälle
 - Deutlich sinnvoller sind automatisierte Tests mit JUnit:
 
@@ -117,10 +117,10 @@ void main() {
 }
 ```
 
-- **Plenum:** Lasst uns die gefunden Test-Methoden ausführen!
+- **Plenum:** Lasst uns die gefundenen Test-Methoden ausführen!
   - `method.invoke(new PalindromTest());`
-  - Fehlschlagende Tests sollen protokolliert werden
-  - Ein Report, wie viele Test bestanden haben, wäre schön
+  - Fehlgeschlagene Tests sollen protokolliert werden
+  - Ein Report, wie viele Tests bestanden haben, wäre schön
 
 > - **Übung:** Schreibe Test-Methoden für mindestens 1 der anderen 4 Methoden:
 >   - enthaeltLeertaste
@@ -229,10 +229,10 @@ public class IntGapBufferTest {
   - Ein fehlschlagender Test muss anschließend durch Schreiben von Produktiv-Code erfüllt werden
   - Zwischendurch wird ggf. refaktoriert
 - Wer TDD richtig macht, wechselt im Minuten-Takt zwischen Test-Code und Produktiv-Code
-- Viele Programmierer meinen "Test First", wenn sie "TDD" sagen:
+- Viele Programmierer meinen “Test First”, wenn sie “TDD” sagen:
   - Erst mal die Test-Klasse schreiben
   - Dann die getestete Klasse schreiben
-- Andere populäre Test-Disziplinen sind "Test Last" und "Test Never"
+- Andere populäre Test-Disziplinen sind “Test Last” und “Test Never”
 
 ### Mocking
 

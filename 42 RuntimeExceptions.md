@@ -138,18 +138,46 @@ public class Zahl implements Wert {
 - `IllegalStateException` wird bei ungültigen Zuständen geworfen:
 
 ```java
-public class ByteVector {
+public class StringSet {
 
     private int size;
     // ...
 
-    public byte top() {
-
-        if (size == 0) throw new IllegalStateException("top on empty vector");
-
-        // ...
+    public String[] first10() {
+        var result = new String[10];
+        int index = 0;
+        for (...) {
+            for (...) {
+                ...
+                if (index == 10) return result;
+            }
+        }
+        throw new IllegalStateException("not enough words: " + size);
     }
+}
+```
 
+- Aber normalerweise prüft und wirft man ganz am Anfang der Methode:
+
+```java
+public class StringSet {
+
+    private int size;
     // ...
+
+    public String[] first10() {
+        if (size < 10) throw new IllegalStateException("not enough words: " + size);
+
+        var result = new String[10];
+        int index = 0;
+        for (...) {
+            for (...) {
+                ...
+                if (index == 10) return result;
+            }
+        }
+        // de facto kommen wir hier niemals an, aber so schlau ist Java leider nicht
+        return null;
+    }
 }
 ```

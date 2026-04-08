@@ -58,7 +58,7 @@ Stream.iterate(ONE, x -> x.add(TWO))  // 1, 3,  5,  7,  9, ...
 Stream.iterate(ONE, x -> x.add(TWO))
       .map(x -> x.multiply(x))
 // How often is x.multiply(x) called?
-      .forEach(x -> IO.println(x) + " should be odd");
+      .forEach(x -> IO.println(x + " should be odd"));
 
 
 Stream.iterate(ONE, x -> x.add(TWO))
@@ -124,36 +124,6 @@ Map<String, List<Email>> emailsByDomain(List<Person> persons) {
 > | Array Constructor | `int[]::new`             | `len -> new int[len]`           |
 
 ## more Stream examples
-
-### Freditor
-
-```java
-List<Path> sortedFiles() {
-    try (Stream<Path> applicationFiles = Files.list(applicationDirectory)) {
-        return applicationFiles
-                .filter(Files::isRegularFile)
-                .filter(TabbedEditors::fileHasPlausibleSize)  // 0 < size < 100_000
-                .filter(file -> !isLegacyBackupFile(file))    // 27base64digits.txt
-                .sorted()
-                .collect(Collectors.toList());
-    } catch (IOException directoryAbsent) {
-        return Collections.emptyList();
-    }
-}
-```
-
-### Pangit
-
-```java
-Stream<GitBlob> findGitBlobs(Path root, Consumer<GitBlob> gitBlobConsumer) throws IOException {
-    return Files.walk(root)                   // Stream<Path>
-                .filter(GitBlob::isGitObject)
-                .map(GitBlob::gitBlobOrNull)  // Stream<GitBlob>
-                .filter(Objects::nonNull)
-                .peek(gitBlobConsumer)
-                .sorted();
-}
-```
 
 ### Moby Dick
 

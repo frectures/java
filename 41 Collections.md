@@ -345,6 +345,9 @@ Map<Integer, Long> zaehleZeichen(String text) {
 }
 
 void main() {
+    // sonst werden auf Windows z.B. Smileys falsch eingelesen
+    System.setProperty("stdin.encoding", "UTF-8");
+
     String text = IO.readln("Text? ");
 
     Map<Integer, Long> zaehler = zaehleZeichen(text);
