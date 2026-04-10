@@ -287,7 +287,75 @@ public class StringSet {
 - Probiere verschiedene 2er-Potenzen für die Länge von `arrays` aus
   - Welchen Einfluss hat das auf die gemessene Zeit?
 
-### Map
+### Maps
+
+- Angenommen, wir wollen Telefon-Nummern auf Pizza-Firmen abbilden:
+
+```java
+var werRuftMichAn = new String[32890521]; // 125 MiB
+
+werRuftMichAn[271025] = "Call a Pizza";
+werRuftMichAn[2294010] = "Domino's";
+werRuftMichAn[32890520] = "Mundfein";
+
+IO.println(werRuftMichAn[32890519]); // null
+IO.println(werRuftMichAn[32890520]); // "Mundfein"
+IO.println(werRuftMichAn[32890521]); // ArrayIndexOutOfBoundsException
+
+//                               schleift 32890521x
+for (int nummer = 0; nummer < werRuftMichAn.length; ++nummer) {
+
+    String firma = werRuftMichAn[nummer];
+
+    if (firma != null) {
+        IO.println(nummer + ": " + firma);
+    }
+}
+```
+
+- Arrays sind für diesen Anwendungsfall nicht geeignet
+  - weil fast alle Positionen unbelegt bleiben
+  - aber trotzdem Speicherplatz verbrauchen
+- Maps eignen sich hier besser:
+
+```java
+var werRuftMichAn = new HashMap<Integer, String>();
+
+werRuftMichAn.put(271025, "Call a Pizza");
+werRuftMichAn.put(2294010, "Domino's");
+werRuftMichAn.put(32890520, "Mundfein");
+
+IO.println(werRuftMichAn.get(32890519)); // null
+IO.println(werRuftMichAn.get(32890520)); // "Mundfein"
+IO.println(werRuftMichAn.get(32890521)); // null
+
+IO.println(werRuftMichAn.getOrDefault(32890519, "unbekannt")); // "unbekannt"
+IO.println(werRuftMichAn.getOrDefault(32890520, "unbekannt")); // "Mundfein"
+IO.println(werRuftMichAn.getOrDefault(32890521, "unbekannt")); // "unbekannt"
+
+//                    schleift 3x
+for (var entry : werRuftMichAn.entrySet()) {
+
+    int   nummer = entry.getKey();
+    String firma = entry.getValue();
+
+    IO.println(nummer + ": " + firma);
+}
+```
+
+- Eine `Map<Key, Value>` bildet Schlüssel auf Werte ab
+  - Schlüssel + Wert = Eintrag
+- `map.get(key)` liefert:
+  - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
+  - ansonsten `null`
+- `map.put(key, value)`
+  - legt einen neuen Eintrag an
+  - oder ersetzt den alten Eintrag
+- `map.getOrDefault(key, defaultValue)` liefert:
+  - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
+  - ansonsten `defaultValue`
+
+### ZeichenZaehlen.java
 
 - Rückblick auf eine ältere Beispiel-Methode `zaehleZeichen`:
 
@@ -304,112 +372,8 @@ int[] zaehleZeichen(String text) {
 }
 ```
 
-- Leider kommt die Methode nicht mit Zeichen zurecht, die 2 `char`s benötigen 😭
-- Lösung: `int` statt `char`
-
-```java
-long[] zaehleZeichen(String text) {
-
-    long[] zaehler = new long[1114112];
-
-    for (int codePoint : text.codePoints().toArray()) {
-        zaehler[codePoint] += 1;
-    }
-
-    return zaehler;
-}
-```
-
-- Nun verbraucht das Array allerdings 8,8 MB statt 0,52 MB...
-- Wenn die meisten Einträge in einem `T[]` nie angefasst werden, ist `Map<Integer, T>` eine speichersparende Alternative:
-
-```java
-Map<Integer, Long> zaehleZeichen(String text) {
-
-    Map<Integer, Long> zaehler = new TreeMap<>();
-
-    for (int codePoint : text.codePoints().toArray()) {
-
-        Long n = zaehler.get(codePoint);
-        // get liefert null, falls kein Eintrag zu dem Schlüssel existiert
-        if (n == null) {
-            // neuen Eintrag anlegen
-            zaehler.put(codePoint, 1L);
-        } else {
-            // alten Eintrag ersetzen
-            zaehler.put(codePoint, n + 1);
-        }
-    }
-
-    return zaehler;
-}
-
-void main() {
-    // sonst werden auf Windows z.B. Smileys falsch eingelesen
-    System.setProperty("stdin.encoding", "UTF-8");
-
-    String text = IO.readln("Text? ");
-
-    Map<Integer, Long> zaehler = zaehleZeichen(text);
-
-    for (Map.Entry<Integer, Long> entry : zaehler.entrySet()) {
-
-        int codePoint = entry.getKey();
-        long count = entry.getValue();
-
-        if (codePoint < 65536) {
-            IO.println(            (char) codePoint  + ": " + count);
-        } else {
-            IO.println(Character.toString(codePoint) + ": " + count);
-        }
-    }
-}
-```
-
-- Eine `Map<Key, Value>` bildet Schlüssel auf Werte ab
-  - Schlüssel plus Wert = Eintrag
-- `map.get(key)` liefert:
-  - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
-  - ansonsten `null`
-- `map.put(key, value)`
-  - legt einen neuen Eintrag an
-  - oder ersetzt den alten Eintrag
-- `map.getOrDefault(key, defaultValue)` liefert:
-  - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
-  - ansonsten `defaultValue`
-
-```java
-    for (int codePoint : text.codePoints().toArray()) {
-
-        long n = zaehler.getOrDefault(codePoint, 0L);
-
-        zaehler.put(codePoint, n + 1);
-    }
-```
-
-> **Übung:**
-> - Vervollständige folgende 3 Methoden zum Zählen von *Wörtern* (statt *Buchstaben*)
-> - 🏆 Ändere den Ergebnistyp von `haeufigstesWort` auf `Map.Entry<String, Long>`
->   - damit man nicht nur das häufigste Wort selbst liefert, sondern auch dessen Häufigkeit
-> - 🏆 Ändere den Ergebnistyp von `seltenstesWort` auf `Map<String, Long>`
->   - weil wahrscheinlich mehrere Wörter gleich selten sind
-
-```java
-Map<String, Long> zaehleWoerter(String text) {
-    // TODO
-    return null;
-}
-
-String haeufigstesWort(Map<String, Long> zaehler) {
-    // TODO
-    return null;
-}
-
-String seltenstesWort(Map<String, Long> zaehler) {
-    // TODO
-    return null;
-}
-```
+> **Übung**:
+> - Ersetze `new int[65536]` durch `new TreeMap<Character, Integer>`
 
 ## Collection 'literals'
 
