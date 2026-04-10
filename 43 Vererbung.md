@@ -231,13 +231,35 @@ class Dog extends Pet {
 - “Trotzdem” haben abstrakte Klassen Konstruktoren
   - zwecks Initialisierung der vererbten Zustandsfelder
 
+### Beispiel `AbstractCollection`
+
+- AbstractCollection (19 Subklassen)
+  - ...
+  - AbstractList (30 Subklassen)
+    - ArrayList
+    - LinkedList
+    - Vector
+    - ...
+  - AbstractSet (51 Subklassen)
+    - HashSet
+    - TreeSet
+    - EnumSet
+    - EmptySet
+    - SingletonSet
+    - ...
+  - AbstractQueue (14 Subklassen)
+    - ArrayBlockingQueue
+    - LinkedBlockingQueue
+    - ...
+
 ### Einordnung
 
-- Etabliertes Muster: `class KonkreteKlasse extends AbstrakteKlasse (implements Interface)`
-  - Von tieferen Vererbungs-Hierarchien wird heutzutage eher abgeraten
-- Fachliche Vererbung (`Sparbuch extends Konto`) wird häufig zum Wartungsproblem
+- *Technische* Vererbung (`AbstractList extends AbstractCollection`) funktioniert oft recht gut
+  - weil die Autoren sich ihre eigene “Welt” ausdenken können
+- *Fachliche* Vererbung (`Sparbuch extends Konto`) wird häufig zum Wartungsproblem
   - weil sich die Domäne ändert
   - oder unser Verständnis davon
+  - oder neue Klassen schlecht in die alte Hierarchie passen
   - [Duplication is far cheaper than the wrong abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction)
 
 ### Was unterscheidet abstrakte Klassen von konkreten Klassen?
