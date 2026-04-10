@@ -279,3 +279,10 @@ class Dog extends Pet {
   - 2012 Go
   - 2015 Rust
   - 2016 Zig
+
+> **Übung:**
+> - Entferne aus der Klasse `Tetris` das Zustandsfeld `private final LetterSupplier letterSupplier;`
+> - Füge dafür eine neue Methode `protected abstract int nextLetter();` hinzu
+> - Implementiere diese Methode in 2 neuen Subklassen `FairTetris` und `UnfairTetris`
+>   - Kopiere den dafür notwendigen Code einfach aus `FairLetterSupplier` und `UnfairLetterSupplier`
+> - Behebe die Fehler in der Klasse `TetrisGUI`
