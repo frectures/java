@@ -136,19 +136,27 @@ public class JGround {
                 new JScrollPane(results),
                 new JScrollPane(printer)
         );
-        vertical.setResizeWeight(0.875);
-
         var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 vertical,
                 new RTextScrollPane(code)
         );
-        horizontal.setResizeWeight(0.25);
 
         var frame = new JFrame();
         frame.add(horizontal);
         frame.pack();
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
+
+        EventQueue.invokeLater(() -> {
+            double phi = 0.618;
+
+            vertical.setDividerLocation(phi);
+            vertical.setResizeWeight(phi);
+
+            horizontal.setDividerLocation(1 - phi);
+            horizontal.setResizeWeight(1 - phi);
+        });
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
