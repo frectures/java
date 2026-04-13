@@ -345,12 +345,12 @@ for (var entry : werRuftMichAn.entrySet()) {
 
 - Eine `Map<Key, Value>` bildet Schlüssel auf Werte ab
   - Schlüssel + Wert = Eintrag
-- `map.get(key)` liefert:
-  - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
-  - ansonsten `null`
 - `map.put(key, value)`
   - legt einen neuen Eintrag an
   - oder ersetzt den alten Eintrag
+- `map.get(key)` liefert:
+  - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
+  - ansonsten `null`
 - `map.getOrDefault(key, defaultValue)` liefert:
   - den zum Schlüssel zugehörigen Wert, sofern ein Eintrag existiert
   - ansonsten `defaultValue`
@@ -374,6 +374,34 @@ int[] zaehleZeichen(String text) {
 
 > **Übung**:
 > - Ersetze `new int[65536]` durch `new TreeMap<Character, Integer>`
+
+### MobyDick.java
+
+> **Übung**:
+> - Baue eine `Map<String, Collection<String>> nachfolger`:
+>   - Key `String` ist jeweils ein Wort in Moby Dick
+>   - Value `Collection<String>` sind alle Wörter, die unmittelbar nach dem Key in Moby Dick auftauchen
+>   - Kleiner Beispieltext `the king and the queen rule the land`:
+>     - `the` → `[king, queen, land]`
+>     - `king` → `[and]`
+>     - `and` → `[the]`
+>     - `queen` → `[rule]`
+>     - `rule` → `[the]`
+> - Generiere aus der Map `nachfolger` zufällige Texte:
+>   - Fange mit irgendeinem Key aus der Map an
+>   - Wähle einen zufälligen Nachfolger aus der Value-Sammlung
+>   - Verwende diesen Nachfolger als nächsten Key usw.
+> - 🏆 Bisher klingen die Texte nicht besonders glaubwürdig...
+>   - Verwende als Key nicht nur 1 Wort, sondern 2 aufeinander folgende Wörter im Text
+>     - `the king` → `[and]`
+>     - `king and` → `[the]`
+>     - `and the` → `[queen]`
+>     - usw.
+>   - Berücksichtige nicht nur Wörter, sondern auch Satzzeichen
+>     - Punkt, Komma, Ausrufezeichen, Fragezeichen...
+>     - Dafür wirst du den [Regex](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) zum Erkennen von “Wörtern” anpassen müssen
+>   - Berücksichtige die statistische Wahrscheinlichkeit von Wörtern
+>     - Nach `captain` kommt `ahab` z.B. mit 61/289 = 21% Wahrscheinlichkeit
 
 ### Wieso `Integer` statt `int`?
 
