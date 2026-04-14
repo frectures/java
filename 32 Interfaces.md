@@ -2,6 +2,215 @@
 
 ### Motivation
 
+- Gegeben seien 2 Klassen für Quadrate und Kreise:
+
+<table>
+<tr>
+<th>Square</th>
+<th>Circle</th>
+</tr>
+<tr>
+<td>
+
+```java
+public class Square {
+
+    private final double length;
+
+    public Square(double length) {
+        this.length = length;
+    }
+
+    public double area() {
+        return length * length;
+    }
+}
+```
+
+</td>
+<td>
+
+```java
+public class Circle {
+
+    private final double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    public double area() {
+        return Math.PI * (radius * radius);
+    }
+}
+```
+
+</td>
+</tr>
+</table>
+
+- Wenn wir die Flächen mehrerer Figuren aufaddieren wollen, brauchen wir dazu 2 separate Methoden:
+
+<table>
+<tr>
+<th>addSquareAreas</th>
+<th>addCircleAreas</th>
+</tr>
+<tr>
+<td>
+
+```java
+double addSquareAreas(Square[] squares) {
+    double sum = 0;
+    for (Square square : squares) {
+        sum += square.area();
+    }
+    return sum;
+}
+```
+
+</td>
+<td>
+
+```java
+double addCircleAreas(Circle[] circles) {
+    double sum = 0;
+    for (Circle circle : circles) {
+        sum += circle.area();
+    }
+    return sum;
+}
+```
+
+</td>
+</tr>
+</table>
+
+- und 2 Arrays in der `main`-Methode:
+
+```java
+void main() {
+
+    Square[] squares = {
+            new Square(3),
+            new Square(4),
+    };
+
+    Circle[] circles = {
+            new Circle(1),
+            new Circle(10),
+    };
+
+    double totalArea = addSquareAreas(squares) + addCircleAreas(circles);
+
+    IO.println(squares.length + circles.length + " shapes with total area " + totalArea);
+}
+```
+
+- Der Code der 2 `add`-Methoden ist bis auf die Typen (und Bezeichner) identisch
+- Schöner wäre 1 `add`-Methode, die mit *beliebigen* Figuren umgehen kann
+- Dazu definieren wir einen abstrakten Typ `Shape` mit einer abstrakten `area`-Methode:
+
+```java
+public abstract interface Shape {
+
+    public abstract double area(); // Semikolon statt Geschweifte Klammern!
+}
+```
+
+- und lassen die konkreten Klassen das Interface implementieren:
+
+<table>
+<tr>
+<th>Square</th>
+<th>Circle</th>
+</tr>
+<tr>
+<td>
+
+```java
+                    ////////////////
+public class Square implements Shape {
+
+    // ... Rumpf wie vorher ...
+}
+```
+
+</td>
+<td>
+
+```java
+                    ////////////////
+public class Circle implements Shape {
+
+    // ... Rumpf wie vorher ...
+}
+```
+
+</td>
+</tr>
+</table>
+
+- Dann brauchen wir nur noch 1 `add`-Methode:
+
+```java
+double addShapeAreas(Shape[] shapes) {
+    double sum = 0;
+    for (Shape shape : shapes) {
+        sum += shape.area();
+    }
+    return sum;
+}
+```
+
+- und nur noch 1 Array in der `main`-Methode:
+
+```java
+void main() {
+
+    Shape[] shapes = {
+            new Square(3),
+            new Square(4),
+
+            new Circle(1),
+            new Circle(10),
+    };
+
+    double totalArea = addShapeAreas(shapes);
+
+    IO.println(shapes.length + " shapes with total area " + totalArea);
+}
+```
+
+> **Übung:**
+> - Schreibe eine dritte Klasse `Rectangle implements Shape` mit 2 Zustandsfeldern:
+>   - `width`
+>   - `height`
+> - Schreibe eine vierte Klasse `Triangle implements Shape` mit 2 Zustandsfeldern:
+>   - `base`
+>     - Die Länge der “Basis” des Dreiecks
+>     - Es steht sozusagen “auf dem Boden”
+>   - `height`
+>     - Die Höhe senkrecht zur Basis
+
+### Eigenschaften von Interfaces
+
+- Ein Interface hat:
+  - *keine* Zustandsfelder
+  - *keine* Konstruktoren
+  - *keine* Methodenrümpfe ¹
+- Von Interfaces kann man *keine* Objekte erzeugen
+  - Ein Interface definiert lediglich einen *statischen* Supertyp für alle implementierenden Klassen
+  - *Dynamisch* getypte Programmiersprachen haben keine Interfaces (siehe JavaScript vs. TypeScript)
+- Interfaces sind grundsätzlich abstrakt
+  - egal ob man `abstract interface` oder nur `interface` schreibt
+- Interface-Methoden sind grundsätzlich öffentlich und abstrakt
+  - egal ob man `public` und/oder `abstract` schreibt
+
+¹ Seit Java 8 können Interfaces auch konkrete `default`-Methoden (mit Rümpfen) enthalten
+
+### Tetris
+
 - Die `Tetris`-Klasse verwendet einen `FairLetterSupplier`:
 
 ```java
@@ -154,22 +363,6 @@ Tetris[] games = {
 > - Schreibe eine dritte Klasse `CheatingLetterSupplier`
 >   - `nextLetter` soll bei jedem 2. Aufruf (und sonst nicht!) den langen `I`-Stein liefern
 >   - Benutze `CheatingLetterSupplier` gemäß obiger Anleitung für Spieler 1
-
-### Eigenschaften von Interfaces
-
-- Ein Interface hat:
-  - *keine* Zustandsfelder
-  - *keine* Konstruktoren
-  - *keine* Methodenrümpfe ¹
-- Von Interfaces kann man *keine* Objekte erzeugen
-  - Ein Interface definiert lediglich einen *statischen* Supertyp für alle implementierenden Klassen
-  - *Dynamisch* getypte Programmiersprachen haben keine Interfaces (siehe JavaScript vs. TypeScript)
-- Interfaces sind grundsätzlich abstrakt
-  - egal ob man `abstract interface` oder nur `interface` schreibt
-- Interface-Methoden sind grundsätzlich öffentlich und abstrakt
-  - egal ob man `public` und/oder `abstract` schreibt
-
-¹ Seit Java 8 können Interfaces auch konkrete `default`-Methoden (mit Rümpfen) enthalten
 
 ### Prägende Informatiker
 
