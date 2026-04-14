@@ -248,44 +248,16 @@ Listen-Klasse: class java.util.ArrayList
 
 ### StringSet.java
 
-- Vervollständige die Klasse `StringSet.java` und verwende sie für Moby Dick:
-
-```java
-public class StringSet {
-    // Grundidee: Viele sehr kurze Arrays anstatt einem langen Array
-    private final String[][] arrays;
-
-    public StringSet() {
-        arrays = new String[32768][]; // MUSS eine Zweierpotenz sein!
-        java.util.Arrays.fill(arrays, new String[0]); // anstatt null
-    }
-
-    public void add(String s) {
-        // Aus jedem String kann man seine zugehörige Zeile berechnen
-        int zeile = s.hashCode() & (arrays.length - 1);
-
-        // Strings in derselben Zeile teilen sich dasselbe innere Array
-        String[] array = arrays[zeile];
-
-        // TODO Wenn das Wort noch nicht enthalten ist, füge es hinzu.
-        // TODO Dazu muss das innere Array um 1 Element vergrößert werden. (+1)
-    }
-
-    public int size() {
-        // TODO Entweder die Längen aller inneren Arrays aufaddieren
-        // TODO oder ein neues Zustandsfeld beim Einfügen pflegen
-        return 123;
-    }
-
-    public String[] first10() {
-        // TODO
-        return arrays[0];
-    }
-}
-```
-
-- Probiere verschiedene 2er-Potenzen für die Länge von `arrays` aus
-  - Welchen Einfluss hat das auf die gemessene Zeit?
+> **Übung**:
+> - Arbeite die `TODO`s in der Klasse `StringSet.java` ab
+> - Starte `StringSetMain.java` um auszuprobieren, ob alles klappt
+>   - ansonsten Bugs in `StringSet.java` beheben
+> - Probiere verschiedene 2er-Potenzen für die Länge von `arrays` aus ⏱️
+> - 🏆 Lasse das Array nach Bedarf dynamisch wachsen:
+>   - Starte mit einem Array der Größe 16 (statt 32768)
+>   - Prüfe vor jedem Einfügen, ob `size` gleich `arrays.length` ist
+>   - Falls ja, verschiebe die Strings in ein doppelt so großes `String[][]`
+>   - ⚠️ Das ist nicht trivial, weil jetzt 1 zusätzliches Hash-Bit berücksichtigt werden muss
 
 ### Maps
 

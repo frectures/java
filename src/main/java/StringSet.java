@@ -1,6 +1,7 @@
 public class StringSet {
     // Grundidee: Viele sehr kurze Arrays anstatt einem langen Array
     private final String[][] arrays;
+    private int size;
 
     public StringSet() {
         arrays = new String[32768][]; // MUSS eine Zweierpotenz sein!
@@ -19,9 +20,8 @@ public class StringSet {
     }
 
     public int size() {
-        // TODO Entweder die Längen aller inneren Arrays aufaddieren
-        // TODO oder ein neues Zustandsfeld beim Einfügen pflegen
-        return 123;
+        // TODO Hier ist nichts zu tun, aber wo muss size inkrementiert werden?
+        return size;
     }
 
     public String[] first10() {
