@@ -59,8 +59,7 @@ public class JGround {
             "import static cafe.Assertions.*;",
             "import cafe.Ints;",
             "import static cafe.Ints.range;",
-            "import cafe.Seq;",
-            "import static cafe.Seq.seq;",
+            "import cafe.Vec;",
     };
 
     private static final String EXAMPLE = """
@@ -251,6 +250,7 @@ public class JGround {
                                 var suggestions = analysis.completionSuggestions(prefix, caretPosition, anchor);
                                 var hidden = new ArrayList<String>();
                                 var shown = new HashSet<String>();
+
                                 for (var suggestion : suggestions) {
                                     String continuation = suggestion.continuation();
                                     if (anchor[0] + continuation.length() == caretPosition) {
@@ -277,12 +277,6 @@ public class JGround {
                                             case "equals(":
                                             case "hashCode()":
                                             case "toString()":
-                                                // Seq clutter (too distracting)
-                                            case "forEach(":
-                                            case "iterator()":
-                                            case "spliterator()":
-                                            case "stream()":
-                                            case "toArray(":
                                                 if (!moreDetails) {
                                                     hidden.add(continuation);
                                                     continue;

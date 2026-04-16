@@ -9,38 +9,38 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public final class Seq<E> implements Iterable<E> {
+public final class Vec<E> implements Iterable<E> {
 
     private final E[] array;
     private final int length;
 
-    private Seq(E[] array, int length) {
+    private Vec(E[] array, int length) {
         this.array = array;
         this.length = length;
     }
 
-    public static final Seq<Object> EMPTY = new Seq<>(new Object[]{new Object()}, 0);
+    public static final Vec<Object> EMPTY = new Vec<>(new Object[]{new Object()}, 0);
 
     @SuppressWarnings("unchecked")
-    public static <E> Seq<E> seq() {
-        return (Seq<E>) EMPTY;
+    public static <E> Vec<E> of() {
+        return (Vec<E>) EMPTY;
     }
 
     @SafeVarargs
-    public static <E> Seq<E> seq(E... elements) {
-        if (elements.length == 0) return seq();
+    public static <E> Vec<E> of(E... elements) {
+        if (elements.length == 0) return Vec.of();
 
         for (Object element : elements) {
-            requireNonNull(element, "Seq rejects null");
+            requireNonNull(element, "Vec rejects null");
         }
 
-        return new Seq<>(elements, elements.length);
+        return new Vec<>(elements, elements.length);
     }
 
     private static final VarHandle OBJECT_ARRAY_HANDLE = MethodHandles.arrayElementVarHandle(Object[].class);
 
-    public Seq<E> plus(E element) {
-        requireNonNull(element, "Seq rejects null");
+    public Vec<E> plus(E element) {
+        requireNonNull(element, "Vec rejects null");
 
         var array = this.array;
         int length = this.length;
@@ -54,16 +54,16 @@ public final class Seq<E> implements Iterable<E> {
             array[length] = element;
         }
 
-        return new Seq<>(array, length + 1);
+        return new Vec<>(array, length + 1);
     }
 
     @SafeVarargs
-    public final Seq<E> plus(E... elements) {
+    public final Vec<E> plus(E... elements) {
         int additional = elements.length;
         if (additional == 0) return this;
 
         for (Object element : elements) {
-            requireNonNull(element, "Seq rejects null");
+            requireNonNull(element, "Vec rejects null");
         }
 
         var array = this.array;
@@ -77,10 +77,10 @@ public final class Seq<E> implements Iterable<E> {
         }
         System.arraycopy(elements, 0, array, length, additional);
 
-        return new Seq<>(array, required);
+        return new Vec<>(array, required);
     }
 
-    public Seq<E> plus(Seq<E> that) {
+    public Vec<E> plus(Vec<E> that) {
         int additional = that.length;
         if (additional == 0) return this;
 
@@ -97,7 +97,7 @@ public final class Seq<E> implements Iterable<E> {
         }
         System.arraycopy(elements, 0, array, length, additional);
 
-        return new Seq<>(array, required);
+        return new Vec<>(array, required);
     }
 
     private E[] copy(int capacity) {
@@ -137,18 +137,18 @@ public final class Seq<E> implements Iterable<E> {
         return index;
     }
 
-    public Seq<E> with(int index, E element) {
+    public Vec<E> with(int index, E element) {
         index = fix(index);
-        requireNonNull(element, "Seq rejects null");
+        requireNonNull(element, "Vec rejects null");
 
         E[] a = copy();
         a[index] = element;
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Seq<?> that)) return false;
+        if (!(obj instanceof Vec<?> that)) return false;
 
         if (this.length != that.length) return false;
 
@@ -235,39 +235,39 @@ public final class Seq<E> implements Iterable<E> {
                 Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.IMMUTABLE);
     }
 
-    public <R> Seq<R> map(Function<E, R> f) {
+    public <R> Vec<R> map(Function<E, R> f) {
         R[] a = newArray(length);
         for (int i = 0; i < length; ++i) {
-            a[i] = Objects.requireNonNull(f.apply(array[i]), "Seq rejects null");
+            a[i] = Objects.requireNonNull(f.apply(array[i]), "Vec rejects null");
         }
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
-    public <R> Seq<R> mapIndexed(BiFunction<Integer, E, R> f) {
+    public <R> Vec<R> mapIndexed(BiFunction<Integer, E, R> f) {
         R[] a = newArray(length);
         for (int i = 0; i < length; ++i) {
-            a[i] = Objects.requireNonNull(f.apply(i, array[i]), "Seq rejects null");
+            a[i] = Objects.requireNonNull(f.apply(i, array[i]), "Vec rejects null");
         }
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
-    public <R> Seq<R> flatMap(Function<E, Seq<R>> f) {
-        Seq<R> result = new Seq<>(newArray(length), 0);
+    public <R> Vec<R> flatMap(Function<E, Vec<R>> f) {
+        Vec<R> result = new Vec<>(newArray(length), 0);
         for (int i = 0; i < length; ++i) {
             result = result.plus(f.apply(array[i]));
         }
         return result;
     }
 
-    public <R> Seq<R> flatMapIndexed(BiFunction<Integer, E, R> f) {
-        Seq<R> result = new Seq<>(newArray(length), 0);
+    public <R> Vec<R> flatMapIndexed(BiFunction<Integer, E, R> f) {
+        Vec<R> result = new Vec<>(newArray(length), 0);
         for (int i = 0; i < length; ++i) {
             result = result.plus(f.apply(i, array[i]));
         }
         return result;
     }
 
-    public Seq<E> filter(Predicate<E> p) {
+    public Vec<E> filter(Predicate<E> p) {
         E[] a = newArray(length);
         int n = 0;
         for (int i = 0; i < length; ++i) {
@@ -275,13 +275,13 @@ public final class Seq<E> implements Iterable<E> {
                 a[n++] = array[i];
             }
         }
-        if (n == 0) return seq();
+        if (n == 0) return Vec.of();
         if (n == length) return this;
 
-        return new Seq<>(a, n);
+        return new Vec<>(a, n);
     }
 
-    public Seq<E> filterIndexed(BiPredicate<Integer, E> p) {
+    public Vec<E> filterIndexed(BiPredicate<Integer, E> p) {
         E[] a = newArray(length);
         int n = 0;
         for (int i = 0; i < length; ++i) {
@@ -289,7 +289,7 @@ public final class Seq<E> implements Iterable<E> {
                 a[n++] = array[i];
             }
         }
-        return new Seq<>(a, n);
+        return new Vec<>(a, n);
     }
 
     public <R> R fold(R value, BiFunction<R, E, R> f) {
@@ -299,44 +299,44 @@ public final class Seq<E> implements Iterable<E> {
         return value;
     }
 
-    public Seq<E> take(int n) {
-        if (n <= 0) return seq();
+    public Vec<E> take(int n) {
+        if (n <= 0) return Vec.of();
         if (n >= length) return this;
 
-        return new Seq<>(array, n);
+        return new Vec<>(array, n);
     }
 
-    public Seq<E> drop(int n) {
+    public Vec<E> drop(int n) {
         if (n <= 0) return this;
-        if (n >= length) return seq();
+        if (n >= length) return Vec.of();
 
         int len = length - n;
         E[] a = newArray(len);
         System.arraycopy(array, n, a, 0, len);
-        return new Seq<>(a, len);
+        return new Vec<>(a, len);
     }
 
-    public Seq<E> sorted() {
+    public Vec<E> sorted() {
         E[] a = copy();
         Arrays.sort(a);
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
-    public Seq<E> sorted(Comparator<E> comparator) {
+    public Vec<E> sorted(Comparator<E> comparator) {
         E[] a = copy();
         Arrays.sort(a, comparator);
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
-    public Seq<E> reversed() {
+    public Vec<E> reversed() {
         E[] a = newArray(length);
         for (int i = 0, j = length - 1; j >= 0; ++i, --j) {
             a[j] = array[i];
         }
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
-    public Seq<E> shuffled() {
+    public Vec<E> shuffled() {
         E[] a = copy();
         Random random = new Random();
         for (int n = length; n >= 2; --n) {
@@ -346,22 +346,22 @@ public final class Seq<E> implements Iterable<E> {
             a[i] = a[j];
             a[j] = t;
         }
-        return new Seq<>(a, length);
+        return new Vec<>(a, length);
     }
 
-    public static <E> Seq<E> iterate(int length, E first, UnaryOperator<E> next) {
-        if (length <= 0) return seq();
+    public static <E> Vec<E> iterate(int length, E first, UnaryOperator<E> next) {
+        if (length <= 0) return Vec.of();
 
         E[] array = newArray(length);
         array[0] = first;
         for (int i = 1; i < length; ++i) {
             array[i] = next.apply(array[i - 1]);
         }
-        return new Seq<>(array, length);
+        return new Vec<>(array, length);
     }
 
-    public static <E> Seq<E> iterate(int length, E first, E second, BinaryOperator<E> next) {
-        if (length <= 0) return seq();
+    public static <E> Vec<E> iterate(int length, E first, E second, BinaryOperator<E> next) {
+        if (length <= 0) return Vec.of();
 
         E[] array = newArray(length);
         array[0] = first;
@@ -371,7 +371,7 @@ public final class Seq<E> implements Iterable<E> {
                 array[i] = next.apply(array[i - 2], array[i - 1]);
             }
         }
-        return new Seq<>(array, length);
+        return new Vec<>(array, length);
     }
 
     public Stream<E> stream() {
@@ -379,7 +379,7 @@ public final class Seq<E> implements Iterable<E> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <E> Collector<E, ?, Seq<E>> collector() {
+    public static <E> Collector<E, ?, Vec<E>> collector() {
         return Collector.of(
                 ArrayList::new,
                 ArrayList::add,
@@ -387,7 +387,7 @@ public final class Seq<E> implements Iterable<E> {
                     left.addAll(right);
                     return left;
                 },
-                list -> Seq.seq((E[]) list.toArray()));
+                list -> Vec.of((E[]) list.toArray()));
     }
 
     public Object[] toArray() {
