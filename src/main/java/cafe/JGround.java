@@ -49,23 +49,10 @@ public class JGround {
         return "🖶 println " + java.time.LocalTime.now().withNano(0) + "\n\n";
     }
 
-    private static final String[] IMPORTS = {
-            "import java.math.*;",
-            "import java.nio.file.*;",
-            "import java.util.*;",
-            "import java.util.stream.*;",
-            "void println(Object x) { IO.println(x); }",
-            "void println(        ) { IO.println( ); }",
-            "void print  (Object x) { IO.print  (x); }",
-
-            "import cafe.Assertions;",
-            "import static cafe.Assertions.*;",
-            "import cafe.Ints;",
-            "import static cafe.Ints.range;",
-            "import cafe.Vec;",
-    };
-
     private static final String EXAMPLE = """
+            import java.util.*;
+            
+            
             1 + 2
             1 + 2 * 3
             (1 + 2) * 3
@@ -122,6 +109,9 @@ public class JGround {
         String text;
         try {
             text = Files.readString(PATH);
+            if (text.isBlank()) {
+                text = EXAMPLE;
+            }
         } catch (IOException ex) {
             text = EXAMPLE;
         }
@@ -201,9 +191,6 @@ public class JGround {
         System.setOut(printStream);
         System.setErr(printStream);
         var shell = JShell.builder().executionEngine("local").build();
-        for (String imp : IMPORTS) {
-            shell.eval(imp);
-        }
         var analysis = shell.sourceCodeAnalysis();
 
         code.requestFocusInWindow();
@@ -222,7 +209,6 @@ public class JGround {
                 printer.setText(printer());
 
                 shell.snippets()
-                        .skip(IMPORTS.length)
                         .toList()
                         .reversed()
                         .forEach(shell::drop);
