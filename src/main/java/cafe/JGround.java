@@ -35,15 +35,18 @@ public class JGround {
     private static final String MANUAL = """
             F1  documentation/completion at cursor
             F5  execute whole program
-            F8  execute section (separated by 2 empty lines)
+            F8  execute section  †
             F9  execute section to current line
             F12 execute selection/current line
             
             combine with SHIFT for more details
+            
+             †  sections are separated by 2 empty lines
+             †  first section is always executed (imports etc.)
             """;
 
     private static String printer() {
-        return "🖶 println " + java.time.LocalTime.now().withNano(0) + "\n";
+        return "🖶 println " + java.time.LocalTime.now().withNano(0) + "\n\n";
     }
 
     private static final String[] IMPORTS = {
@@ -312,6 +315,10 @@ public class JGround {
                             int startOfSection = getSectionStartOffset(currentLine);
                             int endOfSection = getSectionEndOffset(currentLine);
 
+                            if (startOfSection > 0) {
+                                // always execute first section
+                                evaluate(0, code.getText(0, getSectionEndOffset(0)));
+                            }
                             evaluate(startOfSection, code.getText(startOfSection, endOfSection - startOfSection));
                         }
 
@@ -325,6 +332,10 @@ public class JGround {
                             int startOfSection = getSectionStartOffset(currentLine);
                             int endOfLine = code.getLineEndOffset(currentLine);
 
+                            if (startOfSection > 0) {
+                                // always execute first section
+                                evaluate(0, code.getText(0, getSectionEndOffset(0)));
+                            }
                             evaluate(startOfSection, code.getText(startOfSection, endOfLine - startOfSection));
                         }
 
