@@ -394,8 +394,11 @@ public class JGround {
                     appendLine();
                     var completionInfo = analysis.analyzeCompletion(remainingSource);
                     String untrimmed = completionInfo.completeness().isComplete() ? completionInfo.source() : remainingSource;
-                    SnippetEvent event = shell.eval(untrimmed).getFirst();
                     String source = untrimmed.trim();
+
+                    var events = shell.eval(untrimmed);
+                    if (events.isEmpty()) break;
+                    var event = events.getFirst();
 
                     Diag diagnostic = shell.diagnostics(event.snippet()).findFirst().orElse(null);
                     if (diagnostic != null) {
