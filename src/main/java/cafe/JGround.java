@@ -30,7 +30,8 @@ public class JGround {
 
     private static final int TAB_SIZE = 4;
 
-    private static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, 24);
+    private static Font font = new Font(Font.MONOSPACED, Font.PLAIN, 24);
+    private static Timer timer;
 
     private static final String MANUAL = """
             F1  documentation/completion at cursor
@@ -96,15 +97,15 @@ public class JGround {
     }
 
     public static void createAndShowGUI() {
+        var frame = new JFrame();
+
         var results = new JTextArea(null, MANUAL, 0, 0);
         results.getDocument().putProperty("tabSize", TAB_SIZE);
         results.setEditable(false);
-        results.setFont(FONT);
 
         var printer = new JTextArea(null, printer(), 0, 0);
         printer.getDocument().putProperty("tabSize", TAB_SIZE);
         printer.setEditable(false);
-        printer.setFont(FONT);
 
         String text;
         try {
@@ -120,10 +121,44 @@ public class JGround {
         code.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         code.setBracketMatchingEnabled(true); // set to false for demo videos (too distracting)
         code.setTabSize(TAB_SIZE);
-        code.setFont(FONT);
         code.setCaretPosition(0);
         code.getCaret().setBlinkRate(0);
 
+        JTextArea[] textAreas = {results, printer, code};
+        for (var textArea : textAreas) {
+            textArea.setFont(font);
+
+            textArea.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent event) {
+                    if (CtrlRespectivelyMeta.isDown(event)) {
+                        switch (event.getKeyChar()) {
+                            case '+' -> changeFontSize(+1);
+                            case '-' -> changeFontSize(-1);
+                        }
+                    }
+                }
+
+                private void changeFontSize(int delta) {
+                    int oldFontSize = font.getSize();
+                    int newFontSize = oldFontSize + delta;
+                    if (newFontSize > 0) {
+                        font = font.deriveFont((float) newFontSize);
+                        for (var textArea : textAreas) {
+                            textArea.setFont(font);
+                        }
+                        frame.setTitle("font size: " + newFontSize);
+                        timer = new Timer(1000, event -> {
+                            if (event.getSource() == timer) {
+                                frame.setTitle("");
+                            }
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
+                    }
+                }
+            });
+        }
         var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
                 new JScrollPane(results),
                 new JScrollPane(printer)
@@ -133,7 +168,6 @@ public class JGround {
                 new RTextScrollPane(code)
         );
 
-        var frame = new JFrame();
         frame.add(horizontal);
         frame.pack();
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
