@@ -652,50 +652,12 @@ public class JGround {
                         case "double", "Double" -> {
                             double x = Double.parseDouble(value);
                             appendLine("    binary: " + BinaryString.from(x));
-                            long bits = Double.doubleToRawLongBits(x);
-                            int exponent = (int) (bits << 1 >>> 53) - 1023;
-                            if (exponent <= 52) {
-                                long implicit = Long.MIN_VALUE;
-                                if (exponent == -1023) {
-                                    // subnormal
-                                    implicit = 0;
-                                    exponent = -1022;
-                                }
-                                long mantissa = (bits << 11 | implicit) >>> 11;
-                                exponent = 52 - exponent;
-                                String numerator = "" + mantissa;
-                                String denominator = BigDecimal.TWO.pow(exponent).toPlainString();
-                                int n = numerator.length();
-                                int d = denominator.length();
-                                appendLine();
-                                appendLine(" ".repeat(Math.max(0, d - n)) + numerator);
-                                appendLine("-".repeat(Math.max(n, d)));
-                                appendLine(" ".repeat(Math.max(0, n - d)) + denominator + " (2^" + exponent + ")");
-                            }
+                            appendOptionalLine(FractionString.from(x));
                         }
                         case "float", "Float" -> {
                             float x = Float.parseFloat(value);
                             appendLine("    binary: " + BinaryString.from(x));
-                            int bits = Float.floatToRawIntBits(x);
-                            int exponent = (bits << 1 >>> 24) - 127;
-                            if (exponent <= 23) {
-                                int implicit = Integer.MIN_VALUE;
-                                if (exponent == -127) {
-                                    // subnormal
-                                    implicit = 0;
-                                    exponent = -126;
-                                }
-                                int mantissa = (bits << 8 | implicit) >>> 8;
-                                exponent = 23 - exponent;
-                                String numerator = "" + mantissa;
-                                String denominator = BigDecimal.TWO.pow(exponent).toPlainString();
-                                int n = numerator.length();
-                                int d = denominator.length();
-                                appendLine();
-                                appendLine(" ".repeat(Math.max(0, d - n)) + numerator);
-                                appendLine("-".repeat(Math.max(n, d)));
-                                appendLine(" ".repeat(Math.max(0, n - d)) + denominator + " (2^" + exponent + ")");
-                            }
+                            appendOptionalLine(FractionString.from(x));
                         }
                     }
                 }
@@ -744,6 +706,12 @@ public class JGround {
             private void appendLine(String text) {
                 append(text);
                 appendLine();
+            }
+
+            private void appendOptionalLine(String text) {
+                if (text != null) {
+                    appendLine(text);
+                }
             }
         });
     }
