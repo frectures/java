@@ -35,7 +35,8 @@ public class JGround {
 
     private static final String MANUAL = """
             F1  documentation/completion at cursor
-            F5  execute whole program
+            F5  execute program
+            F6  execute program to current line
             F8  execute section  †
             F9  execute section to current line
             F12 execute selection/current line
@@ -43,7 +44,7 @@ public class JGround {
             combine with SHIFT for more details
             
              †  sections are separated by 2 empty lines
-             †  first section is always executed (imports etc.)
+             †  first section is always executed (imports etc)
             """;
 
     private static String printer() {
@@ -323,6 +324,18 @@ public class JGround {
                             reset();
 
                             evaluate(0, code.getText());
+                        }
+
+                        case KeyEvent.VK_F6 -> {
+                            event.consume();
+                            saveCode();
+                            reset();
+
+                            int caretPosition = code.getCaretPosition();
+                            int currentLine = code.getLineOfOffset(caretPosition);
+                            int endOfLine = code.getLineEndOffset(currentLine);
+
+                            evaluate(0, code.getText(0, endOfLine));
                         }
 
                         case KeyEvent.VK_F8 -> {
