@@ -48,8 +48,8 @@ String download(String url) throws IOException, InterruptedException {
 - `geheim` ist ein populäres Passwort:
   - sein SHA-1-Hash ist `90607 2001EFDDF3E11E6D2B5782F4777FE038739`
   - https://api.pwnedpasswords.com/range/90607 liefert ca. 1200 Zeilen
-  - eine davon ist `2001EFDDF3E11E6D2B5782F4777FE038739:78333`
-  - d.h. `78333` bekannte Accounts nutzen `geheim`
+  - eine davon ist `2001EFDDF3E11E6D2B5782F4777FE038739:252943`
+  - d.h. `252943` bekannte Accounts nutzen `geheim`
 - Schreibe eine Konsolen-Anwendung, die:
   - den Benutzer nach einem Passwort fragt, und
   - ihm verrät, wie viele bekannte Accounts dieses Passwort nutzen

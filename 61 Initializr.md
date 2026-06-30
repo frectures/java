@@ -4,7 +4,7 @@
   - Project: **Maven**
   - Language: Java
   - Project Metadata
-    - Java (links unten): **21**
+    - Java (links unten): **25**
   - ADD DEPENDENCIES (rechts oben)
     - **Spring Web**
   - ADD DEPENDENCIES
