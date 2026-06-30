@@ -1,0 +1,143 @@
+## Generics
+
+### Kovarianz
+
+- Was schreibt folgendes Programm auf die Konsole?
+
+```java
+void printAll(List<Object> objects) {
+    for (Object object : objects) {
+        IO.print(object);
+    }
+}
+
+void main() {
+    List<Object> objects = List.of("hello", "world");
+    printAll(objects);
+
+    List<String> strings = List.of("hello", "world");
+    printAll(strings);
+}
+```
+
+- Man kann das Programm gar nicht erst starten
+- Der Compiler meckert beim zweiten `printAll`-Aufruf:
+
+```
+Required type: List<Object>
+Provided:      List<String>
+```
+
+- Jeder `String` ist ein `Object`
+- Aber eine `List<String>` scheint keine `List<Object>` zu sein
+- Warum nicht?
+- Weil `printAll` auch ein Objekt hinzufügen *könnte*:
+
+```java
+void printAll(List<Object> objects) {
+    for (Object object : objects) {
+        IO.print(object);
+    }
+    objects.add(123);
+}
+```
+
+- Spätestens zur Laufzeit würde es dann knallen
+- Aber der Compiler verbietet `printAll(strings)` bereits mit folgender Begründung:
+  - `List<Object>` hat eine Methode `add(Object)`
+  - `List<String>` hat *keine* Methode `add(Object)`
+  - Also kann eine `List<String>` keine `List<Object>` sein!
+- Wie lösen wir das Problem?
+- Der Elementtyp muss `Object` *oder spezieller* sein:
+
+```java
+void printAll(List<? extends Object> list) {
+    for (Object object : list) {
+        IO.print(object);
+    }
+    list.add(null);
+}
+```
+
+- Jetzt funktionieren beide `printAll`-Aufrufe
+- Objekte kann man keine mehr einfügen, egal welchen Typs
+  - nur noch die `null`-Referenz
+  - die ist schließlich in allen Listen erlaubt
+
+- Für `<? extends Object>` gibt es die Abkürzung `<?>`:
+
+```java
+void printAll(List<?> list)
+```
+
+### Kontravarianz
+
+- Was schreibt folgendes Programm auf die Konsole?
+
+```java
+void greet(List<String> strings) {
+    strings.add("hello");
+}
+
+void main() {
+    List<String> strings = new ArrayList<>();
+    greet(strings);
+    IO.println(strings);
+
+    List<Object> objects = new ArrayList<>();
+    greet(objects);
+    IO.println(objects);
+}
+```
+
+- Man kann das Programm gar nicht erst starten
+- Der Compiler meckert beim zweiten `greet`-Aufruf:
+
+```
+Required type: List<String>
+Provided:      List<Object>
+```
+
+- Dann ändern wir den Parametertyp von `greet` halt:
+
+```java
+void greet(List<Object> objects) {
+    objects.add("hello");
+}
+```
+
+- Jetzt meckert der Compiler beim ersten `greet`-Aufruf:
+
+```
+Required type: List<Object>
+Provided:      List<String>
+```
+
+- Können wir nicht einfache beide `greet`-Methoden anbieten?
+
+```java
+void greet(List<Object> objects) {
+    objects.add("hello");
+}
+
+void greet(List<String> strings) {
+    strings.add("hello");
+}
+```
+
+- Nein; der Compiler entfernt Generics aus Parametertypen:
+
+```
+greet(List<Object>) clashes with greet(List<String>)
+
+both methods have the same erasure
+```
+
+- Wie lösen wir das Problem?
+- Der Elementtyp muss `String` *oder allgemeiner* sein:
+
+```java
+void greet(List<? super String> list) {
+    list.add("hello");
+}
+```
