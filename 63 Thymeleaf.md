@@ -159,43 +159,7 @@ public class FruitController {
 
 ### Greet
 
-- Konvertiere das `Greet`-Beispiel von Servlets nach Spring MVC
-
-### RequestParam
-
-- Eine URL kann einen Query-String enthalten:
-  - z.B. `https://www.google.com/search?client=firefox&q=james+gosling`
-  - So greift man im Controller darauf zu:
-
-```java
-@GetMapping("/search")
-public String search(@RequestParam                   String q,
-                     @RequestParam(required = false) String client)
-```
-
-- Ein Controller kann beliebig viele `@GetMapping`/`@PostMapping`-Methoden definieren:
-  - s.o. `@GetMapping("/search")`
-  - Das definierte Pfad-Suffix muss Controller-weit eindeutig sein
-- So generiert man Query-Strings mit Thymeleaf:
-  - `<a th:href="@{/search(client='firefox')}">`
-  - `<a th:href="@{/search(client=${hierKannstDuAufsModelZugreifen})}">`
-- ⚠️ Query-Strings in der `action` eines `form`s werden ignoriert!
-  - Verwende stattdessen `<input type="hidden" name="client" th:value="${hierKannstDuAufsModelZugreifen}">`
-
-### PathVariable
-
-- Alternativ zum Query-String kann man Daten auch in der Adresse selber unterbringen:
-  - z.B. `https://xkcd.com/927/`
-  - So greift man im Controller darauf zu:
-
-```java
-@GetMapping("/{id}")
-public String get(@PathVariable int id)
-```
-
-- So generiert man Pfad-Variablen mit Thymeleaf:
-  - `<form th:action="@{/{id}(id=927)}">`
-  - `<form th:action="@{/{id}(id=${hierKannstDuAufsModelZugreifen})}">`
+- Portiere das `Greet`-Beispiel von Servlets nach Thymeleaf
 
 ### Populäre Passwörter
 
@@ -210,10 +174,43 @@ public String get(@PathVariable int id)
   - https://imgs.xkcd.com/comics/compiling.png
   - https://imgs.xkcd.com/comics/goto.png
   - https://imgs.xkcd.com/comics/pointers.png
-- Baue `prev`/`next`-Links oder -Buttons ein, die zum vorherigen/nächsten Bild aus der Liste wechseln
-  - ⚠️ Der Server darf sich *nicht* Request-übergreifend merken, welcher Comic gerade angezeigt wird
-  - Sonst würden sich verschiedene Benutzer gegenseitig beeinflussen
 - Der Benutzer soll per Zahleneingabe (1 bis 5) direkt zu einem Bild springen können
+- Baue `prev`/`next`-Links oder -Buttons ein, die zum vorherigen/nächsten Bild aus der Liste wechseln
+  - ⚠️ Der Server darf sich *nicht* Request-übergreifend merken, welcher Comic gerade angezeigt wird!
+  - Sonst würden sich verschiedene Benutzer gegenseitig beeinflussen
+  - Stattdessen muss die aktuelle Bildnummer in der URL stehen, siehe nächster Abschnitt
+
+### PathVariable
+
+- Wenn Teile der URL dynamisch sind, verwendet man Pfad-Variablen:
+  - z.B. `http://localhost:8080/xkcd/927`
+  - So greift man im Controller darauf zu:
+
+```java
+@GetMapping("/{id}")
+public String get(@PathVariable int id)
+```
+
+- So generiert man solche URLs mit Thymeleaf:
+  - `<a th:href="@{/xkcd/{id}(id=927)}">`
+  - `<a th:href="@{/xkcd/{id}(id=${hierKannstDuAufsModelZugreifen})}">`
+
+### RequestParam
+
+- Eine Alternative zu Pfad-Variablen sind Request-Parameter:
+  - z.B. `http://localhost:8080/xkcd?id=927`
+  - So greift man im Controller darauf zu:
+
+```java
+@GetMapping
+public String get(@RequestParam(required = false) Integer id)
+```
+
+- So generiert man solche URLs mit Thymeleaf:
+  - `<a th:href="@{/xkcd(id=927)}">`
+  - `<a th:href="@{/xkcd(id=${hierKannstDuAufsModelZugreifen})}">`
+- ⚠️ Request-Parameter in der `action` eines `form`s werden ignoriert!
+  - Verwende stattdessen `<input type="hidden" name="id" th:value="${hierKannstDuAufsModelZugreifen}">`
 
 ### RestTemplate
 
