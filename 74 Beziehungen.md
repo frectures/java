@@ -26,7 +26,7 @@ public class Family {
 }
 ```
 
-Beim Persistieren einer Familie müssen die zugehörigen Personen innerhalb derselben Transaktion manuell mitpersistiert werden, wobei die Reihenfolge keine Rolle spielt:
+Beim Persistieren einer Familie müssen die zugehörigen Personen innerhalb derselben Transaktion manuell mitpersistiert werden:
 ```java
 entityManager.persist(jacksonFamily);
 entityManager.persist(michaelJackson);
@@ -35,7 +35,7 @@ entityManager.persist(janetJackson);
 
 Wenn man die Personen nicht manuell mitpersistiert, kommt es zu folgendem Fehler:
 
-> object references an unsaved transient instance - save the transient instance before flushing
+> Persistent instance of `Family` references an unsaved transient instance of `Person` (persist the transient instance before flushing)
 
 Alternativ kann man die Persistierung einer Familie automatisch auf ihre Personen kaskadieren:
 ```java
@@ -48,19 +48,19 @@ public class Family {
 }
 ```
 
-Mit `CascadeType.REMOVE` werden beim Löschen einer Familie deren Personen ebenfalls gelöscht:
+Mit `cascade = CascadeType.REMOVE` werden beim Löschen einer Familie deren Personen ebenfalls gelöscht:
 ```java
 entityManager.remove(theJacksons);
 // theJacksons.persons.forEach(entityManager::remove);
 ```
 
-Mit `orphanRemoval=true` wird eine Person beim Entfernen aus seiner Familie komplett gelöscht:
+Mit `orphanRemoval = true` wird eine Person beim Entfernen aus seiner Familie komplett gelöscht:
 ```java
 theJacksons.persons.remove(michael);
 // entityManager.remove(michael);
 ```
 
-`orphanRemoval=true` existiert nur für `@OneTo...`-Beziehungen und impliziert `CascadeType.REMOVE`.
+`orphanRemoval = true` existiert nur für `@OneTo...`-Beziehungen und impliziert `CascadeType.REMOVE`.
 
 ### OneToMany mit JoinColumn (unidirektional)
 
@@ -83,7 +83,7 @@ Alternativ kann man die Zugehörigkeit zu einer Familie redundant in der *Klasse
 public class Person {
     @ManyToOne
     // @JoinColumn(name = "fam_id")
-    Family fam;
+    private Family fam;
 
     // ...
 }
@@ -104,20 +104,13 @@ dafür muss man aber beide Seiten der Relation manuell synchron halten.
 
 Beim Zugriff auf die Personen einer geladenen Familie kann folgender Fehler auftreten:
 
-> failed to lazily initialize a collection of role: Family.persons, could not initialize proxy - no Session
+> Cannot lazily initialize collection of role `Family.persons` with key _ (no session)
 
 Die Personen werden normalerweise nur bei Bedarf geladen (das gilt für alle `@...ToMany`-Beziehungen).
 Ein späteres Nachladen außerhalb der ursprünglichen Transaktion ist verboten.
 Mögliche Lösungen:
 
 - Die ladende bzw. verarbeitende Methode mit `@Transactional` annotieren
-- Die Abfrage so anpassen, dass die Personen sofort mitgeladen werden:
-```java
-String q = "select DISTINCT f from Family f"
-        + " LEFT JOIN FETCH f.persons WHERE ...";
-TypedQuery<Family> query = entityManager.createQuery(q, Family.class);
-List<Family> eagerFamilies = query.getResultList();
-```
 - Die Personen einer Familie grundsätzlich sofort mitladen:
 ```java
 @Entity
@@ -146,12 +139,45 @@ public class Person {
 }
 ```
 
+## Einfache Datenbank-Experimente
+
+```java
+@SpringBootApplication
+public class DemoApplication {
+
+    static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @EventListener
+    @Transactional
+    public void onApplicationReady(ApplicationReadyEvent event) {
+
+        Family family = new Family();
+        Person person = new Person();
+        family.persons.add(person);
+        entityManager.persist(family);
+        // entityManager.persist(person);
+        entityManager.flush(); // ...unsaved transient instance...
+
+        entityManager.detach(family);
+        family = entityManager.find(Family.class, 1);
+        entityManager.detach(family);
+
+        family.persons.get(0); // Cannot lazily initialize...
+    }
+}
+```
+
 ## Aufgabe
 
 - Benutzer sollen XKCD-Comics mit Kommentaren versehen können
   - d.h. ein XKCD-Comic hat beliebig viele Kommentare
 
-## Optimistisches Locking
+## Optimistisches “Locking”
 
 Entities, die ein mit `@Version` annotiertes Feld deklarieren, verwenden automatisch *optimistisches Locking*:
 ```java

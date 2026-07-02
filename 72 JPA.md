@@ -14,6 +14,13 @@ JPA erleichtert das Persistieren von Objekt-Graphen in relationalen Datenbanken.
   - `Enum`, `Class`, `java.util.Currency`, `java.util.Locale`, `java.net.URL`
 - Objekt-Beziehungen werden über Fremdschlüssel realisiert
 
+### Show SQL
+
+- Interessiert dich, welche SQL-Statements JPA unter der Haube ausführt?
+- Dann ergänze die Datei `src/main/resources/application.properties` um folgende Zeilen:
+  - `spring.jpa.show-sql=true`
+  - `spring.jpa.properties.hibernate.format_sql=true`
+
 ### Entity
 
 Objekte, die in der Datenbank persistiert werden, bezeichnet man als Entities.
