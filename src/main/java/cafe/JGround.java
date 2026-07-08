@@ -451,7 +451,7 @@ public class JGround {
 
                     Diag diagnostic = shell.diagnostics(event.snippet()).findFirst().orElse(null);
                     if (diagnostic != null) {
-                        appendLine(abbreviate(source));
+                        appendLine(abbreviateSource(source));
                         appendLine();
                         appendLine("❌ " + diagnosticMessage(diagnostic));
                         code.setCaretPosition(sourcePosition + (int) diagnostic.getPosition());
@@ -462,7 +462,7 @@ public class JGround {
                     if (exception != null) {
                         code.setCaretPosition(sourcePosition + untrimmed.length());
                         int beforeSource = results.getDocument().getLength();
-                        appendLine(abbreviate(source));
+                        appendLine(abbreviateSource(source));
                         if (!(exception instanceof EvalException evex)) {
                             appendLine();
                             appendLine("❌ " + exception.getClass().getName() + "\n" + exception.getMessage());
@@ -571,7 +571,7 @@ public class JGround {
                             if (source.startsWith("assertEquals(")) {
                                 append("✓ ");
                             }
-                            appendLine(abbreviate(source));
+                            appendLine(abbreviateSource(source));
                         }
                     }
                     sourcePosition += untrimmed.length();
@@ -591,7 +591,7 @@ public class JGround {
                 return expression.charAt(lastIndex) == ';' ? expression.substring(0, lastIndex) : expression;
             }
 
-            private static String abbreviate(String source) {
+            private static String abbreviateSource(String source) {
                 if (source.indexOf('\n') == -1) {
                     // 1 line
                     return source;
@@ -605,6 +605,17 @@ public class JGround {
                 }
                 // 4+ lines
                 return lines[0] + "\n…\n" + lines[n - 1];
+            }
+
+            private static String abbreviateResult(String result, int maxLen) {
+                int len = result.length();
+                if (len > maxLen) {
+                    maxLen /= 2;
+                    String front = result.substring(0, maxLen);
+                    String back = result.substring(len - maxLen);
+                    result = front + " … " + back;
+                }
+                return result;
             }
 
             private void appendResult(String label, String expressionOrVariable, String value, String type) {
@@ -632,7 +643,7 @@ public class JGround {
                         }
                     }
                 }
-                appendLine("     value: " + value);
+                appendLine("     value: " + abbreviateResult(value, moreDetails ? 1000 : 100));
 
                 // type = removeAdditionalBounds(type);
                 appendLine("      type: " + type);
