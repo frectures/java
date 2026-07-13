@@ -108,6 +108,48 @@ class JGround {
             celsiusToFahrenheit(  21   ); // Raumtemperatur
             celsiusToFahrenheit(  37   ); // Körpertemperatur
             celsiusToFahrenheit( 100   ); // Siedepunkt
+            
+            
+            Zufall.nextBoolean();
+            Zufall.nextBoolean() ? "heads" : "tails";
+            
+            Zufall.nextInt();
+            Zufall.nextInt() % 37;
+            
+            
+            var number = Zufall.nextInt() % 37;
+            number == 0 ? "green" : "red or black";
+            switch (number)
+            {
+                case 0 -> "green";
+            
+                case 1, 3, 5, 7, 9 -> "red";
+                case 2, 4, 6, 8, 10 -> "black";
+            
+                case 11, 13, 15, 17 -> "black";
+                case 12, 14, 16, 18 -> "red";
+            
+                case 19, 21, 23, 25, 27 -> "red";
+                case 20, 22, 24, 26, 28 -> "black";
+            
+                case 29, 31, 33, 35 -> "black";
+                case 30, 32, 34, 36 -> "red";
+            
+                default -> "roulette wheel has no " + number;
+            }
+            
+            
+            var black = "black";
+            
+            var wheel = Vec.of(
+                "green",
+                "red", black, "red", black, "red", black, "red", black, "red", black,
+                black, "red", black, "red", black, "red", black, "red",
+                "red", black, "red", black, "red", black, "red", black, "red", black,
+                black, "red", black, "red", black, "red", black, "red"
+            );
+            
+            var number = Zufall.nextInt() % 37;  wheel.at(number);
             """;
 
     static void main() {
