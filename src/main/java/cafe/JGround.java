@@ -58,30 +58,31 @@ class JGround {
             import cafe.Zufall;
             
             
-            1 + 2
-            1 + 2 * 3
-            (1 + 2) * 3
+            1 + 2;
+            1 + 2 * 3;
+            (1 + 2) * 3;
             
-            1_234_567_890
-            1_000_000_000 + 2_000_000_000
-            Integer.MAX_VALUE
-            Integer.MAX_VALUE + 1
+            1_234_567_890;
+            1_000_000_000 + 2_000_000_000;
+            2_147_483_647;
+            2_147_483_647 + 1;
             
             
-            9 / 2
-            9 % 2
+            9 / 2;
+            9 % 2;
             
-            9.0 / 2.0
-            0.1 + 0.2
+            9.0 / 2.0;
+            0.1 + 0.2;
             
-            Math.PI
-            Math.sqrt(2)
-            (Math.sqrt(5) + 1) / 2
-            Math.pow(2, 9)
+            
+            Math.PI;
+            Math.sqrt(2);
+            (Math.sqrt(5) + 1) / 2;
+            Math.pow(2, 9);
             
             
             // square: R -> R
-            // square(x) = x²
+            // square (x) = x²
             double square(double x)
             {
                 return x * x;
@@ -92,6 +93,21 @@ class JGround {
             square(3) + square(4);
             
             Math.pow(square(3) + square(4), 0.5);
+            
+            
+            // f: R -> R
+            // f (x) = x * 1.8 + 32
+            double celsiusToFahrenheit(double celsius)
+            {
+                return celsius * 1.8 + 32;
+            }
+            
+            celsiusToFahrenheit(-273.15); // Kälter gehts nicht
+            celsiusToFahrenheit(   0   ); // Schmelzpunkt
+            celsiusToFahrenheit(   4   ); // Dichteanomalie
+            celsiusToFahrenheit(  21   ); // Raumtemperatur
+            celsiusToFahrenheit(  37   ); // Körpertemperatur
+            celsiusToFahrenheit( 100   ); // Siedepunkt
             """;
 
     static void main() {
