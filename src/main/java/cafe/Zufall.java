@@ -3,8 +3,15 @@ package cafe;
 public class Zufall {
     private static long seed = System.nanoTime();
 
-    private static long next(int bits) {
+    public static long next(int bits) {
         return (seed = seed * 6364136223846793005L + 1) >>> (64 - bits);
+    }
+
+    /**
+     * @return false/true
+     */
+    public static boolean nextBoolean() {
+        return next(64) < 0;
     }
 
     /**
