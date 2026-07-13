@@ -2,7 +2,7 @@ package cafe;
 
 import java.util.ArrayList;
 
-public class Signatures {
+class Signatures {
     private final String in;
     private int index;
     private final StringBuilder out;

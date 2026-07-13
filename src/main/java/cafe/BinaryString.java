@@ -2,7 +2,7 @@ package cafe;
 
 import java.nio.charset.StandardCharsets;
 
-public class BinaryString {
+class BinaryString {
 
     public static String from(long value) {
         return from(value, 64 + 7, 0x0101010101010100L);

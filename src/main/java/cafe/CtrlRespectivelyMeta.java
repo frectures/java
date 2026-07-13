@@ -2,7 +2,7 @@ package cafe;
 
 import java.awt.event.InputEvent;
 
-public class CtrlRespectivelyMeta {
+class CtrlRespectivelyMeta {
 
     private static final boolean macOS = System.getProperty("os.name").toLowerCase().contains("mac");
 

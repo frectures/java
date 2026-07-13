@@ -2,7 +2,7 @@ package cafe;
 
 import java.math.BigDecimal;
 
-public class FractionString {
+class FractionString {
 
     public static String from(double x) {
 

@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 import static java.awt.event.KeyEvent.*;
 
-public class JGround {
+class JGround {
 
     private static final Path PATH = Path.of(System.getProperty("user.home"), "jground1.txt");
 
@@ -54,7 +54,8 @@ public class JGround {
     }
 
     private static final String EXAMPLE = """
-            import java.util.*;
+            import cafe.Vec;
+            import cafe.Zufall;
             
             
             1 + 2

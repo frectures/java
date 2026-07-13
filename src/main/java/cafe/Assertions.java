@@ -2,10 +2,10 @@ package cafe;
 
 public class Assertions {
 
-    public static final String EXPECTED = "     expected: ";
-    public static final String ACTUAL = "\n       actual: ";
+    static final String EXPECTED = "     expected: ";
+    static final String ACTUAL = "\n       actual: ";
 
-    public static int passed;
+    static int passed;
 
     public static void assertEquals(long expected, long actual) {
         if (expected != actual) throw new AssertionFailed(EXPECTED + expected + ACTUAL + actual);
