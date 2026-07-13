@@ -162,12 +162,8 @@ public class JGround {
                 }
             });
         }
-        var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-                new JScrollPane(results),
-                new JScrollPane(printer)
-        );
         var horizontal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                vertical,
+                new JScrollPane(results),
                 new RTextScrollPane(code)
         );
 
@@ -178,9 +174,6 @@ public class JGround {
 
         EventQueue.invokeLater(() -> {
             double phi = 0.618;
-
-            vertical.setDividerLocation(phi);
-            vertical.setResizeWeight(phi);
 
             horizontal.setDividerLocation(1 - phi);
             horizontal.setResizeWeight(1 - phi);
@@ -225,8 +218,49 @@ public class JGround {
             }
         });
 
-        System.setOut(printStream);
-        System.setErr(printStream);
+        var lazyPrintStream = new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {
+                init();
+                printStream.write(b);
+            }
+
+            @Override
+            public void write(byte[] b) throws IOException {
+                init();
+                printStream.write(b);
+            }
+
+            @Override
+            public void write(byte[] b, int off, int len) {
+                init();
+                printStream.write(b, off, len);
+            }
+
+            private void init() {
+                var vertical = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                        new JScrollPane(results),
+                        new JScrollPane(printer)
+                );
+                horizontal.setLeftComponent(vertical);
+
+                EventQueue.invokeLater(() -> {
+                    double phi = 0.618;
+
+                    vertical.setDividerLocation(phi);
+                    vertical.setResizeWeight(phi);
+
+                    horizontal.setDividerLocation(1 - phi);
+                    horizontal.setResizeWeight(1 - phi);
+                });
+
+                System.setOut(printStream);
+                System.setErr(printStream);
+            }
+        });
+
+        System.setOut(lazyPrintStream);
+        System.setErr(lazyPrintStream);
         var shell = JShell.builder().executionEngine("local").build();
         var analysis = shell.sourceCodeAnalysis();
 
