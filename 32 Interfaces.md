@@ -227,8 +227,6 @@ public class Tetris {
 }
 ```
 
-- In Tetris-Lingo ist ein “Letter” eine Zahl zwischen 1 und 7
-  - stellvertretend für die (unrotierten) Basis-Formen I, J, L, O, S, T, Z
 - Angenommen, Spieler 2 ist deutlich besser als Spieler 1
   - Spieler 1 soll weiterhin einen `FairLetterSupplier` verwenden
   - Spieler 2 soll einen neuen `UnfairLetterSupplier` verwenden:
@@ -236,8 +234,8 @@ public class Tetris {
 ```java
 public class UnfairLetterSupplier {
     // potenziell beliebig lange Pausen zwischen guten Steinen
-    public int nextLetter() {
-        return Zufall.nextInt() % 7 + 1;
+    public char nextLetter() {
+        return "IJLOSTZ".charAt(Zufall.nextInt() % 7);
     }
 }
 ```
@@ -313,7 +311,7 @@ public class Tetris {
 ```java
 public abstract interface LetterSupplier {
 
-    public abstract int nextLetter();
+    public abstract char nextLetter();
 }
 ```
 
@@ -361,7 +359,7 @@ Tetris[] games = {
 
 > **Übung:**
 > - Schreibe eine dritte Klasse `CheatingLetterSupplier`
->   - `nextLetter` soll bei jedem 2. Aufruf (und sonst nicht!) den langen `I`-Stein liefern
+>   - `nextLetter` soll bei jedem 2. Aufruf (und sonst nicht!) `I` liefern
 >   - Benutze `CheatingLetterSupplier` gemäß obiger Anleitung für Spieler 1
 
 ### Prägende Informatiker

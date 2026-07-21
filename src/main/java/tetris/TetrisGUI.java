@@ -22,18 +22,10 @@ public class TetrisGUI {
         for (int i = 0; i < panels.length; ++i) {
             int g = i;
             panels[g] = new JPanel() {
-                private static final Color[] COLORS = {
-                        Color.BLACK, // background
-                        Color.CYAN, Color.BLUE, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.RED, // shapes
-                        Color.GRAY, // wall
-                        Color.LIGHT_GRAY, // penalty lines
-                        Color.WHITE, // current piece
-                };
-
                 protected void paintComponent(Graphics graphics) {
                     int width = getWidth();
                     int height = getHeight();
-                    graphics.setColor(COLORS[0]);
+                    graphics.setColor(Color.BLACK);
                     graphics.fillRect(0, 0, width, height);
 
                     int cellSize = Math.min(width / Tetris.WIDTH, height / Tetris.HEIGHT);
@@ -41,19 +33,19 @@ public class TetrisGUI {
                     int marginY = (height - cellSize * Tetris.HEIGHT) / 2;
 
                     Tetris game = games[g];
-                    game.storePiece(10); // paint current piece white
+                    game.storeShape(Color.WHITE);
 
                     for (int y = 0; y < Tetris.HEIGHT; ++y) {
                         for (int x = 0; x < Tetris.WIDTH; ++x) {
-                            int cell = game.cell(x, y);
-                            if (cell != 0) {
-                                graphics.setColor(COLORS[cell]);
+                            Color color = game.colorAt(x, y);
+                            if (color != null) {
+                                graphics.setColor(color);
                                 graphics.fillRect(marginX + x * cellSize, marginY + y * cellSize, cellSize, cellSize);
                             }
                         }
                     }
 
-                    game.storePiece(0);
+                    game.storeShape(null);
 
                     // https://stackoverflow.com/questions/19480076/java-animation-stutters-when-not-moving-mouse-cursor
                     Toolkit.getDefaultToolkit().sync();

@@ -313,33 +313,37 @@ public class String {
   - Berücksichtige `mass` in der Methode `paint` für die Größe des gezeichneten Quadrats
 - 🏆 Verpasse den Punkten eine dritte Dimension
 
-### Tetris (★★★★★)
+### Tetris (★★★★☆)
 
 - Starte die (`main`-Methode in der) Klasse `tetris/TetrisGUI.java`
   - Was funktioniert bereits?
   - Was funktioniert noch nicht?
-- **Plenum:** Wir implementieren gemeinsam die Methode `rotate`
-  - Dazu wühlen wir uns erst mal gemeinsam durch die Klasse `Tetris` (**ohne** `GUI`!)
-  - Relevant sind die beiden Zustandsfelder `rotation` und `shape`
-  - Was passiert, wenn wir einen vertikalen `I`-Stein am Rand drehen?
+- Studiere die Klasse `Tetris` (**ohne** `GUI`!)
+  - Notiere dir Unklarheiten
+  - Besprich sie mit Fred
+- Implementiere die Methode `rotate`
+  - Die rotierten Shapes existieren bereits, siehe `Shapes.java`
+  - Du musst nur noch vom aktuellen Shape zum rotierten Shape wechseln
+  - Vielleicht kann das `switch` in `Shape.fromLetter` dich inspirieren?
+  - Was passiert, wenn du einen vertikalen `I`-Stein am Rand drehst?
 - Implementiere die Methode `removeCompleteLines` in 4 Schritten:
-  1. Falls die unterste Zeile voll ist, überschreibe sie mit Nullen
+  1. Falls die unterste Zeile voll ist, überschreibe sie mit `null`en
      - Tipp: `java.util.Arrays.fill`
   2. Falls die unterste Zeile voll ist, kopiere die Zeilen darüber 1 Zeile nach unten
      - Tipp: `System.arraycopy`
   3. Führe Schritt 2 nicht nur für die unterste Zeile aus, sondern für *alle* Zeilen
   4. 🏆 Führe Schritt 2 nur für die Zeilen aus, in denen der Stein platziert wurde
-- Implementiere die Methode `insertPenaltyLines`
+- Implementiere die Methode `insertOwnPenaltyLines`
   - Strafzeilen werden ganz unten eingefügt
   - Die Strafzeilen haben in einer zufälligen Spalte eine Lücke
-  - Verwende als Farbwert `9`
+  - Verwende die Farbe `Color.LIGHT_GRAY`
 - Bisher fällt der aktuelle Stein 1x pro Sekunde (alle 30 Ticks)
   - Für jede bisher entfernte Reihe soll der Stein 1 Tick schneller fallen
 - Angenommen, es werden erst `m` Strafzeilen geschickt und dann `n` Strafzeilen
   - Alle `m` Strafzeilen sollen dieselbe (zufällige) Leer-Spalte haben
   - Alle `n` Strafzeilen sollen dieselbe (zufällige) Leer-Spalte haben
   - 🏆 Aber `m` und `n` sollen *niemals* gleich sein!
-- Die scheinbar kleine Klasse `FairLetterSupplier` ist mit 81 kb die größte der gesamten Schulung!
+- Die scheinbar kleine Klasse `FairLetterSupplier` ist mit 41 kb die größte der gesamten Schulung!
   - Woran liegt das?
   - 🏆 Kannst du das im Klassenkommentar dokumentierte Verhalten auch platzsparender realisieren?
 - Vermisst du weitere Features?
