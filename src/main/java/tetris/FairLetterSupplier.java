@@ -22,7 +22,7 @@ public class FairLetterSupplier {
         // end of permutation?
         if (letter == ' ') {
             // start new permutation
-            index = (Zufall.nextInt() % 5040) * 8;
+            index = Zufall.nextInt(5040) * 8;
             letter = PERMUTATIONS.charAt(index);
         }
         ++index;

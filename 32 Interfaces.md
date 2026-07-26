@@ -235,7 +235,7 @@ public class Tetris {
 public class UnfairLetterSupplier {
     // potenziell beliebig lange Pausen zwischen guten Steinen
     public char nextLetter() {
-        return "IJLOSTZ".charAt(Zufall.nextInt() % 7);
+        return "IJLOSTZ".charAt(Zufall.nextInt(7));
     }
 }
 ```

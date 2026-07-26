@@ -313,7 +313,7 @@ public final class Vec<E> implements Iterable<E> {
         E[] a = copy();
         int n = length;
         while (n > 1) {
-            int i = Zufall.nextInt() % n--;
+            int i = Zufall.nextInt(n--);
             E temp = a[i];
             a[i] = a[n];
             a[n] = temp;

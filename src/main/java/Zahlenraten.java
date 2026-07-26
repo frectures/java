@@ -2,7 +2,7 @@ import cafe.Zufall;
 
 void main() {
 
-    int ausgedacht = Zufall.nextInt() % 10 + 1;
+    int ausgedacht = Zufall.nextInt(10) + 1;
     IO.println("Ich habe mir eine Zahl zwischen 1 und 10 ausgedacht.");
 
     int geraten = Integer.parseInt(IO.readln("Welche Zahl mag es wohl sein? "));

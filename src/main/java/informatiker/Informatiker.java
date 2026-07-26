@@ -167,7 +167,7 @@ public class Informatiker {
     // 11.3 Better Quicksorts
     public static void quicksort(Person[] personen, int l, int u, Vergleicher vergleicher) {
         if (l < u) {
-            swap(personen, l, Zufall.nextInt() % (u - l + 1) + l);
+            swap(personen, l, Zufall.nextInt(u - l + 1) + l);
             Person pivot = personen[l];
             int i = l;
             int j = u + 1;

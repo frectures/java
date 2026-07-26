@@ -8,7 +8,7 @@
 ```java
 int zufallszahl()
 {
-    return Zufall.nextInt() % 10 + 1;
+    return Zufall.nextInt(10) + 1;
 }
 
 void main()
@@ -28,7 +28,7 @@ int zufallszahl(int von, int bis)
 {
     int anzahl = bis - von + 1;
 
-    return Zufall.nextInt() % anzahl + von;
+    return Zufall.nextInt(anzahl) + von;
 }
 
 void main()

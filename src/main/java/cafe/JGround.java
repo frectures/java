@@ -114,10 +114,10 @@ class JGround {
             Zufall.nextBoolean() ? "heads" : "tails";
             
             Zufall.nextInt();
-            Zufall.nextInt() % 37;
+            Zufall.nextInt(37);
             
             
-            var number = Zufall.nextInt() % 37;
+            var number = Zufall.nextInt(37);
             number == 0 ? "green" : "red or black";
             switch (number)
             {
@@ -149,7 +149,7 @@ class JGround {
                 black, "red", black, "red", black, "red", black, "red"
             );
             
-            var number = Zufall.nextInt() % 37;  wheel.at(number);
+            var number = Zufall.nextInt(37);  wheel.at(number);
             """;
 
     static void main() {
