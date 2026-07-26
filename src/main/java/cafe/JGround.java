@@ -112,44 +112,34 @@ class JGround {
             
             Zufall.nextBoolean();
             Zufall.nextBoolean() ? "heads" : "tails";
+
             
             Zufall.nextInt();
-            Zufall.nextInt(37);
+            Zufall.nextInt(3);
+            Zufall.nextInt(3) == 0 ? "rock" : Zufall.nextInt(3) == 1 ? "paper" : "scissors"; // 33:22:44
+
+            
+            var number = Zufall.nextInt(3);
+            number == 0 ? "rock" : number == 1 ? "paper" : "scissors"; // 33:33:33
             
             
-            var number = Zufall.nextInt(37);
-            number == 0 ? "green" : "red or black";
-            switch (number)
+            switch (Zufall.nextInt(3))
             {
-                case 0 -> "green";
-            
-                case 1, 3, 5, 7, 9 -> "red";
-                case 2, 4, 6, 8, 10 -> "black";
-            
-                case 11, 13, 15, 17 -> "black";
-                case 12, 14, 16, 18 -> "red";
-            
-                case 19, 21, 23, 25, 27 -> "red";
-                case 20, 22, 24, 26, 28 -> "black";
-            
-                case 29, 31, 33, 35 -> "black";
-                case 30, 32, 34, 36 -> "red";
-            
-                default -> "roulette wheel has no " + number;
+                case 0 -> "rock";
+                case 1 -> "paper";
+                case 2 -> "scissors";
+                default -> "???";
             }
             
             
-            var black = "black";
+            var alphabet = Vec.of("rock", "paper", "scissors");
             
-            var wheel = Vec.of(
-                "green",
-                "red", black, "red", black, "red", black, "red", black, "red", black,
-                black, "red", black, "red", black, "red", black, "red",
-                "red", black, "red", black, "red", black, "red", black, "red", black,
-                black, "red", black, "red", black, "red", black, "red"
-            );
+            alphabet.at(Zufall.nextInt(3));
+
+
+            var seed = System.nanoTime(); // einmalig ausführen
             
-            var number = Zufall.nextInt(37);  wheel.at(number);
+            (seed = seed * 6364136223846793005L + 1) < 0 ? "heads" : "tails"; // beliebig oft
             """;
 
     static void main() {
