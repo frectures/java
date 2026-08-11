@@ -5,10 +5,33 @@ import java.awt.Color;
 import static java.awt.Color.GRAY;
 
 public class Tetris {
-    public static final int TICKS_PER_SECOND = 30;
-    public static final int WIDTH = 16;
+    private static final Color[] EMPTY_BOARD = {
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, null, null, null, null, null, null, null, null, null, null, GRAY,
+            GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY,
+    };
+    public static final int WIDTH = 12;
     public static final int HEIGHT = 21;
-    private static final int START_POSITION = 6;
+    private static final int START_POSITION = 4;
+    public static final int TICKS_PER_SECOND = 30;
 
     private final Color[] board;
     private final FairLetterSupplier letterSupplier;
@@ -39,17 +62,17 @@ public class Tetris {
     }
 
     public void storeShape(Color color) {
-        board[position + shape.block0] = color;
-        board[position + shape.block1] = color;
-        board[position + shape.block2] = color;
-        board[position + shape.block3] = color;
+        board[position + shape.block0.position] = color;
+        board[position + shape.block1.position] = color;
+        board[position + shape.block2.position] = color;
+        board[position + shape.block3.position] = color;
     }
 
     private boolean shapeCollides() {
-        return board[position + shape.block0] != null ||
-                board[position + shape.block1] != null ||
-                board[position + shape.block2] != null ||
-                board[position + shape.block3] != null;
+        return board[position + shape.block0.position] != null ||
+                board[position + shape.block1.position] != null ||
+                board[position + shape.block2.position] != null ||
+                board[position + shape.block3.position] != null;
     }
 
     public void moveLeft() {
@@ -116,28 +139,4 @@ public class Tetris {
     public boolean gameOver() {
         return gameOver;
     }
-
-    private static final Color[] EMPTY_BOARD = {
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, null, null, null, null, null, null, null, null, null, null, GRAY, null, null,
-            null, null, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, null, null,
-    };
 }
