@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
 import static java.awt.event.KeyEvent.*;
@@ -112,12 +111,12 @@ class JGround {
             
             Zufall.nextBoolean();
             Zufall.nextBoolean() ? "heads" : "tails";
-
+            
             
             Zufall.nextInt();
             Zufall.nextInt(3);
             Zufall.nextInt(3) == 0 ? "rock" : Zufall.nextInt(3) == 1 ? "paper" : "scissors"; // 33:22:44
-
+            
             
             var number = Zufall.nextInt(3);
             number == 0 ? "rock" : number == 1 ? "paper" : "scissors"; // 33:33:33
@@ -135,8 +134,8 @@ class JGround {
             var alphabet = Vec.of("rock", "paper", "scissors");
             
             alphabet.at(Zufall.nextInt(3));
-
-
+            
+            
             var seed = System.nanoTime(); // einmalig ausführen
             
             (seed = seed * 6364136223846793005L + 1) < 0 ? "heads" : "tails"; // beliebig oft
@@ -437,7 +436,7 @@ class JGround {
                                 // always execute first section
                                 evaluate(0, code.getText(0, getSectionEndOffset(0)));
                             }
-                            evaluate(startOfSection, code.getText(startOfSection, endOfSection - startOfSection));
+                            evaluate(startOfSection, code.getText(0, endOfSection));
                         }
 
                         case KeyEvent.VK_F9 -> {
@@ -454,7 +453,7 @@ class JGround {
                                 // always execute first section
                                 evaluate(0, code.getText(0, getSectionEndOffset(0)));
                             }
-                            evaluate(startOfSection, code.getText(startOfSection, endOfLine - startOfSection));
+                            evaluate(startOfSection, code.getText(0, endOfLine));
                         }
 
                         case KeyEvent.VK_F12 -> {
@@ -463,14 +462,14 @@ class JGround {
 
                             String selectedText = code.getSelectedText();
                             if (selectedText != null) {
-                                evaluate(code.getSelectionStart(), selectedText);
+                                evaluate(code.getSelectionStart(), code.getText(0, code.getSelectionEnd()));
                             } else {
                                 int caretPosition = code.getCaretPosition();
                                 int currentLine = code.getLineOfOffset(caretPosition);
                                 int startOfLine = code.getLineStartOffset(currentLine);
                                 int endOfLine = code.getLineEndOffset(currentLine);
 
-                                evaluate(startOfLine, code.getText(startOfLine, endOfLine - startOfLine));
+                                evaluate(startOfLine, code.getText(0, endOfLine));
                             }
                         }
                     }
@@ -520,16 +519,26 @@ class JGround {
                 return code.getLineEndOffset(line);
             }
 
-            private void evaluate(int sourcePosition, String remainingSource) throws BadLocationException {
-                cafe.Assertions.passed = 0;
-                while (!remainingSource.isBlank()) {
+            private static final Pattern VISIBLE = Pattern.compile("\\S");
+
+            private void evaluate(int index, String paddedSource) throws BadLocationException {
+                foundFirstExceptionTriggerSnippet = false;
+                while (index < paddedSource.length()) {
+                    // preserve meaningful line numbers in stack traces
+                    String prefix = paddedSource.substring(0, index);
+                    String suffix = paddedSource.substring(index);
+                    prefix = VISIBLE.matcher(prefix).replaceAll(" ");
+                    paddedSource = prefix + suffix;
+                    if (paddedSource.isBlank()) return;
+
                     appendLine();
-                    var completionInfo = analysis.analyzeCompletion(remainingSource);
-                    String untrimmed = completionInfo.completeness().isComplete() ? completionInfo.source() : remainingSource;
+                    var completionInfo = analysis.analyzeCompletion(paddedSource);
+                    String untrimmed = completionInfo.completeness().isComplete() ? completionInfo.source() : paddedSource;
+                    index = untrimmed.length();
                     String source = untrimmed.trim();
 
                     var events = shell.eval(untrimmed);
-                    if (events.isEmpty()) break;
+                    if (events.isEmpty()) return;
                     var event = events.getFirst();
 
                     Diag diagnostic = shell.diagnostics(event.snippet()).findFirst().orElse(null);
@@ -537,37 +546,39 @@ class JGround {
                         appendLine(abbreviateSource(source));
                         appendLine();
                         appendLine("❌ " + diagnosticMessage(diagnostic));
-                        code.setCaretPosition(sourcePosition + (int) diagnostic.getPosition());
+                        code.setCaretPosition((int) diagnostic.getPosition());
                         return;
                     }
 
                     JShellException exception = event.exception();
                     if (exception != null) {
-                        code.setCaretPosition(sourcePosition + untrimmed.length());
                         int beforeSource = results.getDocument().getLength();
                         appendLine(abbreviateSource(source));
                         if (!(exception instanceof EvalException evex)) {
                             appendLine();
-                            appendLine("❌ " + exception.getClass().getName() + "\n" + exception.getMessage());
+                            appendLine("❌ " + exception.getClass().getName());
+                            appendOptionalLine(exception.getMessage());
+                            code.setCaretPosition(untrimmed.length());
                             return;
                         }
                         String exceptionClassName = evex.getExceptionClassName();
-                        if (!exceptionClassName.equals("cafe.AssertionFailed")) {
+                        if (exceptionClassName.equals("cafe.AssertionFailed")) {
+                            results.insert("✗ ", beforeSource);
+                            appendOptionalLine(evex.getMessage());
+                        } else if (source.startsWith("assertEquals(")) {
+                            results.insert("✗ ", beforeSource);
                             appendLine();
-                            appendLine("❌ " + exceptionClassName + "\n" + evex.getMessage());
+                            appendLine(exceptionClassName);
+                            appendOptionalLine(evex.getMessage());
+                            appendStackTrace(exception);
+                        } else {
+                            appendLine();
+                            appendLine("❌ " + exceptionClassName);
+                            appendOptionalLine(evex.getMessage());
+                            appendStackTrace(exception);
                             return;
                         }
-                        results.insert("✗ ", beforeSource);
-                        appendLine(evex.getMessage());
-                        int passed = cafe.Assertions.passed;
-                        if (passed > 0) {
-                            appendLine();
-                            appendLine(passed + " previous assertions passed though");
-                        }
-                        return;
-                    }
-
-                    switch (event.snippet()) {
+                    } else switch (event.snippet()) {
                         case ExpressionSnippet assignmentOrVariableExpression -> {
                             String name = assignmentOrVariableExpression.name();
                             VarSnippet variable = shell.variables()
@@ -596,58 +607,42 @@ class JGround {
                             int boundary = signature.lastIndexOf(')') + 1;
                             appendLine(" function name:  " + method.name());
                             appendLine("parameter types: " + signature.substring(0, boundary));
-                            appendLine("   return type:  " + signature.substring(boundary));
+                            appendLine("   return type:  " + signature.substring(boundary) + "  ");
+                            int testReport = results.getDocument().getLength() - 1;
 
-                            boolean failed = false;
                             var matcher = EXAMPLE.matcher(untrimmed);
-                            if (matcher.find()) {
-                                appendLine();
-                                do {
-                                    String arguments = matcher.group(2);
-                                    String expected = matcher.group(3);
-                                    String call = method.name() + arguments;
-                                    int beforeArguments = results.getDocument().getLength();
-                                    appendLine("✗   arguments: " + arguments);
+                            while (matcher.find()) {
+                                String arguments = matcher.group(2);
+                                String expected = matcher.group(3);
+                                String call = method.name() + arguments;
 
-                                    event = shell.eval(call).getFirst();
+                                event = shell.eval(call).getFirst();
 
-                                    diagnostic = shell.diagnostics(event.snippet()).findFirst().orElse(null);
-                                    if (diagnostic != null) {
-                                        appendLine();
-                                        appendLine(diagnosticMessage(diagnostic));
-                                        code.setCaretPosition(sourcePosition + matcher.start(2) + (int) diagnostic.getPosition() - method.name().length());
-                                        return;
-                                    }
+                                diagnostic = shell.diagnostics(event.snippet()).findFirst().orElse(null);
+                                if (diagnostic != null) {
+                                    appendLine();
+                                    appendLine(diagnosticMessage(diagnostic));
+                                    code.setCaretPosition(matcher.start(2) + (int) diagnostic.getPosition() - method.name().length());
+                                    return;
+                                }
 
-                                    String valueOrException;
-                                    BiPredicate<String, String> satisfies;
-                                    String label;
-                                    exception = event.exception();
-                                    if (exception == null) {
-                                        valueOrException = event.value();
-                                        satisfies = String::equals;
-                                        label = Assertions.ACTUAL;
+                                exception = event.exception();
+                                if (exception == null) {
+                                    String actual = event.value();
+                                    if (expected.equals(actual)) {
+                                        results.insert("✓", testReport++);
                                     } else {
-                                        satisfies = String::contains;
-                                        label = "\n       thrown: ";
-                                        if (exception instanceof EvalException evex) {
-                                            valueOrException = evex.getExceptionClassName() + ": " + evex.getMessage();
-                                        } else {
-                                            valueOrException = exception.getClass().getName() + ": " + exception.getMessage();
-                                        }
+                                        results.insert("✗", testReport++);
+                                        appendLine("\n    arguments: " + arguments + "\n" + Assertions.EXPECTED + expected + Assertions.ACTUAL + actual);
                                     }
-
-                                    if (!satisfies.test(valueOrException, expected)) {
-                                        appendLine(Assertions.EXPECTED + expected + label + valueOrException);
-                                        failed = true;
-                                    } else {
-                                        cafe.Assertions.passed++;
-                                        results.getDocument().remove(beforeArguments, 1);
-                                        results.insert("✓", beforeArguments);
-                                    }
-                                } while (matcher.find());
+                                } else {
+                                    results.insert("✗", testReport++);
+                                    String thrown = (exception instanceof EvalException evex) ? evex.getExceptionClassName() : exception.getClass().getName();
+                                    appendLine("\n    arguments: " + arguments + "\n" + Assertions.EXPECTED + expected + "\n       thrown: " + thrown);
+                                    appendOptionalLine(exception.getMessage());
+                                    appendStackTrace(exception);
+                                }
                             }
-                            if (failed) return;
                         }
 
                         default -> {
@@ -657,13 +652,6 @@ class JGround {
                             appendLine(abbreviateSource(source));
                         }
                     }
-                    sourcePosition += untrimmed.length();
-                    remainingSource = completionInfo.remaining();
-                }
-                int passed = cafe.Assertions.passed;
-                if (passed > 0) {
-                    appendLine();
-                    appendLine("ALL " + passed + " assertions PASSED");
                 }
             }
 
@@ -820,6 +808,22 @@ class JGround {
             private void appendOptionalLine(String text) {
                 if (text != null) {
                     appendLine(text);
+                }
+            }
+
+            private boolean foundFirstExceptionTriggerSnippet;
+
+            private void appendStackTrace(Exception exception) throws BadLocationException {
+                for (StackTraceElement e : exception.getStackTrace()) {
+                    String fileName = e.getFileName();
+                    if (fileName != null && !fileName.isEmpty() && fileName.charAt(0) == '#') {
+                        fileName = "🗎";
+                        if (!foundFirstExceptionTriggerSnippet) {
+                            code.setCaretPosition(code.getLineStartOffset(e.getLineNumber() - 1));
+                            foundFirstExceptionTriggerSnippet = true;
+                        }
+                    }
+                    appendLine("            at " + e.getMethodName() + "(" + fileName + ":" + e.getLineNumber() + ")");
                 }
             }
         });
